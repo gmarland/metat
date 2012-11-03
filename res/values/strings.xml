@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="add">Add</string>
+    <string name="app_name">Met At</string>
+    <string name="cancel">Cancel</string>
+    <string name="contacts">Contacts</string>
+    <string name="email_address">E-mail Address</string>
+    <string name="log_out_of_meetup">Log out of Meetup</string>
+    <string name="meetups">Meetups</string>
+    <string name="name">Name</string>
+    <string name="notes">Notes</string>
+    <string name="phone_number">Phone number</string>
+    <string name="save">Save</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="settings">Settings</string>
+
+</resources>
