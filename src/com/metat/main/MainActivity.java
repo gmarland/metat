@@ -1,10 +1,16 @@
 package com.metat.main;
 
 import com.example.metat.R;
+import com.metat.webservices.ClientWebservices;
 
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +31,9 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
+        startAuthenticateMeetupTask.execute();
+        
         _contactSortingTabs = (TabHost) findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
 
@@ -34,6 +43,18 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         _contactSortingTabs.addTab(newTab(TAB_MEETUPS, R.string.meetups, R.id.sort_by_group_container));
     }
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		Uri uri = getIntent().getData();
+		
+		if (uri != null && ClientWebservices.CALLBACK_URI.getScheme().equals(uri.getScheme())) {
+			FinishAuthenticateMeetupTask finishAuthenticateMeetupTask = new FinishAuthenticateMeetupTask(this, uri);
+			finishAuthenticateMeetupTask.execute();
+		}
+	}
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -72,5 +93,70 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	public void onTabChanged(String arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private class StartAuthenticateMeetupTask extends AsyncTask<String, String, String>
+	{
+		private Activity _parentActivity;
+		
+		public StartAuthenticateMeetupTask(Activity activity)
+		{
+			_parentActivity = activity;
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			Intent i = _parentActivity.getIntent();
+			
+			if (i.getData() == null) {
+				Uri authenticationUri = ClientWebservices.startMeetupAuthorization(_parentActivity.getBaseContext());
+				
+				if (authenticationUri != null)
+					return authenticationUri.toString();
+				else
+				{
+					return "";
+				}
+			}
+			else
+				return "";
+		}
+		
+		@Override
+        protected void onPostExecute(String result) {
+			if (result.trim().length() > 0)
+			{
+				_parentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result)));
+			}
+		}
+	}
+	
+	private class FinishAuthenticateMeetupTask extends AsyncTask<String, String, String>
+	{
+		private Activity _parentActivity;
+		private Uri _meetupUri;
+		
+		public FinishAuthenticateMeetupTask(Activity activity, Uri uri)
+		{
+			_parentActivity = activity;
+			_meetupUri = uri;
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			Intent i = _parentActivity.getIntent();
+
+			ClientWebservices.completeMeetupAuthorization(_parentActivity, _meetupUri);
+			
+			return "";
+		}
+		
+		@Override
+        protected void onPostExecute(String result) {
+			if (result.trim().length() > 0)
+			{
+				_parentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result)));
+			}
+		}
 	}
 }
