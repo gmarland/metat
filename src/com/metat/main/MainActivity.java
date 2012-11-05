@@ -1,16 +1,22 @@
 package com.metat.main;
 
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+
 import com.example.metat.R;
+import com.metat.helpers.ConnectionHelper;
+import com.metat.helpers.PreferencesHelper;
 import com.metat.webservices.ClientWebservices;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,20 +29,41 @@ import android.widget.TabHost.TabSpec;
 public class MainActivity extends Activity implements OnTabChangeListener {
     public static final String TAB_CONTACTS = "contacts";
     public static final String TAB_MEETUPS = "meetups";
-
+    
 	private TabHost _contactSortingTabs;
 	
+	private String _userToken = "";
+	
+	private OAuthConsumer _consumer;
+	private OAuthProvider _provider;
+	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
+    	{
+	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+			
+	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) == null)
+	        {
+	        	_consumer = new CommonsHttpOAuthConsumer(ClientWebservices.METAT_API_KEY, ClientWebservices.METAT_API_KEY_SECRET);
+	        	_provider = new CommonsHttpOAuthProvider(ClientWebservices.MEETUP_REQUEST_TOKEN_URL, ClientWebservices.MEETUP_ACCESS_TOKEN_URL, ClientWebservices.MEETUP_AUTHORIZE_URL);
+	        	
+		        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
+		        startAuthenticateMeetupTask.execute();
+	        }
+	        else
+	        {
+	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+	        }
+    	}
         
-        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
-        startAuthenticateMeetupTask.execute();
-        
+    	
         _contactSortingTabs = (TabHost) findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
-
         _contactSortingTabs.setup();
         
         _contactSortingTabs.addTab(newTab(TAB_CONTACTS, R.string.contacts, R.id.sort_by_contact_container));
@@ -44,23 +71,60 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     }
 
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
 		
 		Uri uri = getIntent().getData();
 		
-		if (uri != null && ClientWebservices.CALLBACK_URI.getScheme().equals(uri.getScheme())) {
+		if ((uri != null) && (ClientWebservices.CALLBACK_URI.getScheme().equals(uri.getScheme())))
+		{
 			FinishAuthenticateMeetupTask finishAuthenticateMeetupTask = new FinishAuthenticateMeetupTask(this, uri);
 			finishAuthenticateMeetupTask.execute();
+		}
+		else
+		{
+	    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
+	    	{
+		        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+		        
+		        if (settings.getString(PreferencesHelper.USER_TOKEN, null) == null)
+		        {
+			        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
+			        startAuthenticateMeetupTask.execute();
+		        }
+	    	}
 		}
 	}
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+    	if (_userToken.trim().length() > 0)
+    		getMenuInflater().inflate(R.menu.main_menu, menu);
+    	else
+    		getMenuInflater().inflate(R.menu.main_menu_static, menu);
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        menu.clear();
+
+    	if (_userToken.trim().length() > 0)
+    		getMenuInflater().inflate(R.menu.main_menu, menu);
+    	else
+    		getMenuInflater().inflate(R.menu.main_menu_static, menu);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
     
+    public void resetMenuOptions()
+    {
+    	this.invalidateOptionsMenu();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -76,6 +140,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         
         return false;
     }
+    
 
     // Private Methods
     private TabSpec newTab(String tag, int label, int tabContentId) 
@@ -109,7 +174,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 			Intent i = _parentActivity.getIntent();
 			
 			if (i.getData() == null) {
-				Uri authenticationUri = ClientWebservices.startMeetupAuthorization(_parentActivity.getBaseContext());
+				Uri authenticationUri = ClientWebservices.startMeetupAuthorization(_parentActivity.getBaseContext(), _consumer, _provider);
 				
 				if (authenticationUri != null)
 					return authenticationUri.toString();
@@ -144,19 +209,21 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		
 		@Override
 		protected String doInBackground(String... strings) {
-			Intent i = _parentActivity.getIntent();
-
-			ClientWebservices.completeMeetupAuthorization(_parentActivity, _meetupUri);
-			
+			ClientWebservices.completeMeetupAuthorization(_parentActivity, _consumer, _provider, _meetupUri);
+	        
 			return "";
 		}
 		
 		@Override
         protected void onPostExecute(String result) {
-			if (result.trim().length() > 0)
-			{
-				_parentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result)));
-			}
+			SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+
+	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
+	        {
+	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+	        	((MainActivity)_parentActivity).resetMenuOptions();
+	        }
 		}
 	}
 }
