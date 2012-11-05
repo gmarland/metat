@@ -11,7 +11,6 @@ import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Group;
-import com.metat.models.MeetupContact;
 import com.metat.webservices.ClientWebservices;
 import com.metat.webservices.GroupWebservices;
 
@@ -39,6 +38,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	private TabHost _contactSortingTabs;
 	
 	private String _userToken = "";
+	private static boolean _attemptReathorization = true;
 	
 	private OAuthConsumer _consumer;
 	private OAuthProvider _provider;
@@ -245,6 +245,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		private Activity _parentActivity;
 		private String _meetupKey;
 		
+		private long _selfId;
+		
 		public UpdateMeetupGroupsTask(Activity activity, String meetupKey)
 		{
 			_parentActivity = activity;
@@ -253,14 +255,14 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		
 		@Override
 		protected String doInBackground(String... strings) {
-			MeetupContact self = ClientWebservices.getCurrentUser(_meetupKey);
+			_selfId = ClientWebservices.getCurrentUser(_parentActivity,_meetupKey);
 
-			if (self != null)
+			if (_selfId >= 0)
 			{
 				GroupsDataAccess groupsDataAccess = new GroupsDataAccess(_parentActivity);
 				ContactDataAccess contactDataAccess = new ContactDataAccess(_parentActivity);
 				
-				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, self.getMeetupId());
+				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, _selfId + "");
 
 				Log.e("here", onlineMeetupGroups.length + "");
 				
@@ -312,11 +314,18 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				}
 			}
 			
-			return "";
+			
+			return "Complete";
 		}
 		
 		@Override
         protected void onPostExecute(String result) {
+			if ((_selfId == -2) && (_attemptReathorization))
+			{
+				_attemptReathorization = false;
+				StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(_parentActivity);
+				startAuthenticateMeetupTask.execute();
+			}
 		}
 	}
 }

@@ -128,7 +128,7 @@ public class ClientWebservices {
 		}
 	}
 	  
-	public static MeetupContact getCurrentUser(String meetupKey)
+	public static long getCurrentUser(Context context, String meetupKey)
 	{
 		HttpResponse response = null;
 		StatusLine statusLine = null;
@@ -143,7 +143,7 @@ public class ClientWebservices {
 		catch (Exception ex)
 		{
 			Log.e("getCurrentUser()", Log.getStackTraceString(ex));
-			return null;
+			return -1;
 		}
 
 	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
@@ -155,7 +155,7 @@ public class ClientWebservices {
 	        }
 	        catch (Exception ex) {
 				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
-				return null;
+				return -1;
 	        }
 	        
 	        String responseString = out.toString();
@@ -163,12 +163,25 @@ public class ClientWebservices {
 	        try {
 				JSONObject contact = new JSONObject(responseString);
 
-		        return new MeetupContact(contact.getString(MEMBER_ID), contact.getString(MEMBER_NAME));
+		        return contact.getLong(MEMBER_ID);
 			}
 	        catch (JSONException ex) {
 				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
-				return null;
+				return -1;
 			}
+	    }
+	    else if(statusLine.getStatusCode() == HttpStatus.SC_UNAUTHORIZED){
+	    	Log.e("dude", "here");
+			SharedPreferences settings = context.getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+
+			SharedPreferences.Editor editor = settings.edit();
+			
+			editor.remove(PreferencesHelper.USER_TOKEN);
+			editor.remove(PreferencesHelper.USER_SECRET);
+			
+			editor.commit();
+			
+			return -2;
 	    }
 	    else {
 	        try {
@@ -178,7 +191,7 @@ public class ClientWebservices {
 				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
 	        }
 
-			return null;
+			return -1;
 	    }
 	}
 }
