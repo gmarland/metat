@@ -1,8 +1,20 @@
 package com.metat.webservices;
 
+import java.io.ByteArrayOutputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import junit.framework.Assert;
 
 import com.metat.helpers.PreferencesHelper;
+import com.metat.models.MeetupContact;
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
@@ -26,7 +38,12 @@ public class ClientWebservices {
 	public static final String MEETUP_AUTHORIZE_URL = "http://www.meetup.com/authenticate";
 
 	public static final Uri CALLBACK_URI = Uri.parse("metat://authorized");
+
+	private static final String GET_SELF = "https://api.meetup.com/2/member/self?access_token={key}";
 	
+	private static final String MEMBER_ID = "id";
+	private static final String MEMBER_NAME = "name";
+
 	public static Uri startMeetupAuthorization(Context context, OAuthConsumer consumer, OAuthProvider provider)
 	{
 		provider.setOAuth10a(true);
@@ -108,7 +125,57 @@ public class ClientWebservices {
 		}
 	}
 	  
-	public static void getCurrentUser()
+	public static MeetupContact getCurrentUser(String meetupKey)
 	{
+		HttpResponse response = null;
+		StatusLine statusLine = null;
+		
+		try
+		{
+			HttpClient httpclient = new DefaultHttpClient();
+		    response = httpclient.execute(new HttpGet(GET_SELF.replace("{key}", meetupKey)));
+
+		    statusLine = response.getStatusLine();
+		}
+		catch (Exception ex)
+		{
+			Log.e("getCurrentUser()", Log.getStackTraceString(ex));
+			return null;
+		}
+
+	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+	        ByteArrayOutputStream out = new ByteArrayOutputStream();
+	        
+	        try {
+	        	response.getEntity().writeTo(out);
+		        out.close();
+	        }
+	        catch (Exception ex) {
+				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
+				return null;
+	        }
+	        
+	        String responseString = out.toString();
+	        
+	        try {
+				JSONObject contact = new JSONObject(responseString);
+
+		        return new MeetupContact(contact.getString(MEMBER_ID), contact.getString(MEMBER_NAME));
+			}
+	        catch (JSONException ex) {
+				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
+				return null;
+			}
+	    }
+	    else {
+	        try {
+	        	response.getEntity().getContent().close();
+	        }
+	        catch (Exception ex) {
+				Log.e("getCurrentUser()", Log.getStackTraceString(ex));
+	        }
+
+			return null;
+	    }
 	}
 }

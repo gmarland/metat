@@ -50,20 +50,25 @@ public class GroupsDataAccess {
 			return new Group[0];
 	}
 	
-	public void Insert(Group[] groups)
+	public void Insert(Group group)
 	{
-		for (Group group : groups)
-		{
-			ContentValues values = new ContentValues();
-			values.put(KEY_MEEETUPID, group.getMeetupId());
-			values.put(KEY_NAME, group.getName());
-			
-			_dbHelper.getWritableDatabase().insert(DATABASE_TABLE, null, values);
-		}
+		ContentValues values = new ContentValues();
+		values.put(KEY_MEEETUPID, group.getMeetupId());
+		values.put(KEY_NAME, group.getName());
+		
+		_dbHelper.getWritableDatabase().insert(DATABASE_TABLE, null, values);
 	}
 	
-	public boolean DeleteAll()
+	public void Update(String meetupId, String name)
 	{
-		return (_dbHelper.getWritableDatabase().delete(DATABASE_TABLE, null, null) > 0);
+		ContentValues ownerValues = new ContentValues();
+		ownerValues.put(KEY_NAME, name);
+		
+		_dbHelper.getWritableDatabase().update(DATABASE_TABLE, ownerValues, KEY_MEEETUPID + " = '" + meetupId + "'", null);
+	}
+	
+	public boolean Delete(String meetupId)
+	{
+		return (_dbHelper.getWritableDatabase().delete(DATABASE_TABLE, KEY_MEEETUPID + " = '" + meetupId + "'", null) > 0);
 	}
 }

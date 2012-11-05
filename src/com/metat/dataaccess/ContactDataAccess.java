@@ -113,6 +113,14 @@ public class ContactDataAccess {
 		return _dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_ID + " = " + id, null) > 0;
 	}
 	
+	public void UpdateGroupNames(String meetupId, String name)
+	{
+		ContentValues ownerValues = new ContentValues();
+		ownerValues.put(KEY_GROUPNAME, name);
+		
+		_dbHelper.getWritableDatabase().update(DATABASE_TABLE, ownerValues, KEY_GROUPMEETUPID + " = '" + meetupId + "'", null);
+	}
+	
 	public boolean Delete(long id)
 	{
 		return (_dbHelper.getWritableDatabase().delete(DATABASE_TABLE, KEY_ID + " = " + id, null) > 0);

@@ -11,6 +11,12 @@ public class MeetupContact {
 		_photoThumbnail = photoThumbnail;
 		_name = name;
 	}
+
+	public MeetupContact(String meetupId, String name)
+	{
+		_meetupId = meetupId;
+		_name = name;
+	}
 	
 	public String getMeetupId()
 	{

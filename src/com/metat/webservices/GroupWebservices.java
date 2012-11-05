@@ -18,7 +18,7 @@ import android.util.Log;
 import com.metat.models.Group;
 
 public class GroupWebservices {
-	private static final String GET_ALL_GROUPS = "https://api.meetup.com/2/groups?key={key}&member_id={member_id}";
+	private static final String GET_ALL_GROUPS = "https://api.meetup.com/2/groups?access_token={key}&member_id={member_id}";
 
 	private static final String GROUP_CONTAINER = "results";
 	private static final String GROUP_ID = "id";
@@ -40,7 +40,7 @@ public class GroupWebservices {
 			Log.e("getAllGroups()", ex.getMessage());
 			return new Group[0];
 		}
-
+		
 	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
 	        ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        

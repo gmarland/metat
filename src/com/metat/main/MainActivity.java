@@ -6,9 +6,14 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 
 import com.example.metat.R;
+import com.metat.dataaccess.ContactDataAccess;
+import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
+import com.metat.models.Group;
+import com.metat.models.MeetupContact;
 import com.metat.webservices.ClientWebservices;
+import com.metat.webservices.GroupWebservices;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,10 +63,10 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	        else
 	        {
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+	        	refreshMeetupGroups();
 	        }
     	}
         
-    	
         _contactSortingTabs = (TabHost) findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
         _contactSortingTabs.setup();
@@ -160,6 +165,12 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		
 	}
 	
+	public void refreshMeetupGroups()
+	{
+		UpdateMeetupGroupsTask updateMeetupGroupsTask = new UpdateMeetupGroupsTask(this, _userToken);
+		updateMeetupGroupsTask.execute();
+	}
+	
 	private class StartAuthenticateMeetupTask extends AsyncTask<String, String, String>
 	{
 		private Activity _parentActivity;
@@ -223,7 +234,83 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	        {
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
 	        	((MainActivity)_parentActivity).resetMenuOptions();
+	        	((MainActivity)_parentActivity).refreshMeetupGroups();
 	        }
+		}
+	}
+	
+	private class UpdateMeetupGroupsTask extends AsyncTask<String, String, String>
+	{
+		private Activity _parentActivity;
+		private String _meetupKey;
+		
+		public UpdateMeetupGroupsTask(Activity activity, String meetupKey)
+		{
+			_parentActivity = activity;
+			_meetupKey = meetupKey;
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			MeetupContact self = ClientWebservices.getCurrentUser(_meetupKey);
+
+			if (self != null)
+			{
+				GroupsDataAccess groupsDataAccess = new GroupsDataAccess(_parentActivity);
+				ContactDataAccess contactDataAccess = new ContactDataAccess(_parentActivity);
+				
+				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, self.getMeetupId());
+
+				Group[] existingMeetupGroups = groupsDataAccess.getAllGroups();
+				
+				for (Group onlineMeetupGroup : onlineMeetupGroups)
+				{
+					boolean onlineGroupFound = false;
+
+					for (Group existingMeetupGroup : existingMeetupGroups)
+					{
+						if (onlineMeetupGroup.getMeetupId().equals(existingMeetupGroup.getMeetupId()))
+						{
+							onlineGroupFound = true;
+							
+							if (!onlineMeetupGroup.getName().trim().equals(existingMeetupGroup.getName().trim()))
+							{
+								groupsDataAccess.Update(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
+								contactDataAccess.UpdateGroupNames(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
+							}
+						}
+					}
+					
+					if (!onlineGroupFound)
+					{
+						groupsDataAccess.Insert(onlineMeetupGroup);
+					}
+				}
+
+				existingMeetupGroups = groupsDataAccess.getAllGroups();
+				
+				for (Group existingMeetupGroup : existingMeetupGroups)
+				{
+					boolean existingGroupFound = false;
+
+					for (Group onlineMeetupGroup : onlineMeetupGroups)
+					{
+						if (existingMeetupGroup.getMeetupId().equals(onlineMeetupGroup.getMeetupId()))
+							existingGroupFound = true;
+					}
+
+					if (!existingGroupFound)
+					{
+						groupsDataAccess.Delete(existingMeetupGroup.getMeetupId());
+					}
+				}
+			}
+			
+			return "";
+		}
+		
+		@Override
+        protected void onPostExecute(String result) {
 		}
 	}
 }
