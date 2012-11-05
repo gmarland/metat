@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -261,47 +262,52 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				
 				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, self.getMeetupId());
 
-				Group[] existingMeetupGroups = groupsDataAccess.getAllGroups();
+				Log.e("here", onlineMeetupGroups.length + "");
 				
-				for (Group onlineMeetupGroup : onlineMeetupGroups)
+				if (onlineMeetupGroups.length > 0)
 				{
-					boolean onlineGroupFound = false;
-
-					for (Group existingMeetupGroup : existingMeetupGroups)
-					{
-						if (onlineMeetupGroup.getMeetupId().equals(existingMeetupGroup.getMeetupId()))
-						{
-							onlineGroupFound = true;
-							
-							if (!onlineMeetupGroup.getName().trim().equals(existingMeetupGroup.getName().trim()))
-							{
-								groupsDataAccess.Update(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
-								contactDataAccess.UpdateGroupNames(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
-							}
-						}
-					}
+					Group[] existingMeetupGroups = groupsDataAccess.getAllGroups();
 					
-					if (!onlineGroupFound)
-					{
-						groupsDataAccess.Insert(onlineMeetupGroup);
-					}
-				}
-
-				existingMeetupGroups = groupsDataAccess.getAllGroups();
-				
-				for (Group existingMeetupGroup : existingMeetupGroups)
-				{
-					boolean existingGroupFound = false;
-
 					for (Group onlineMeetupGroup : onlineMeetupGroups)
 					{
-						if (existingMeetupGroup.getMeetupId().equals(onlineMeetupGroup.getMeetupId()))
-							existingGroupFound = true;
+						boolean onlineGroupFound = false;
+	
+						for (Group existingMeetupGroup : existingMeetupGroups)
+						{
+							if (onlineMeetupGroup.getMeetupId().equals(existingMeetupGroup.getMeetupId()))
+							{
+								onlineGroupFound = true;
+								
+								if (!onlineMeetupGroup.getName().trim().equals(existingMeetupGroup.getName().trim()))
+								{
+									groupsDataAccess.Update(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
+									contactDataAccess.UpdateGroupNames(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
+								}
+							}
+						}
+						
+						if (!onlineGroupFound)
+						{
+							groupsDataAccess.Insert(onlineMeetupGroup);
+						}
 					}
-
-					if (!existingGroupFound)
+	
+					existingMeetupGroups = groupsDataAccess.getAllGroups();
+					
+					for (Group existingMeetupGroup : existingMeetupGroups)
 					{
-						groupsDataAccess.Delete(existingMeetupGroup.getMeetupId());
+						boolean existingGroupFound = false;
+	
+						for (Group onlineMeetupGroup : onlineMeetupGroups)
+						{
+							if (existingMeetupGroup.getMeetupId().equals(onlineMeetupGroup.getMeetupId()))
+								existingGroupFound = true;
+						}
+	
+						if (!existingGroupFound)
+						{
+							groupsDataAccess.Delete(existingMeetupGroup.getMeetupId());
+						}
 					}
 				}
 			}

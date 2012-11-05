@@ -89,4 +89,9 @@ public class Contact {
 	{
 		return _groupName;
 	}
+	
+    @Override
+    public String toString() {
+        return _firstname + " " + _lastname;
+    }
 }

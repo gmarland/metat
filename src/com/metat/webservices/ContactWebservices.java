@@ -18,13 +18,14 @@ import android.util.Log;
 import com.metat.models.MeetupContact;
 
 public class ContactWebservices {
-	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?key={key}&group_id={group_id}";
-
 	private static final String MEMBER_CONTAINER = "results";
 	private static final String MEMBER_ID = "id";
 	private static final String MEMBER_NAME = "name";
 	private static final String MEMBER_PHOTO_CONTAINER = "photo";
 	private static final String MEMBER_PHOTO_URL = "thumb_link";
+
+	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "." + MEMBER_PHOTO_URL;
+
 
 	public static MeetupContact[] getAllContacts(String meetupKey, String groupId)
 	{
@@ -39,7 +40,7 @@ public class ContactWebservices {
 		}
 		catch (Exception ex)
 		{
-			Log.e("getAllContacts()", ex.getMessage());
+			Log.e("getAllContacts()", Log.getStackTraceString(ex));
 			return new MeetupContact[0];
 		}
 
@@ -51,12 +52,12 @@ public class ContactWebservices {
 		        out.close();
 	        }
 	        catch (Exception ex) {
-				Log.e("getAllContacts()", ex.getMessage());
+				Log.e("getAllContacts()", Log.getStackTraceString(ex));
 				return new MeetupContact[0];
 	        }
 	        
 	        String responseString = out.toString();
-	        
+
 	        ArrayList<MeetupContact> contacts = new ArrayList<MeetupContact>();
 
 	        try {
@@ -65,14 +66,21 @@ public class ContactWebservices {
 
 			    for(int i = 0; i < allContacts.length(); i++){
 			        JSONObject contact = allContacts.getJSONObject(i);
-			        JSONObject photoContainer = contact.getJSONObject(MEMBER_PHOTO_CONTAINER);
-			        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoContainer.getString(MEMBER_PHOTO_URL), contact.getString(MEMBER_NAME)));
+			        if (contact.has(MEMBER_PHOTO_CONTAINER))
+			        {
+				        JSONObject photoContainer = contact.getJSONObject(MEMBER_PHOTO_CONTAINER);
+				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoContainer.getString(MEMBER_PHOTO_URL), contact.getString(MEMBER_NAME)));
+			        }
+			        else
+			        {
+				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), "", contact.getString(MEMBER_NAME)));
+			        }
 			    }
 			    
 			    return contacts.toArray(new MeetupContact[contacts.size()]);
 			}
 	        catch (JSONException ex) {
-				Log.e("getAllContacts()", ex.getMessage());
+				Log.e("getAllContacts()", Log.getStackTraceString(ex));
 				return new MeetupContact[0];
 			}
 	    }

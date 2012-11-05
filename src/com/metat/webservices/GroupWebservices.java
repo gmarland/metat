@@ -18,11 +18,12 @@ import android.util.Log;
 import com.metat.models.Group;
 
 public class GroupWebservices {
-	private static final String GET_ALL_GROUPS = "https://api.meetup.com/2/groups?access_token={key}&member_id={member_id}";
-
 	private static final String GROUP_CONTAINER = "results";
 	private static final String GROUP_ID = "id";
 	private static final String GROUP_NAME = "name";
+
+	private static final String GET_ALL_GROUPS = "https://api.meetup.com/2/groups?access_token={key}&member_id={member_id}&only=" + GROUP_ID + "," + GROUP_NAME;
+
 	
 	public static Group[] getAllGroups(String meetupKey, String memberId)
 	{
@@ -37,10 +38,11 @@ public class GroupWebservices {
 		}
 		catch (Exception ex)
 		{
-			Log.e("getAllGroups()", ex.getMessage());
+			Log.e("getAllGroups()", Log.getStackTraceString(ex));
 			return new Group[0];
 		}
-		
+
+
 	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
 	        ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        
@@ -49,7 +51,7 @@ public class GroupWebservices {
 		        out.close();
 	        }
 	        catch (Exception ex) {
-				Log.e("getAllGroups()", ex.getMessage());
+				Log.e("getAllGroups()", Log.getStackTraceString(ex));
 				return new Group[0];
 	        }
 	        
@@ -69,7 +71,7 @@ public class GroupWebservices {
 			    return groups.toArray(new Group[groups.size()]);
 			}
 	        catch (JSONException ex) {
-				Log.e("getAllGroups()", ex.getMessage());
+				Log.e("getAllGroups()", Log.getStackTraceString(ex));
 				return new Group[0];
 			}
 	    }
@@ -78,7 +80,7 @@ public class GroupWebservices {
 	        	response.getEntity().getContent().close();
 	        }
 	        catch (Exception ex) {
-				Log.e("getAllGroups()", ex.getMessage());
+				Log.e("getAllGroups()", Log.getStackTraceString(ex));
 	        }
 
 			return new Group[0];

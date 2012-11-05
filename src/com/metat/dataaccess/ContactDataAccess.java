@@ -95,7 +95,17 @@ public class ContactDataAccess {
 			_dbHelper.getWritableDatabase().insert(DATABASE_TABLE, null, values);
 	}
 	
-	public boolean updateNote(long id, byte[] thumbnail, String firstname, String lastname, String email, String phone, String notes, String groupId, String groupName)
+	public void updateImage(String meetupId, byte[] thumbnail)
+	{
+		ContentValues values = new ContentValues();
+		if ((thumbnail != null) && (thumbnail.length > 0))
+		{
+			values.put(KEY_THUMBNAIL, thumbnail);
+			_dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_MEEETUPID + " = '" + meetupId + "'", null);
+		}
+	}
+	
+	public boolean updateContact(long id, byte[] thumbnail, String firstname, String lastname, String email, String phone, String notes, String groupId, String groupName)
 	{
 		ContentValues values = new ContentValues();
 		if ((thumbnail != null) && (thumbnail.length > 0))

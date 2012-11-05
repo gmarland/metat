@@ -38,11 +38,11 @@ public class ClientWebservices {
 	public static final String MEETUP_AUTHORIZE_URL = "http://www.meetup.com/authenticate";
 
 	public static final Uri CALLBACK_URI = Uri.parse("metat://authorized");
-
-	private static final String GET_SELF = "https://api.meetup.com/2/member/self?access_token={key}";
 	
 	private static final String MEMBER_ID = "id";
 	private static final String MEMBER_NAME = "name";
+
+	private static final String GET_SELF = "https://api.meetup.com/2/member/self?access_token={key}";
 
 	public static Uri startMeetupAuthorization(Context context, OAuthConsumer consumer, OAuthProvider provider)
 	{
@@ -121,6 +121,9 @@ public class ClientWebservices {
 			Log.e("completeMeetupAuthorization", Log.getStackTraceString(ex));
 		} 
 		catch (OAuthCommunicationException ex) {
+			Log.e("completeMeetupAuthorization", Log.getStackTraceString(ex));
+		}
+		catch (Exception ex) {
 			Log.e("completeMeetupAuthorization", Log.getStackTraceString(ex));
 		}
 	}
