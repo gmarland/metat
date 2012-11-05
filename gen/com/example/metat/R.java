@@ -20,28 +20,34 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int add_contact=0x7f08000b;
-        public static final int cancel=0x7f080009;
-        public static final int contact_sorting_tabs=0x7f080006;
+        public static final int add_contact=0x7f08000e;
+        public static final int cancel=0x7f08000c;
+        public static final int contact_name=0x7f080006;
+        public static final int contact_sorting_tabs=0x7f080008;
+        public static final int contacts_container=0x7f08000a;
         public static final int email=0x7f080002;
-        public static final int logout_meetup=0x7f08000e;
+        public static final int group_name=0x7f08000b;
+        public static final int list_header_title=0x7f080005;
+        public static final int logout_meetup=0x7f080011;
         public static final int meetup_group_select=0x7f080000;
+        public static final int meetup_groups_container=0x7f080009;
         public static final int name=0x7f080001;
         public static final int notes=0x7f080004;
         public static final int phone=0x7f080003;
-        public static final int save=0x7f08000a;
-        public static final int send_feedback=0x7f08000d;
-        public static final int settings=0x7f08000c;
-        public static final int sort_by_contact_container=0x7f080008;
-        public static final int sort_by_group_container=0x7f080007;
-        public static final int sorting_lbl=0x7f080005;
+        public static final int save=0x7f08000d;
+        public static final int send_feedback=0x7f080010;
+        public static final int settings=0x7f08000f;
+        public static final int sorting_lbl=0x7f080007;
     }
     public static final class layout {
         public static final int add_contact=0x7f030000;
-        public static final int contact_sorting_tab=0x7f030001;
-        public static final int contacts_spinner_style=0x7f030002;
-        public static final int groups_spinner_style=0x7f030003;
-        public static final int main=0x7f030004;
+        public static final int contact_list_header=0x7f030001;
+        public static final int contact_list_item=0x7f030002;
+        public static final int contact_sorting_tab=0x7f030003;
+        public static final int contacts_spinner_style=0x7f030004;
+        public static final int groups_spinner_style=0x7f030005;
+        public static final int main=0x7f030006;
+        public static final int meetup_group_list_item=0x7f030007;
     }
     public static final class menu {
         public static final int add_contact_menu=0x7f070000;
@@ -62,6 +68,7 @@ public final class R {
         public static final int save=0x7f05000a;
         public static final int send_feedback=0x7f05000b;
         public static final int settings=0x7f05000c;
+        public static final int you_need_to_provide_a_name=0x7f05000d;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;

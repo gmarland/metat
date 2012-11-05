@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import junit.framework.Assert;
 
 import com.metat.helpers.PreferencesHelper;
-import com.metat.models.MeetupContact;
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
@@ -40,7 +39,6 @@ public class ClientWebservices {
 	public static final Uri CALLBACK_URI = Uri.parse("metat://authorized");
 	
 	private static final String MEMBER_ID = "id";
-	private static final String MEMBER_NAME = "name";
 
 	private static final String GET_SELF = "https://api.meetup.com/2/member/self?access_token={key}";
 

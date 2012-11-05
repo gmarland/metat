@@ -10,14 +10,19 @@ import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
+import com.metat.models.Contact;
 import com.metat.models.Group;
 import com.metat.webservices.ClientWebservices;
 import com.metat.webservices.GroupWebservices;
+import com.metat.fragments.AllExistingContacts;
+import com.metat.fragments.AllExistingMeetpGroups;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,21 +48,23 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	private OAuthConsumer _consumer;
 	private OAuthProvider _provider;
 	
+	public static Contact[] AllContacts = new Contact[0];
+	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+    	_consumer = new CommonsHttpOAuthConsumer(ClientWebservices.METAT_API_KEY, ClientWebservices.METAT_API_KEY_SECRET);
+    	_provider = new CommonsHttpOAuthProvider(ClientWebservices.MEETUP_REQUEST_TOKEN_URL, ClientWebservices.MEETUP_ACCESS_TOKEN_URL, ClientWebservices.MEETUP_AUTHORIZE_URL);
+    	
     	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
     	{
 	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
 			
 	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) == null)
 	        {
-	        	_consumer = new CommonsHttpOAuthConsumer(ClientWebservices.METAT_API_KEY, ClientWebservices.METAT_API_KEY_SECRET);
-	        	_provider = new CommonsHttpOAuthProvider(ClientWebservices.MEETUP_REQUEST_TOKEN_URL, ClientWebservices.MEETUP_ACCESS_TOKEN_URL, ClientWebservices.MEETUP_AUTHORIZE_URL);
-	        	
 		        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
 		        startAuthenticateMeetupTask.execute();
 	        }
@@ -67,13 +74,48 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	        	refreshMeetupGroups();
 	        }
     	}
+    	
+    	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
+    	AllContacts = contactDataAccess.getAllContacts();
         
         _contactSortingTabs = (TabHost) findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
         _contactSortingTabs.setup();
-        
-        _contactSortingTabs.addTab(newTab(TAB_CONTACTS, R.string.contacts, R.id.sort_by_contact_container));
-        _contactSortingTabs.addTab(newTab(TAB_MEETUPS, R.string.meetups, R.id.sort_by_group_container));
+
+        _contactSortingTabs.addTab(newTab(TAB_MEETUPS, R.string.meetups, R.id.meetup_groups_container));
+        _contactSortingTabs.addTab(newTab(TAB_CONTACTS, R.string.contacts, R.id.contacts_container));
+
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+		Fragment allContactsFragment;
+
+		if (savedInstanceState != null)
+		{
+			allContactsFragment = getFragmentManager().findFragmentByTag("AllExistingContacts");
+		}
+		else
+		{
+			allContactsFragment = new AllExistingContacts();
+			Bundle allContactsSelectedArgs = new Bundle();
+			allContactsFragment.setArguments(allContactsSelectedArgs);
+			transaction.add(R.id.contacts_container, allContactsFragment, "AllExistingContacts");
+		}
+
+		Fragment allMeetupsFragment;
+
+		if (savedInstanceState != null)
+		{
+			allMeetupsFragment = getFragmentManager().findFragmentByTag("AllExistingMeetups");
+		}
+		else
+		{
+			allMeetupsFragment = new AllExistingMeetpGroups();
+			Bundle allContactsSelectedArgs = new Bundle();
+			allContactsFragment.setArguments(allContactsSelectedArgs);
+			transaction.add(R.id.meetup_groups_container, allMeetupsFragment, "AllExistingMeetups");
+		}
+
+		transaction.commit();
     }
 
 	@Override
@@ -132,6 +174,10 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -162,8 +208,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
 	@Override
 	public void onTabChanged(String arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void refreshMeetupGroups()
@@ -230,7 +274,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         protected void onPostExecute(String result) {
 			SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
         	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-
+        	getIntent().setData(null);
+        	
 	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
 	        {
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");

@@ -21,11 +21,11 @@
 			android:paddingTop="8dp"
 			android:paddingBottom="8dp">
 			<FrameLayout
-			    android:id="@+id/sort_by_group_container"
+			    android:id="@+id/meetup_groups_container"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" />
 			<FrameLayout
-			    android:id="@+id/sort_by_contact_container"
+			    android:id="@+id/contacts_container"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" />
 		</FrameLayout>

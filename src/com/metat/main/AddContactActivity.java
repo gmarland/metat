@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddContactActivity extends Activity implements TextWatcher {
 	private Group[] _groups;
@@ -118,18 +119,20 @@ public class AddContactActivity extends Activity implements TextWatcher {
         getMenuInflater().inflate(R.menu.add_contact_menu, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		getBaseContext().startActivity(cancelIntent);	
+    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
         {
-        	case android.R.id.home:
-				Intent homeIntent = new Intent(getBaseContext(), MainActivity.class);
-				homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				
-				getBaseContext().startActivity(homeIntent);	
-        		return true;
         	case R.id.cancel:
 				Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
 				cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -137,43 +140,53 @@ public class AddContactActivity extends Activity implements TextWatcher {
 				getBaseContext().startActivity(cancelIntent);	
         		return true;
         	case R.id.save:
-        		int selectedIndex = -1;
-        		
-        		for (int i=0; i<_contacts.length; i++)
+        		if (_name.getText().toString().length() > 0)
         		{
-        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
-        			{
-        				selectedIndex = i;
-        				break;
-        			}
+	        		int selectedIndex = -1;
+	        		
+	        		for (int i=0; i<_contacts.length; i++)
+	        		{
+	        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
+	        			{
+	        				selectedIndex = i;
+	        				break;
+	        			}
+	        		}
+	        		
+	        		String meetupId = "";
+	        		String firstname = "";
+	        		String lastname = "";
+	        		
+	        		if (selectedIndex != -1) {
+	        			meetupId = _contacts[selectedIndex].getMeetupId();
+	            		firstname = _contacts[selectedIndex].getName().substring(0, _contacts[selectedIndex].getName().indexOf(" "));
+	            		lastname = _contacts[selectedIndex].getName().substring(_contacts[selectedIndex].getName().indexOf(" "));
+	        		}
+	        		else
+	        		{
+	            		firstname = _name.getText().toString().substring(0,_name.getText().toString().indexOf(" "));
+	            		lastname = _name.getText().toString().substring(_name.getText().toString().indexOf(" "));
+	        		}
+	        			
+	        		String contactPhotoThumbnailLocation = _contacts[selectedIndex].getPhotoThumbnail();
+	        		
+	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
+	        		contactDataAccess.Insert(meetupId, new byte[0], firstname.trim(), lastname.trim(), _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), ((Group)_meetupGroupSelect.getSelectedItem()).getMeetupId(), ((Group)_meetupGroupSelect.getSelectedItem()).getName());
+	        		
+	        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
+	        		downloadImageTask.execute();
+	        		
+					Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
+					returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					
+					getBaseContext().startActivity(returnIntent);
+					
+	        		return true;
         		}
-        		
-        		String meetupId = "";
-        		String firstname = "";
-        		String lastname = "";
-        		
-        		if (selectedIndex != -1) {
-        			meetupId = _contacts[selectedIndex].getMeetupId();
+        		else
+        		{
+        			Toast.makeText(this, R.string.you_need_to_provide_a_name, Toast.LENGTH_SHORT).show();
         		}
-        			
-        		String contactPhotoThumbnailLocation = "";
-        		String contactMeetupId = "";
-        		
-        		firstname = _name.getText().toString().substring(0,_name.getText().toString().indexOf(" "));
-        		lastname = _name.getText().toString().substring(_name.getText().toString().indexOf(" "));
-        		
-        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
-        		contactDataAccess.Insert(meetupId, new byte[0], firstname.trim(), lastname.trim(), _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), ((Group)_meetupGroupSelect.getSelectedItem()).getMeetupId(), ((Group)_meetupGroupSelect.getSelectedItem()).getName());
-        		
-        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, contactMeetupId, contactPhotoThumbnailLocation);
-        		downloadImageTask.execute();
-        		
-				Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
-				returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				
-				getBaseContext().startActivity(returnIntent);
-				
-        		return true;
         }
         
         return false;
