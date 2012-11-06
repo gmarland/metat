@@ -48,7 +48,10 @@ public class ContactsSectionAdapter extends BaseAdapter {
     	}
 
     	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.contact_name);
-    	contactNameTextView.setText(_contacts[position].getFirstname() + " " + _contacts[position].getLastName());    		
+    	contactNameTextView.setText(_contacts[position].getName());    
+
+    	TextView contactMetAtTextView = (TextView)contactLayout.findViewById(R.id.contact_meetup_group);
+    	contactMetAtTextView.setText(_context.getString(R.string.met_at) + " " + _contacts[position].getGroupName());
     	
     	return contactLayout;
     }

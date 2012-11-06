@@ -8,6 +8,8 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
+import com.metat.dialogs.ContactAction;
+import com.metat.dialogs.ContactDeleteConfirm;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Contact;
@@ -26,7 +28,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,8 @@ import android.widget.TabHost.TabSpec;
 public class MainActivity extends Activity implements OnTabChangeListener {
     public static final String TAB_CONTACTS = "contacts";
     public static final String TAB_MEETUPS = "meetups";
+    
+    public static final int CONTACT_ACTION = 1;
     
 	private TabHost _contactSortingTabs;
 	
@@ -193,6 +196,95 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         return false;
     }
     
+    public void showContactActionDialog(long contactId)
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("contactActionDialog");
+        if (prev != null) {
+        	fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+
+        ContactAction contactAction = ContactAction.newInstance(contactId);
+        if (contactAction.getDialog() != null) {
+        	contactAction.getDialog().setCancelable(true);
+        	contactAction.getDialog().setCanceledOnTouchOutside(true);
+        }
+        
+        contactAction.show(fragmentTransaction, "contactActionDialog");
+    }
+    
+    public void editContactSelected(long contactId)
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+    	
+        Fragment prevContactActionDialog = getFragmentManager().findFragmentByTag("contactActionDialog");
+        if (prevContactActionDialog != null) {
+            ((ContactAction)prevContactActionDialog).getDialog().dismiss();
+        	fragmentTransaction.remove(prevContactActionDialog);
+        }
+        
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+		Intent intent = new Intent(getBaseContext(), EditContactActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra("contactId", contactId);
+
+		getBaseContext().startActivity(intent);	
+    }
+    
+    public void deleteContactSelected(long contactId)
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+    	
+        Fragment prevContactActionDialog = getFragmentManager().findFragmentByTag("contactActionDialog");
+        if (prevContactActionDialog != null) {
+            ((ContactAction)prevContactActionDialog).getDialog().dismiss();
+        	fragmentTransaction.remove(prevContactActionDialog);
+        }
+        
+        Fragment prevDeleteConfirmDialog = getFragmentManager().findFragmentByTag("deleteConfirmDialog");
+        if (prevDeleteConfirmDialog != null) {
+        	fragmentTransaction.remove(prevDeleteConfirmDialog);
+        }
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        
+        ContactDeleteConfirm contactDeleteConfirm = ContactDeleteConfirm.newInstance(contactId);
+        if (contactDeleteConfirm.getDialog() != null) {
+        	contactDeleteConfirm.getDialog().setCancelable(true);
+        	contactDeleteConfirm.getDialog().setCanceledOnTouchOutside(true);
+        }
+        contactDeleteConfirm.show(fragmentTransaction, "deleteConfirmDialog");
+    }
+    
+    public void deleteContactConfirmed(long contactId)
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+    	
+        Fragment prevDeleteConfirmDialog = getFragmentManager().findFragmentByTag("deleteConfirmDialog");
+        if (prevDeleteConfirmDialog != null) {
+            ((ContactDeleteConfirm)prevDeleteConfirmDialog).getDialog().dismiss();
+        	fragmentTransaction.remove(prevDeleteConfirmDialog);
+        }
+
+        fragmentTransaction.commit();
+        
+        ContactDataAccess contactDataAccess = new ContactDataAccess(this);
+        contactDataAccess.Delete(contactId);
+
+    	AllContacts = contactDataAccess.getAllContacts();
+        
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment allExistingContacts = getFragmentManager().findFragmentByTag("AllExistingContacts");
+        if (allExistingContacts != null)
+        {
+        	((AllExistingContacts)allExistingContacts).bindContactsAdapter();
+        }
+    }
 
     // Private Methods
     private TabSpec newTab(String tag, int label, int tabContentId) 
@@ -308,8 +400,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				ContactDataAccess contactDataAccess = new ContactDataAccess(_parentActivity);
 				
 				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, _selfId + "");
-
-				Log.e("here", onlineMeetupGroups.length + "");
 				
 				if (onlineMeetupGroups.length > 0)
 				{

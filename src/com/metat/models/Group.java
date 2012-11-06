@@ -5,6 +5,8 @@ public class Group {
 	private String _meetupId;
 	private String _name;
 	
+	private int _memberCount = 0;
+	
 	public Group(String meetupId, String name)
 	{
 		_id = -1;
@@ -32,6 +34,16 @@ public class Group {
 	public String getName()
 	{
 		return _name;
+	}
+	
+	public void addMemberCount()
+	{
+		_memberCount++;
+	}
+	
+	public int getMemberCount()
+	{
+		return _memberCount;
 	}
 	
     @Override

@@ -49,6 +49,13 @@ public class MeetupGroupsAdapter extends BaseAdapter {
 
     	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.group_name);
     	contactNameTextView.setText(_groups[position].getName());    		
+
+    	TextView groupContactCountTextView = (TextView)contactLayout.findViewById(R.id.group_contact_count);
+    	
+    	if (_groups[position].getMemberCount() != 1)
+    		groupContactCountTextView.setText(_groups[position].getMemberCount() + " " + _context.getString(R.string.people));   
+    	else
+    		groupContactCountTextView.setText(_groups[position].getMemberCount() + " " + _context.getString(R.string.person));  
     	
     	return contactLayout;
     }

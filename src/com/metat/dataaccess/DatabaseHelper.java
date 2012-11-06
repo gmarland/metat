@@ -19,8 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	private String CONTACT_TABLE_CREATE = "CREATE TABLE Contact (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										"meetupId TEXT NULL, " + 
 										"thumbnail BLOB NOT NULL, " + 
-										"firstname TEXT NOT NULL, " + 
-										"lastname TEXT NULL, " +
+										"name TEXT NOT NULL, " + 
 										"email TEXT NULL, " +
 										"phone TEXT NULL, " +
 										"notes TEXT NULL, " +

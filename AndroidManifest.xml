@@ -28,6 +28,7 @@
 		    </intent-filter>
         </activity>
         <activity android:name="com.metat.main.AddContactActivity"></activity>
+        <activity android:name="com.metat.main.EditContactActivity"></activity>
     </application>
 
 </manifest>

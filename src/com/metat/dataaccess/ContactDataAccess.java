@@ -12,8 +12,7 @@ public class ContactDataAccess {
 	public static final String KEY_ID = "_id";
 	public static final String KEY_MEEETUPID = "meetupId";
 	public static final String KEY_THUMBNAIL = "thumbnail";
-	public static final String KEY_FIRSTNAME = "firstname";
-	public static final String KEY_LASTNAME = "lastname";
+	public static final String KEY_NAME = "name";
 	public static final String KEY_EMAIL = "email";
 	public static final String KEY_PHONE = "phone";
 	public static final String KEY_NOTES = "notes";
@@ -31,7 +30,7 @@ public class ContactDataAccess {
 	
 	public Contact[] getAllContacts()
 	{
-		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_FIRSTNAME, KEY_LASTNAME, KEY_GROUPMEETUPID, KEY_GROUPNAME }, null, null, null, null, KEY_FIRSTNAME + " ASC, " + KEY_LASTNAME + " ASC");
+		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_GROUPMEETUPID, KEY_GROUPNAME }, null, null, null, null, KEY_NAME + " ASC");
 
 		if (contactsCursor != null)
 		{
@@ -41,7 +40,7 @@ public class ContactDataAccess {
 			{
 				do
 				{
-					contacts.add(new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FIRSTNAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LASTNAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME))));
+					contacts.add(new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME))));
 				}
 				while (contactsCursor.moveToNext());
 			}
@@ -56,7 +55,7 @@ public class ContactDataAccess {
 	
 	public Contact getContact(long id)
 	{
-		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_FIRSTNAME, KEY_LASTNAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES,KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_ID + " = " + id, null, null, null, KEY_FIRSTNAME + " ASC, " + KEY_LASTNAME + " ASC");
+		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES,KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_ID + " = " + id, null, null, null, KEY_NAME + " ASC");
 
 		if (contactsCursor != null)
 		{
@@ -66,7 +65,7 @@ public class ContactDataAccess {
 			{
 				do
 				{
-					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FIRSTNAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LASTNAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
+					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
 				}
 				while (contactsCursor.moveToNext());
 			}
@@ -79,13 +78,12 @@ public class ContactDataAccess {
 			return null;
 	}
 	
-	public void Insert(String meetupId, byte[] thumbnail, String firstname, String lastname, String email, String phone, String notes, String groupId, String groupName)
+	public void Insert(String meetupId, byte[] thumbnail, String name, String email, String phone, String notes, String groupId, String groupName)
 	{
 			ContentValues values = new ContentValues();
 			values.put(KEY_MEEETUPID, meetupId);
 			values.put(KEY_THUMBNAIL, thumbnail);
-			values.put(KEY_FIRSTNAME, firstname);
-			values.put(KEY_LASTNAME, lastname);
+			values.put(KEY_NAME, name);
 			values.put(KEY_EMAIL, email);
 			values.put(KEY_PHONE, phone);
 			values.put(KEY_NOTES, notes);
@@ -105,20 +103,18 @@ public class ContactDataAccess {
 		}
 	}
 	
-	public boolean updateContact(long id, byte[] thumbnail, String firstname, String lastname, String email, String phone, String notes, String groupId, String groupName)
+	public boolean updateContact(long id, String meetupId, byte[] thumbnail, String name, String email, String phone, String notes)
 	{
 		ContentValues values = new ContentValues();
+		values.put(KEY_MEEETUPID, meetupId);
 		if ((thumbnail != null) && (thumbnail.length > 0))
 		{
 			values.put(KEY_THUMBNAIL, thumbnail);
 		}
-		values.put(KEY_FIRSTNAME, firstname);
-		values.put(KEY_LASTNAME, lastname);
+		values.put(KEY_NAME, name);
 		values.put(KEY_EMAIL, email);
 		values.put(KEY_PHONE, phone);
 		values.put(KEY_NOTES, notes);
-		values.put(KEY_GROUPMEETUPID, groupId);
-		values.put(KEY_GROUPNAME, groupName);
 		
 		return _dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_ID + " = " + id, null) > 0;
 	}

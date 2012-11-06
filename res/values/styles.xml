@@ -1,5 +1,10 @@
 <resources>
 
     <style name="AppTheme" parent="android:Theme.Light" />
+	
+	<style name="DialogStyle" parent="@android:style/Theme.Dialog">
+	    <item name="android:topDark">#000000</item>
+	    <item name="android:background">#FFFFFF</item>
+	</style>
 
 </resources>

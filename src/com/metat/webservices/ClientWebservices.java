@@ -92,8 +92,6 @@ public class ClientWebservices {
 			String otoken = callbackUri.getQueryParameter(OAuth.OAUTH_TOKEN);
 			String verifier = callbackUri.getQueryParameter(OAuth.OAUTH_VERIFIER);
 
-			Assert.assertEquals(otoken, consumer.getToken());
-
 			provider.retrieveAccessToken(consumer, verifier);
 
 			token = consumer.getToken();
@@ -169,7 +167,6 @@ public class ClientWebservices {
 			}
 	    }
 	    else if(statusLine.getStatusCode() == HttpStatus.SC_UNAUTHORIZED){
-	    	Log.e("dude", "here");
 			SharedPreferences settings = context.getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
 
 			SharedPreferences.Editor editor = settings.edit();

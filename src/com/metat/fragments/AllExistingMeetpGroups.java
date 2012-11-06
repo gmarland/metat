@@ -31,6 +31,8 @@ public class AllExistingMeetpGroups extends ListFragment {
 		{
 			if (!allGroups.containsKey(contact.getGroupId()))
 				allGroups.put(contact.getGroupId(), new Group(contact.getGroupId(), contact.getGroupName()));
+			
+			allGroups.get(contact.getGroupId()).addMemberCount();
 		}
 		
 		ArrayList<Group> distinctGroups = new ArrayList<Group>();

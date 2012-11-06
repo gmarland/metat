@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/contact_delete_confirm_header"
+	   	android:layout_height="wrap_content"
+        android:layout_width="fill_parent" />
+    <TextView
+        android:id="@+id/confirmed_btn"
+	   	android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+	   	android:text="@string/im_sure_i_want_to_remove_this_person" />
+    <TextView
+        android:id="@+id/cancelled_btn"
+	   	android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+	   	android:text="@string/dont_remove_them" />
+</LinearLayout>

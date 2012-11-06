@@ -10,12 +10,10 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
-import com.metat.dataaccess.GroupsDataAccess;
-import com.metat.models.Group;
+import com.metat.models.Contact;
 import com.metat.models.MeetupContact;
 import com.metat.webservices.ContactWebservices;
 import com.metat.helpers.ConnectionHelper;
-import com.metat.helpers.NoDefaultSpinner;
 import com.metat.helpers.PreferencesHelper;
 
 import android.app.Activity;
@@ -28,22 +26,21 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddContactActivity extends Activity implements TextWatcher {
-	private Group[] _groups;
-	private ArrayAdapter<Group> _meetupGroupsAdapter;
+public class EditContactActivity extends Activity implements TextWatcher {
 	private ArrayAdapter<MeetupContact> _meetupGroupContactsAdapter;
+	
+	private Contact _contact;
 	
 	private static MeetupContact[] _contacts = new MeetupContact[0];	
 	private String _userToken = "";
 	
-	private NoDefaultSpinner _meetupGroupSelect;
+	private TextView _meetupGroupName;
 	private AutoCompleteTextView _name;
 	private EditText _email;
 	private EditText _phone;
@@ -52,70 +49,56 @@ public class AddContactActivity extends Activity implements TextWatcher {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_contact);
+        setContentView(R.layout.edit_contact);
+        
+        Bundle extras = this.getIntent().getExtras();
+        
+        ContactDataAccess contactDataAccess = new ContactDataAccess(this);
+        _contact = contactDataAccess.getContact(extras.getLong("contactId"));
         
         _contacts = new MeetupContact[0];
         
-    	setTitle(" " + getResources().getString(R.string.add));
+    	setTitle(" " + getResources().getString(R.string.edit));
     	
-    	GroupsDataAccess groupsDataAccess = new GroupsDataAccess(this);
-    	_groups = groupsDataAccess.getAllGroups();
+    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
+    	{
+	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+	
+	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
+	        {
+	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+	        }
+	        else
+	        {
+				Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+				startActivity(cancelIntent);	
+	        }
+	        
+	    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getMeetupId());
+	    	getGroupContactsTask.execute();
+    	}
 
-        if (_groups.length > 0)
-        {
-	    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
-	    	{
-		        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-		
-		        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
-		        {
-		        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-		        }
-		        else
-		        {
-					Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
-					startActivity(cancelIntent);	
-		        }
-		        
-		    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _groups[0].getMeetupId());
-		    	getGroupContactsTask.execute();
-	    	}
-	    	
-	    	_meetupGroupsAdapter = new ArrayAdapter<Group>(this, R.layout.groups_spinner_style, _groups);
-	    	
-	    	_meetupGroupSelect = (NoDefaultSpinner) findViewById(R.id.meetup_group_select);
-	    	_meetupGroupSelect.setAdapter(_meetupGroupsAdapter);
-	    	_meetupGroupSelect.setVisibility(View.VISIBLE);
-	    	_meetupGroupSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-				public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-					_contacts = new MeetupContact[0];
-					_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(getBaseContext(), R.layout.contacts_spinner_style, _contacts);
-					_name.setAdapter(_meetupGroupContactsAdapter);
-					
-					GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(getBaseContext(), _userToken, _groups[pos].getMeetupId());
-	    			getGroupContactsTask.execute();
-				}
-
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
-        }
-
+    	_meetupGroupName = (TextView) findViewById(R.id.meetup_group);
+    	_meetupGroupName.setText(_contact.getGroupName());
+    	
     	_name = (AutoCompleteTextView) findViewById(R.id.name);
+    	_name.setText(_contact.getName());
     	_name.addTextChangedListener(this);
     	_name.setThreshold(2);
 		_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(this, R.layout.contacts_spinner_style, _contacts);
 		_name.setAdapter(_meetupGroupContactsAdapter);
     	
     	_email = (EditText) findViewById(R.id.email);
+    	_email.setText(_contact.getEmail());
     	_phone = (EditText) findViewById(R.id.phone);
+    	_phone.setText(_contact.getPhone());
     	_notes = (EditText) findViewById(R.id.notes);
+    	_notes.setText(_contact.getNotes());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_contact_menu, menu);
+        getMenuInflater().inflate(R.menu.update_contact_menu, menu);
         return true;
     }
 
@@ -138,7 +121,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
 				
 				getBaseContext().startActivity(cancelIntent);	
         		return true;
-        	case R.id.save:
+        	case R.id.update:
         		if (_name.getText().toString().length() > 0)
         		{
 	        		int selectedIndex = -1;
@@ -154,23 +137,27 @@ public class AddContactActivity extends Activity implements TextWatcher {
 	        		
 	        		String meetupId = "";
 	        		String name = "";
+	        		String contactPhotoThumbnailLocation = "";
 	        		
 	        		if (selectedIndex != -1) {
 	        			meetupId = _contacts[selectedIndex].getMeetupId();
 	        			name = _contacts[selectedIndex].getName();
+	        			
+	            		contactPhotoThumbnailLocation = _contacts[selectedIndex].getPhotoThumbnail();
 	        		}
 	        		else
 	        		{
+	        			meetupId = _contact.getMeetupId();
 	        			name = _name.getText().toString();
 	        		}
-	        			
-	        		String contactPhotoThumbnailLocation = _contacts[selectedIndex].getPhotoThumbnail();
 	        		
 	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
-	        		contactDataAccess.Insert(meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), ((Group)_meetupGroupSelect.getSelectedItem()).getMeetupId(), ((Group)_meetupGroupSelect.getSelectedItem()).getName());
+        			contactDataAccess.updateContact(_contact.getId(), meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString());
 	        		
-	        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
-	        		downloadImageTask.execute();
+        			if (contactPhotoThumbnailLocation.trim().length() > 0) {
+		        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
+		        		downloadImageTask.execute();
+        			}
 	        		
 					Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
 					returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

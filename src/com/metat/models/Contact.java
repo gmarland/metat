@@ -4,8 +4,7 @@ public class Contact {
 	private long _id;
 	private String _meetupId;
 	private byte[] _photoThumbnail;
-	private String _firstname;
-	private String _lastname;
+	private String _name;
 	private String _email;
 	private String _phone;
 	private String _notes;
@@ -13,25 +12,23 @@ public class Contact {
 	private String _groupId;
 	private String _groupName;
 	
-	public Contact(long id, String meetupId, byte[] photoThumbnail, String firstname, String lastname, String groupId, String groupName)
+	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String groupId, String groupName)
 	{
 		_id = id;
 		_meetupId = meetupId;
 		_photoThumbnail = photoThumbnail;
-		_firstname = firstname;
-		_lastname = lastname;
+		_name = name;
 
 		_groupId = groupId;
 		_groupName = groupName;
 	}
 	
-	public Contact(long id, String meetupId, byte[] photoThumbnail, String firstname, String lastname, String email, String phone, String notes, String groupId, String groupName)
+	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String email, String phone, String notes, String groupId, String groupName)
 	{
 		_id = id;
 		_meetupId = meetupId;
 		_photoThumbnail = photoThumbnail;
-		_firstname = firstname;
-		_lastname = lastname;
+		_name = name;
 		_email = email;
 		_phone = phone;
 		_notes = notes;
@@ -55,14 +52,9 @@ public class Contact {
 		return _photoThumbnail;
 	}
 	
-	public String getFirstname()
+	public String getName()
 	{
-		return _firstname;
-	}
-	
-	public String getLastName()
-	{
-		return _lastname;
+		return _name;
 	}
 	
 	public String getEmail()
@@ -92,6 +84,6 @@ public class Contact {
 	
     @Override
     public String toString() {
-        return _firstname + " " + _lastname;
+        return _name;
     }
 }
