@@ -11,8 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import junit.framework.Assert;
-
 import com.metat.helpers.PreferencesHelper;
 
 import oauth.signpost.OAuth;
@@ -89,7 +87,6 @@ public class ClientWebservices {
 				consumer.setTokenWithSecret(token, secret);
 			}
 			
-			String otoken = callbackUri.getQueryParameter(OAuth.OAUTH_TOKEN);
 			String verifier = callbackUri.getQueryParameter(OAuth.OAUTH_VERIFIER);
 
 			provider.retrieveAccessToken(consumer, verifier);

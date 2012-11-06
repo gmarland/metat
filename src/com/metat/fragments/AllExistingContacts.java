@@ -8,12 +8,15 @@ import java.util.Map;
 import com.metat.adapters.ContactsAdapter;
 import com.metat.adapters.ContactsSectionAdapter;
 import com.metat.main.MainActivity;
+import com.metat.main.ViewContactActivity;
 import com.metat.models.Contact;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 public class AllExistingContacts extends ListFragment {
@@ -24,6 +27,17 @@ public class AllExistingContacts extends ListFragment {
 		
 		bindContactsAdapter();
 
+		getListView().setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        		Intent intent = new Intent(getActivity(), ViewContactActivity.class);
+        		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        		intent.putExtra("contactId", ((Contact)parent.getAdapter().getItem(position)).getId());
+
+        		getActivity().startActivity(intent);	
+			} });
+		
 		getListView().setOnItemLongClickListener(new OnItemLongClickListener() { 
 
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

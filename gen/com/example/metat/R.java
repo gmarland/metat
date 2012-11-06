@@ -31,6 +31,7 @@ public final class R {
         public static final int contact_sorting_tabs=0x7f080010;
         public static final int contacts_container=0x7f080012;
         public static final int delete_contact_btn=0x7f080007;
+        public static final int edit=0x7f08001c;
         public static final int edit_contact_btn=0x7f080006;
         public static final int email=0x7f080002;
         public static final int group_contact_count=0x7f080014;
@@ -61,36 +62,39 @@ public final class R {
         public static final int groups_spinner_style=0x7f030008;
         public static final int main=0x7f030009;
         public static final int meetup_group_list_item=0x7f03000a;
+        public static final int view_contact=0x7f03000b;
     }
     public static final class menu {
         public static final int add_contact_menu=0x7f070000;
         public static final int main_menu=0x7f070001;
         public static final int main_menu_static=0x7f070002;
         public static final int update_contact_menu=0x7f070003;
+        public static final int view_contact_menu=0x7f070004;
     }
     public static final class string {
         public static final int add=0x7f050000;
         public static final int app_name=0x7f050001;
         public static final int cancel=0x7f050002;
-        public static final int contacts=0x7f050003;
-        public static final int delete=0x7f050004;
-        public static final int dont_remove_them=0x7f050008;
-        public static final int edit=0x7f050005;
-        public static final int email_address=0x7f050006;
-        public static final int im_sure_i_want_to_remove_this_person=0x7f050007;
-        public static final int log_out_of_meetup=0x7f050009;
-        public static final int meetups=0x7f05000a;
-        public static final int met_at=0x7f05000b;
-        public static final int name=0x7f05000c;
-        public static final int notes=0x7f05000d;
-        public static final int people=0x7f05000e;
-        public static final int person=0x7f05000f;
-        public static final int phone_number=0x7f050010;
-        public static final int save=0x7f050011;
-        public static final int send_feedback=0x7f050012;
-        public static final int settings=0x7f050013;
-        public static final int update=0x7f050014;
-        public static final int you_need_to_provide_a_name=0x7f050015;
+        public static final int contact=0x7f050003;
+        public static final int contacts=0x7f050004;
+        public static final int delete=0x7f050005;
+        public static final int dont_remove_them=0x7f050009;
+        public static final int edit=0x7f050006;
+        public static final int email_address=0x7f050007;
+        public static final int im_sure_i_want_to_remove_this_person=0x7f050008;
+        public static final int log_out_of_meetup=0x7f05000a;
+        public static final int meetups=0x7f05000b;
+        public static final int met_at=0x7f05000c;
+        public static final int name=0x7f05000d;
+        public static final int notes=0x7f05000e;
+        public static final int people=0x7f05000f;
+        public static final int person=0x7f050010;
+        public static final int phone_number=0x7f050011;
+        public static final int save=0x7f050012;
+        public static final int send_feedback=0x7f050013;
+        public static final int settings=0x7f050014;
+        public static final int update=0x7f050015;
+        public static final int you_need_to_provide_a_name=0x7f050016;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;
