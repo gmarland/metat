@@ -4,6 +4,7 @@ import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.helpers.ImagesHelper;
 import com.metat.models.Contact;
+import com.metat.models.NavigationSource;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 public class ViewContactActivity extends Activity {
 	private Contact _contact;
+	private NavigationSource _navigationSource = NavigationSource.AllContacts;
 	
 	private ImageView _image;
 	private TextView _meetupGroupName;
@@ -33,11 +35,14 @@ public class ViewContactActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_contact);
         
-        Bundle extras = this.getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
+
+        if (extras.containsKey("navigationSource"))
+        	_navigationSource = (NavigationSource)extras.get("navigationSource");
         
         ContactDataAccess contactDataAccess = new ContactDataAccess(this);
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
-        
+
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(false);
     	
@@ -92,6 +97,19 @@ public class ViewContactActivity extends Activity {
     @Override
     public void onBackPressed() {
 		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+
+		switch (_navigationSource)
+		{
+		case AllContacts:
+			cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+			cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+			break;
+		case GroupContacts:
+			cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+			cancelIntent.putExtra("groupId", _contact.getGroupId());
+			break;
+		}
+		
 		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		getBaseContext().startActivity(cancelIntent);	
@@ -104,6 +122,19 @@ public class ViewContactActivity extends Activity {
         {
     		case R.id.back:
     			Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+
+    			switch (_navigationSource)
+    			{
+    			case AllContacts:
+    				cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+    				cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+    				break;
+    			case GroupContacts:
+    				cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+    				cancelIntent.putExtra("groupId", _contact.getGroupId());
+    				break;
+    			}
+    			
     			cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     			
     			getBaseContext().startActivity(cancelIntent);	
@@ -112,6 +143,7 @@ public class ViewContactActivity extends Activity {
         		Intent intent = new Intent(getBaseContext(), EditContactActivity.class);
         		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         		intent.putExtra("contactId", _contact.getId());
+        		intent.putExtra("navigationSource", NavigationSource.ViewContact);
 
         		getBaseContext().startActivity(intent);	
         		return true;

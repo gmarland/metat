@@ -10,6 +10,7 @@ import com.metat.adapters.ContactsSectionAdapter;
 import com.metat.main.GroupActivity;
 import com.metat.main.ViewContactActivity;
 import com.metat.models.Contact;
+import com.metat.models.NavigationSource;
 
 import android.app.ListFragment;
 import android.content.Intent;
@@ -33,6 +34,8 @@ public class AllExistingGroupContacts extends ListFragment {
         		Intent intent = new Intent(getActivity(), ViewContactActivity.class);
         		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         		intent.putExtra("contactId", ((Contact)parent.getAdapter().getItem(position)).getId());
+        		intent.putExtra("groupId", ((Contact)parent.getAdapter().getItem(position)).getGroupId());
+        		intent.putExtra("navigationSource", NavigationSource.GroupContacts);
 
         		getActivity().startActivity(intent);	
 		}});

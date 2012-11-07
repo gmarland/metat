@@ -9,6 +9,7 @@ import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Contact;
 import com.metat.models.Group;
+import com.metat.models.NavigationSource;
 import com.metat.fragments.AllExistingGroupContacts;
 
 import android.os.Bundle;
@@ -103,6 +104,7 @@ public class GroupActivity extends Activity {
     @Override
     public void onBackPressed() {
 		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+		cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		getBaseContext().startActivity(cancelIntent);	
@@ -115,12 +117,15 @@ public class GroupActivity extends Activity {
         {
     		case R.id.back:
     			Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+				cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
     			cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     			
     			getBaseContext().startActivity(cancelIntent);	
         		return true;
         	case R.id.add_contact:
 				Intent intent = new Intent(getBaseContext(), AddContactActivity.class);
+        		intent.putExtra("groupId", SelectedGroup.getMeetupId());
+        		intent.putExtra("navigationSource", NavigationSource.GroupContacts);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				
 				getBaseContext().startActivity(intent);	
@@ -164,6 +169,8 @@ public class GroupActivity extends Activity {
 		Intent intent = new Intent(getBaseContext(), EditContactActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra("contactId", contactId);
+		intent.putExtra("groupId", SelectedGroup.getMeetupId());
+		intent.putExtra("navigationSource", NavigationSource.GroupContacts);
 
 		getBaseContext().startActivity(intent);	
     }

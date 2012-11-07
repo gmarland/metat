@@ -14,6 +14,7 @@ import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Contact;
 import com.metat.models.Group;
+import com.metat.models.NavigationSource;
 import com.metat.webservices.ClientWebservices;
 import com.metat.webservices.GroupWebservices;
 import com.metat.fragments.AllExistingContacts;
@@ -85,6 +86,13 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
         _contactSortingTabs.addTab(newTab(TAB_MEETUPS, R.string.meetups, R.id.meetup_groups_container));
         _contactSortingTabs.addTab(newTab(TAB_CONTACTS, R.string.contacts, R.id.contacts_container));
+        
+        Bundle extras = getIntent().getExtras();
+
+        if ((extras != null) && (extras.containsKey("selectedTab")))
+            _contactSortingTabs.setCurrentTabByTag(extras.getString("selectedTab"));
+        else
+        	_contactSortingTabs.setCurrentTabByTag(TAB_MEETUPS);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -187,6 +195,15 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				Intent intent = new Intent(getBaseContext(), AddContactActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				
+				if (_contactSortingTabs.getCurrentTabTag().trim().toLowerCase().equals("meetups"))
+				{
+	        		intent.putExtra("navigationSource", NavigationSource.AllGroups);
+				}
+				else if(_contactSortingTabs.getCurrentTabTag().trim().toLowerCase().equals("contacts"))
+				{
+	        		intent.putExtra("navigationSource", NavigationSource.AllContacts);
+				}
+				
 				getBaseContext().startActivity(intent);	
         		return true;
         }
@@ -228,6 +245,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		Intent intent = new Intent(getBaseContext(), EditContactActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra("contactId", contactId);
+		intent.putExtra("navigationSource", NavigationSource.AllContacts);
 
 		getBaseContext().startActivity(intent);	
     }

@@ -13,6 +13,7 @@ import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.models.Group;
 import com.metat.models.MeetupContact;
+import com.metat.models.NavigationSource;
 import com.metat.webservices.ContactWebservices;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.NoDefaultSpinner;
@@ -36,6 +37,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddContactActivity extends Activity implements TextWatcher {
+	private NavigationSource _navigationSource = NavigationSource.ViewContact;
+	
+	private String sourceGroupId = "";
+	
 	private Group[] _groups;
 	private ArrayAdapter<Group> _meetupGroupsAdapter;
 	private ArrayAdapter<MeetupContact> _meetupGroupContactsAdapter;
@@ -53,6 +58,14 @@ public class AddContactActivity extends Activity implements TextWatcher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_contact);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras.containsKey("navigationSource"))
+        	_navigationSource = (NavigationSource)extras.get("navigationSource");
+
+        if (extras.containsKey("groupId"))
+        	sourceGroupId = extras.getString("groupId");
         
         _contacts = new MeetupContact[0];
         
@@ -122,6 +135,31 @@ public class AddContactActivity extends Activity implements TextWatcher {
     @Override
     public void onBackPressed() {
 		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+
+		switch (_navigationSource)
+		{
+		case AllContacts:
+			cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+			cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+			break;
+		case AllGroups:
+			cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+			cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
+			break;
+		case GroupContacts:
+			if (sourceGroupId.trim().length() > 0)
+			{
+				cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+				cancelIntent.putExtra("groupId", sourceGroupId);
+			}
+			else
+			{
+				cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+				cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
+			}
+			break;
+		}
+		
 		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		getBaseContext().startActivity(cancelIntent);	
@@ -134,6 +172,31 @@ public class AddContactActivity extends Activity implements TextWatcher {
         {
         	case R.id.cancel:
 				Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+
+				switch (_navigationSource)
+				{
+				case AllContacts:
+					cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+					cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+					break;
+				case AllGroups:
+					cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+					cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
+					break;
+				case GroupContacts:
+					if (sourceGroupId.trim().length() > 0)
+					{
+						cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+						cancelIntent.putExtra("groupId", sourceGroupId);
+					}
+					else
+					{
+						cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+						cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
+					}
+					break;
+				}
+				
 				cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				
 				getBaseContext().startActivity(cancelIntent);	
@@ -173,6 +236,22 @@ public class AddContactActivity extends Activity implements TextWatcher {
 	        		downloadImageTask.execute();
 	        		
 					Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
+
+					switch (_navigationSource)
+					{
+					case AllContacts:
+						returnIntent = new Intent(getBaseContext(), MainActivity.class);
+						returnIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+						break;
+					case AllGroups:
+						returnIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+						returnIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
+						break;
+					case GroupContacts:
+						returnIntent = new Intent(getBaseContext(), GroupActivity.class);
+						break;
+					}
+					
 					returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					
 					getBaseContext().startActivity(returnIntent);

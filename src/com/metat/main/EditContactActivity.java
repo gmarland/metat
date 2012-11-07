@@ -12,6 +12,7 @@ import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.models.Contact;
 import com.metat.models.MeetupContact;
+import com.metat.models.NavigationSource;
 import com.metat.webservices.ContactWebservices;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.helpers.PreferencesHelper;
@@ -33,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditContactActivity extends Activity implements TextWatcher {
+	private NavigationSource _navigationSource = NavigationSource.ViewContact;
+	
 	private ArrayAdapter<MeetupContact> _meetupGroupContactsAdapter;
 	
 	private Contact _contact;
@@ -51,7 +54,10 @@ public class EditContactActivity extends Activity implements TextWatcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_contact);
         
-        Bundle extras = this.getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
+
+        if (extras.containsKey("navigationSource"))
+        	_navigationSource = (NavigationSource)extras.get("navigationSource");
         
         ContactDataAccess contactDataAccess = new ContactDataAccess(this);
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
@@ -105,6 +111,23 @@ public class EditContactActivity extends Activity implements TextWatcher {
     @Override
     public void onBackPressed() {
 		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+
+		switch (_navigationSource)
+		{
+		case AllContacts:
+			cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+			cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+			break;
+		case GroupContacts:
+			cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+			cancelIntent.putExtra("groupId", _contact.getGroupId());
+			break;
+		case ViewContact:
+			cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+			cancelIntent.putExtra("contactId", _contact.getId());
+			break;
+		}
+		
 		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		getBaseContext().startActivity(cancelIntent);	
@@ -117,6 +140,23 @@ public class EditContactActivity extends Activity implements TextWatcher {
         {
         	case R.id.cancel:
 				Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+				
+				switch (_navigationSource)
+				{
+				case AllContacts:
+					cancelIntent = new Intent(getBaseContext(), MainActivity.class);
+					cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
+					break;
+				case GroupContacts:
+					cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
+					cancelIntent.putExtra("groupId", _contact.getGroupId());
+					break;
+				case ViewContact:
+					cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+					cancelIntent.putExtra("contactId", _contact.getId());
+					break;
+				}
+				
 				cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				
 				getBaseContext().startActivity(cancelIntent);	
@@ -159,7 +199,8 @@ public class EditContactActivity extends Activity implements TextWatcher {
 		        		downloadImageTask.execute();
         			}
 	        		
-					Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
+					Intent returnIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+					returnIntent.putExtra("navigationSource", _navigationSource);
 					returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					
 					getBaseContext().startActivity(returnIntent);
