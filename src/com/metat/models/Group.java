@@ -1,6 +1,6 @@
 package com.metat.models;
 
-public class Group {
+public class Group implements Comparable<Group> {
 	private long _id;
 	private String _meetupId;
 	private String _name;
@@ -50,4 +50,8 @@ public class Group {
     public String toString() {
         return _name;
     }
+
+	public int compareTo(Group compareGroup) {
+		return (compareGroup.getName().toLowerCase().compareTo(_name.toLowerCase())*-1);
+	}
 }

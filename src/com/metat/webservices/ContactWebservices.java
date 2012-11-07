@@ -22,7 +22,7 @@ public class ContactWebservices {
 	private static final String MEMBER_ID = "id";
 	private static final String MEMBER_NAME = "name";
 	private static final String MEMBER_PHOTO_CONTAINER = "photo";
-	private static final String MEMBER_PHOTO_URL = "thumb_link";
+	private static final String MEMBER_PHOTO_URL = "photo_link";
 
 	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "." + MEMBER_PHOTO_URL;
 

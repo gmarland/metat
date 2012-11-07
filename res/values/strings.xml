@@ -2,8 +2,10 @@
 
     <string name="add">Add</string>
     <string name="app_name">Met At</string>
+    <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="contact">Contact</string>
+    <string name="contact_icon">Contact Icon</string>
     <string name="contacts">Contacts</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>

@@ -62,9 +62,18 @@ public class AllExistingContacts extends ListFragment {
 			contactSections.get(contact.getName().substring(0, 1).toUpperCase()).add(contact);
 		}
 		
+		boolean first = true;
 		for (String headerIndex : contactSections.keySet())
 		{
-			contactsAdapter.addSection(headerIndex, new ContactsSectionAdapter(getActivity(), contactSections.get(headerIndex).toArray(new Contact[contactSections.get(headerIndex).size()])));
+			ContactsSectionAdapter contactsSectionAdapter = new ContactsSectionAdapter(getActivity(), contactSections.get(headerIndex).toArray(new Contact[contactSections.get(headerIndex).size()]));
+			
+			if (first)
+			{
+				contactsSectionAdapter.ImageLoader.clearCache();
+				first = false;
+			}
+			
+			contactsAdapter.addSection(headerIndex, contactsSectionAdapter);
 		}
 		
 		setListAdapter(contactsAdapter);

@@ -2,23 +2,29 @@ package com.metat.adapters;
 
 import com.example.metat.R;
 import com.metat.models.Contact;
+import com.metat.helpers.ImageLoader;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class ContactsSectionAdapter extends BaseAdapter {
+	public ImageLoader ImageLoader;
+	
 	private Context _context;
 	private Contact[] _contacts;
 
-    public ContactsSectionAdapter(Context c, Contact[] contacts)
+    public ContactsSectionAdapter(Context context, Contact[] contacts)
     {
-    	_context = c;
+    	_context = context;
     	_contacts = contacts;
+
+        ImageLoader = new ImageLoader(context);
     }
 
 	public int getCount() {
@@ -35,17 +41,21 @@ public class ContactsSectionAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent)
     {
-    	LinearLayout contactLayout;
+    	TableLayout contactLayout;
 
     	if (convertView == null) 
     	{ 
     		LayoutInflater vi = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-    		contactLayout = (LinearLayout) vi.inflate(R.layout.contact_list_item, parent, false); 
+    		contactLayout = (TableLayout) vi.inflate(R.layout.contact_list_item, parent, false); 
     	} 
     	else
     	{
-    		contactLayout = (LinearLayout)convertView;
+    		contactLayout = (TableLayout)convertView;
     	}
+
+		ImageView imageView = (ImageView)contactLayout.findViewById(R.id.contact_image);
+    	imageView.setTag(_contacts[position].getMeetupId());
+    	this.ImageLoader.DisplayImage(_contacts[position].getId(), _contacts[position].getMeetupId(), imageView);
 
     	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.contact_name);
     	contactNameTextView.setText(_contacts[position].getName());    

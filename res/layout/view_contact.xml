@@ -3,24 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <TextView
-		android:id="@+id/meetup_group" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" />
-    <TextView 
-		android:id="@+id/name" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" />
-    <TextView 
-		android:id="@+id/email" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" />
-    <TextView 
-		android:id="@+id/phone" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/notes"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<TableLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<TableRow
+		    android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content">
+		    <ImageView
+				android:id="@+id/image"
+		        android:layout_width="80dp"
+		        android:layout_height="wrap_content"
+		        android:contentDescription="@string/contact_icon"
+		        android:adjustViewBounds="true" />
+			<LinearLayout
+			    android:layout_width="fill_parent"   
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+			    <TextView 
+					android:id="@+id/name" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" />
+			    <TextView
+					android:id="@+id/meetup_group" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" />
+			</LinearLayout>
+		</TableRow>
+	</TableLayout>
+	<LinearLayout
+		android:id="@+id/email_container" 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    <TextView 
+			android:id="@+id/email" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" />
+	</LinearLayout>
+	<LinearLayout
+		android:id="@+id/phone_container"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    <TextView 
+			android:id="@+id/phone" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" />
+	</LinearLayout>
+	<LinearLayout
+		android:id="@+id/notes_container"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    <TextView
+	        android:id="@+id/notes"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" />
+	</LinearLayout>
 </LinearLayout>
