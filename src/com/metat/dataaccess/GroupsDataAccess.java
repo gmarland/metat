@@ -23,6 +23,31 @@ public class GroupsDataAccess {
 		_dbHelper = DatabaseHelper.getInstance(context);
 	}
 	
+	public Group getGroup(String id)
+	{
+		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME }, KEY_MEEETUPID + " = '" + id + "'", null, null, null, KEY_NAME + " ASC");
+
+		if (groupsCursor != null)
+		{
+			Group group = null;
+			
+			if (groupsCursor.moveToFirst())
+			{
+				do
+				{
+					group = new Group(groupsCursor.getLong(groupsCursor.getColumnIndex(KEY_ID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_MEEETUPID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_NAME)));
+				}
+				while (groupsCursor.moveToNext());
+			}
+			
+			groupsCursor.close();
+			
+			return group;
+		}
+		else
+			return null;
+	}
+	
 	public Group[] getAllGroups()
 	{
 		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME }, null, null, null, null, KEY_NAME + " ASC");

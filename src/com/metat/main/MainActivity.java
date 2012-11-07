@@ -41,8 +41,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     public static final String TAB_CONTACTS = "contacts";
     public static final String TAB_MEETUPS = "meetups";
     
-    public static final int CONTACT_ACTION = 1;
-    
 	private TabHost _contactSortingTabs;
 	
 	private String _userToken = "";

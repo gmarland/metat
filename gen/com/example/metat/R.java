@@ -21,8 +21,8 @@ public final class R {
         public static final int profile_default=0x7f020002;
     }
     public static final class id {
-        public static final int add_contact=0x7f08001c;
-        public static final int back=0x7f080021;
+        public static final int add_contact=0x7f08001d;
+        public static final int back=0x7f08001c;
         public static final int cancel=0x7f08001a;
         public static final int cancelled_btn=0x7f08000a;
         public static final int confirmed_btn=0x7f080009;
@@ -31,8 +31,8 @@ public final class R {
         public static final int contact_image=0x7f08000c;
         public static final int contact_meetup_group=0x7f08000e;
         public static final int contact_name=0x7f08000d;
-        public static final int contact_sorting_tabs=0x7f080011;
-        public static final int contacts_container=0x7f080013;
+        public static final int contact_sorting_tabs=0x7f080012;
+        public static final int contacts_container=0x7f080011;
         public static final int delete_contact_btn=0x7f080007;
         public static final int edit=0x7f080022;
         public static final int edit_contact_btn=0x7f080006;
@@ -42,20 +42,20 @@ public final class R {
         public static final int group_name=0x7f080014;
         public static final int image=0x7f080016;
         public static final int list_header_title=0x7f08000b;
-        public static final int logout_meetup=0x7f08001f;
+        public static final int logout_meetup=0x7f080020;
         public static final int meetup_group=0x7f080010;
         public static final int meetup_group_select=0x7f080000;
-        public static final int meetup_groups_container=0x7f080012;
+        public static final int meetup_groups_container=0x7f080013;
         public static final int name=0x7f080001;
         public static final int notes=0x7f080004;
         public static final int notes_container=0x7f080019;
         public static final int phone=0x7f080003;
         public static final int phone_container=0x7f080018;
         public static final int save=0x7f08001b;
-        public static final int send_feedback=0x7f08001e;
-        public static final int settings=0x7f08001d;
+        public static final int send_feedback=0x7f08001f;
+        public static final int settings=0x7f08001e;
         public static final int sorting_lbl=0x7f08000f;
-        public static final int update=0x7f080020;
+        public static final int update=0x7f080021;
     }
     public static final class layout {
         public static final int add_contact=0x7f030000;
@@ -66,17 +66,20 @@ public final class R {
         public static final int contact_sorting_tab=0x7f030005;
         public static final int contacts_spinner_style=0x7f030006;
         public static final int edit_contact=0x7f030007;
-        public static final int groups_spinner_style=0x7f030008;
-        public static final int main=0x7f030009;
-        public static final int meetup_group_list_item=0x7f03000a;
-        public static final int view_contact=0x7f03000b;
+        public static final int group=0x7f030008;
+        public static final int groups_spinner_style=0x7f030009;
+        public static final int main=0x7f03000a;
+        public static final int meetup_group_list_item=0x7f03000b;
+        public static final int view_contact=0x7f03000c;
     }
     public static final class menu {
         public static final int add_contact_menu=0x7f070000;
-        public static final int main_menu=0x7f070001;
-        public static final int main_menu_static=0x7f070002;
-        public static final int update_contact_menu=0x7f070003;
-        public static final int view_contact_menu=0x7f070004;
+        public static final int group_menu=0x7f070001;
+        public static final int group_menu_static=0x7f070002;
+        public static final int main_menu=0x7f070003;
+        public static final int main_menu_static=0x7f070004;
+        public static final int update_contact_menu=0x7f070005;
+        public static final int view_contact_menu=0x7f070006;
     }
     public static final class string {
         public static final int add=0x7f050000;

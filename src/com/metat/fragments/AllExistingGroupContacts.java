@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.metat.adapters.ContactsAdapter;
 import com.metat.adapters.ContactsSectionAdapter;
-import com.metat.main.MainActivity;
+import com.metat.main.GroupActivity;
 import com.metat.main.ViewContactActivity;
 import com.metat.models.Contact;
 
@@ -19,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-public class AllExistingContacts extends ListFragment {
+public class AllExistingGroupContacts extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
@@ -40,7 +40,7 @@ public class AllExistingContacts extends ListFragment {
 		getListView().setOnItemLongClickListener(new OnItemLongClickListener() { 
 
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				((MainActivity)getActivity()).showContactActionDialog(((Contact)parent.getAdapter().getItem(position)).getId());
+				((GroupActivity)getActivity()).showContactActionDialog(((Contact)parent.getAdapter().getItem(position)).getId());
 				
 				return false;
 			} 
@@ -52,8 +52,8 @@ public class AllExistingContacts extends ListFragment {
 		ContactsAdapter contactsAdapter = new ContactsAdapter(getActivity());
 		
 		Map<String,List<Contact>> contactSections = new LinkedHashMap<String,List<Contact>>();
-	
-		for (Contact contact : MainActivity.AllContacts)
+
+		for (Contact contact : GroupActivity.AllContacts)
 		{
 			if (!contactSections.containsKey(contact.getName().substring(0, 1).toUpperCase()))
 				contactSections.put(contact.getName().substring(0, 1).toUpperCase(), new ArrayList<Contact>());

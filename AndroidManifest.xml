@@ -27,6 +27,7 @@
 		        <data android:scheme="metat" android:host="authorized" />
 		    </intent-filter>
         </activity>
+        <activity android:name="com.metat.main.GroupActivity"></activity>
         <activity android:name="com.metat.main.AddContactActivity"></activity>
         <activity android:name="com.metat.main.EditContactActivity"></activity>
         <activity android:name="com.metat.main.ViewContactActivity"></activity>

@@ -53,6 +53,31 @@ public class ContactDataAccess {
 			return new Contact[0];
 	}
 	
+	public Contact[] getAllContacts(String groupMeetupId)
+	{
+		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_GROUPMEETUPID + " = '" + groupMeetupId + "'", null, null, null, KEY_NAME + " ASC");
+
+		if (contactsCursor != null)
+		{
+			ArrayList<Contact> contacts = new ArrayList<Contact>();
+
+			if (contactsCursor.moveToFirst())
+			{
+				do
+				{
+					contacts.add(new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME))));
+				}
+				while (contactsCursor.moveToNext());
+			}
+			
+			contactsCursor.close();
+			
+			return contacts.toArray(new Contact[contacts.size()]);
+		}
+		else
+			return new Contact[0];
+	}
+	
 	public Contact getContact(long id)
 	{
 		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES,KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_ID + " = " + id, null, null, null, KEY_NAME + " ASC");
