@@ -37,9 +37,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddContactActivity extends Activity implements TextWatcher {
-	private NavigationSource _navigationSource = NavigationSource.ViewContact;
+	private NavigationSource _navigationSource = NavigationSource.AllContacts;
 	
-	private String sourceGroupId = "";
+	private String _sourceGroupId = "";
 	
 	private Group[] _groups;
 	private ArrayAdapter<Group> _meetupGroupsAdapter;
@@ -65,7 +65,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
         	_navigationSource = (NavigationSource)extras.get("navigationSource");
 
         if (extras.containsKey("groupId"))
-        	sourceGroupId = extras.getString("groupId");
+        	_sourceGroupId = extras.getString("groupId");
         
         _contacts = new MeetupContact[0];
         
@@ -90,14 +90,33 @@ public class AddContactActivity extends Activity implements TextWatcher {
 					startActivity(cancelIntent);	
 		        }
 		        
-		    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _groups[0].getMeetupId());
-		    	getGroupContactsTask.execute();
+		        if (_sourceGroupId.trim().length() > 0)
+		        {
+			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _sourceGroupId);
+			    	getGroupContactsTask.execute();
+		        }
+		        else
+		        {
+			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _groups[0].getMeetupId());
+			    	getGroupContactsTask.execute();	
+		        }
+	    	}
+	    	
+	    	int groupSelectinedIndex = 0;
+	    	
+	    	for (int i=0; i<_groups.length; i++)
+	    	{
+	    		if (_groups[i].getMeetupId().equals(_sourceGroupId))
+	    		{
+	    			groupSelectinedIndex=i;
+	    		}
 	    	}
 	    	
 	    	_meetupGroupsAdapter = new ArrayAdapter<Group>(this, R.layout.groups_spinner_style, _groups);
 	    	
 	    	_meetupGroupSelect = (NoDefaultSpinner) findViewById(R.id.meetup_group_select);
 	    	_meetupGroupSelect.setAdapter(_meetupGroupsAdapter);
+	    	_meetupGroupSelect.setSelection(groupSelectinedIndex);
 	    	_meetupGroupSelect.setVisibility(View.VISIBLE);
 	    	_meetupGroupSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -143,18 +162,18 @@ public class AddContactActivity extends Activity implements TextWatcher {
 			cancelIntent.putExtra("selectedTab", MainActivity.TAB_CONTACTS);
 			break;
 		case AllGroups:
-			cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+			cancelIntent = new Intent(getBaseContext(), MainActivity.class);
 			cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 			break;
 		case GroupContacts:
-			if (sourceGroupId.trim().length() > 0)
+			if (_sourceGroupId.trim().length() > 0)
 			{
 				cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
-				cancelIntent.putExtra("groupId", sourceGroupId);
+				cancelIntent.putExtra("groupId", _sourceGroupId);
 			}
 			else
 			{
-				cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+				cancelIntent = new Intent(getBaseContext(), MainActivity.class);
 				cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 			}
 			break;
@@ -184,14 +203,14 @@ public class AddContactActivity extends Activity implements TextWatcher {
 					cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 					break;
 				case GroupContacts:
-					if (sourceGroupId.trim().length() > 0)
+					if (_sourceGroupId.trim().length() > 0)
 					{
 						cancelIntent = new Intent(getBaseContext(), GroupActivity.class);
-						cancelIntent.putExtra("groupId", sourceGroupId);
+						cancelIntent.putExtra("groupId", _sourceGroupId);
 					}
 					else
 					{
-						cancelIntent = new Intent(getBaseContext(), ViewContactActivity.class);
+						cancelIntent = new Intent(getBaseContext(), MainActivity.class);
 						cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 					}
 					break;

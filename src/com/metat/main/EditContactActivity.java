@@ -80,7 +80,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 				startActivity(cancelIntent);	
 	        }
 	        
-	    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getMeetupId());
+	    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getGroupId());
 	    	getGroupContactsTask.execute();
     	}
 
@@ -236,7 +236,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 		@Override
 		protected String doInBackground(String... strings) {
 			_retrievedContacts = ContactWebservices.getAllContacts(_meetupKey, _groupMeetupId);
-	    	
+
 			return "Complete";
 		}
 		
