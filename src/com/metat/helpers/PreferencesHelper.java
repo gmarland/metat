@@ -7,4 +7,6 @@ public class PreferencesHelper {
 	public static final String USER_SECRET = "user_secret";
 	public static final String REQUEST_TOKEN = "request_token";
 	public static final String REQUEST_SECRET = "request_secret";
+	
+	public static final String FEEDBACK_EMAIL = "gareth@deckarddesigns.com";
 }

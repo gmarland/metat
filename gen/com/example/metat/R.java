@@ -34,7 +34,7 @@ public final class R {
         public static final int contact_sorting_tabs=0x7f080012;
         public static final int contacts_container=0x7f080011;
         public static final int delete_contact_btn=0x7f080007;
-        public static final int edit=0x7f080022;
+        public static final int edit=0x7f080021;
         public static final int edit_contact_btn=0x7f080006;
         public static final int email=0x7f080002;
         public static final int email_container=0x7f080017;
@@ -42,7 +42,7 @@ public final class R {
         public static final int group_name=0x7f080014;
         public static final int image=0x7f080016;
         public static final int list_header_title=0x7f08000b;
-        public static final int logout_meetup=0x7f080020;
+        public static final int logout_meetup=0x7f08001f;
         public static final int meetup_group=0x7f080010;
         public static final int meetup_group_select=0x7f080000;
         public static final int meetup_groups_container=0x7f080013;
@@ -52,10 +52,9 @@ public final class R {
         public static final int phone=0x7f080003;
         public static final int phone_container=0x7f080018;
         public static final int save=0x7f08001b;
-        public static final int send_feedback=0x7f08001f;
-        public static final int settings=0x7f08001e;
+        public static final int send_feedback=0x7f08001e;
         public static final int sorting_lbl=0x7f08000f;
-        public static final int update=0x7f080021;
+        public static final int update=0x7f080020;
     }
     public static final class layout {
         public static final int add_contact=0x7f030000;
@@ -97,16 +96,18 @@ public final class R {
         public static final int log_out_of_meetup=0x7f05000c;
         public static final int meetups=0x7f05000d;
         public static final int met_at=0x7f05000e;
-        public static final int name=0x7f05000f;
-        public static final int notes=0x7f050010;
-        public static final int people=0x7f050011;
-        public static final int person=0x7f050012;
-        public static final int phone_number=0x7f050013;
-        public static final int save=0x7f050014;
-        public static final int send_feedback=0x7f050015;
-        public static final int settings=0x7f050016;
-        public static final int update=0x7f050017;
-        public static final int you_need_to_provide_a_name=0x7f050018;
+        public static final int met_at_feedback=0x7f05000f;
+        public static final int name=0x7f050010;
+        public static final int notes=0x7f050011;
+        public static final int people=0x7f050012;
+        public static final int person=0x7f050013;
+        public static final int phone_number=0x7f050014;
+        public static final int save=0x7f050015;
+        public static final int send_feedback=0x7f050017;
+        public static final int send_feedback_using=0x7f050016;
+        public static final int settings=0x7f050018;
+        public static final int update=0x7f050019;
+        public static final int you_need_to_provide_a_name=0x7f05001a;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;

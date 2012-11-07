@@ -4,10 +4,6 @@
         android:id="@+id/add_contact"
 		android:title="@string/add"
       	android:showAsAction="always|withText" />
-    <item
-        android:id="@+id/settings"
-		android:title="@string/settings"
-		android:orderInCategory="0" />
 	<item android:id="@+id/send_feedback"
 		android:title="@string/send_feedback"
 		android:orderInCategory="0" />

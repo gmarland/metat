@@ -5,13 +5,13 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 
+import com.metat.helpers.PreferencesHelper;
 import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.ContactAction;
 import com.metat.dialogs.ContactDeleteConfirm;
 import com.metat.helpers.ConnectionHelper;
-import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Contact;
 import com.metat.models.Group;
 import com.metat.models.NavigationSource;
@@ -206,6 +206,17 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				
 				getBaseContext().startActivity(intent);	
         		return true;
+        	case R.id.send_feedback:
+	    		String emailList[] = { PreferencesHelper.FEEDBACK_EMAIL };  
+
+	    		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+	    		
+	    		emailIntent.setType("plain/text"); 
+    			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, emailList);
+    			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, this.getResources().getString(R.string.met_at_feedback));
+    			
+	    		startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.send_feedback_using)));
+				return true;
         }
         
         return false;

@@ -15,12 +15,14 @@
     <string name="log_out_of_meetup">Log out of Meetup</string>
     <string name="meetups">Meetups</string>
     <string name="met_at">Met at</string>
+    <string name="met_at_feedback">Met At Feedback</string>
     <string name="name">Name</string>
     <string name="notes">Notes</string>
     <string name="people">People</string>
     <string name="person">Person</string>
     <string name="phone_number">Phone number</string>
     <string name="save">Save</string>
+    <string name="send_feedback_using">Send feedback using:</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="settings">Settings</string>
     <string name="update">Update</string>
