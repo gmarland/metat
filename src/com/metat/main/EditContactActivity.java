@@ -73,15 +73,10 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
 	        {
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+		        
+		    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getGroupId());
+		    	getGroupContactsTask.execute();
 	        }
-	        else
-	        {
-				Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
-				startActivity(cancelIntent);	
-	        }
-	        
-	    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getGroupId());
-	    	getGroupContactsTask.execute();
     	}
 
     	_meetupGroupName = (TextView) findViewById(R.id.meetup_group);
@@ -201,6 +196,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        		
 					Intent returnIntent = new Intent(getBaseContext(), ViewContactActivity.class);
 					returnIntent.putExtra("navigationSource", _navigationSource);
+					returnIntent.putExtra("contactId", _contact.getId());
 					returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					
 					getBaseContext().startActivity(returnIntent);

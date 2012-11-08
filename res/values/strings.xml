@@ -12,6 +12,7 @@
     <string name="email_address">E-mail Address</string>
     <string name="im_sure_i_want_to_remove_this_person">I\'m sure I want to remove this person</string>
     <string name="dont_remove_them">Don\'t remove them</string>
+    <string name="log_into_meetup">Log into Meetup</string>
     <string name="log_out_of_meetup">Log out of Meetup</string>
     <string name="meetups">Meetups</string>
     <string name="met_at">Met at</string>

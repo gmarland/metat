@@ -23,7 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class GroupActivity extends Activity {
-	private String _userToken;
+	private String _userToken = "";
 	
 	public static Group SelectedGroup = null;
 	public static Contact[] AllContacts = new Contact[0];

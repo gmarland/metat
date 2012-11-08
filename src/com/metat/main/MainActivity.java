@@ -33,6 +33,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TabHost.OnTabChangeListener;
@@ -43,6 +45,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     public static final String TAB_MEETUPS = "meetups";
     
 	private TabHost _contactSortingTabs;
+	private LinearLayout _meetupLoginLayout;
 	
 	private String _userToken = "";
 	private static boolean _attemptReathorization = true;
@@ -60,27 +63,25 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
     	_consumer = new CommonsHttpOAuthConsumer(ClientWebservices.METAT_API_KEY, ClientWebservices.METAT_API_KEY_SECRET);
     	_provider = new CommonsHttpOAuthProvider(ClientWebservices.MEETUP_REQUEST_TOKEN_URL, ClientWebservices.MEETUP_ACCESS_TOKEN_URL, ClientWebservices.MEETUP_AUTHORIZE_URL);
+
+    	_meetupLoginLayout = (LinearLayout)findViewById(R.id.MeetupLoginContainer);
+    	_meetupLoginLayout.setOnClickListener(_loginButtonListener);
     	
-    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
-    	{
-	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-			
-	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) == null)
-	        {
-		        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
-		        startAuthenticateMeetupTask.execute();
-	        }
-	        else
-	        {
+        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+		
+        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
+        {
+	    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
+	    	{
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
 	        	refreshMeetupGroups();
 	        }
     	}
-    	
+
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts();
         
-        _contactSortingTabs = (TabHost) findViewById(R.id.contact_sorting_tabs);
+        _contactSortingTabs = (TabHost)findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
         _contactSortingTabs.setup();
 
@@ -139,28 +140,21 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 			FinishAuthenticateMeetupTask finishAuthenticateMeetupTask = new FinishAuthenticateMeetupTask(this, uri);
 			finishAuthenticateMeetupTask.execute();
 		}
-		else
-		{
-	    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
-	    	{
-		        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-		        
-		        if (settings.getString(PreferencesHelper.USER_TOKEN, null) == null)
-		        {
-			        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
-			        startAuthenticateMeetupTask.execute();
-		        }
-	    	}
-		}
 	}
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
     	if (_userToken.trim().length() > 0)
+    	{
     		getMenuInflater().inflate(R.menu.main_menu, menu);
+	    	_meetupLoginLayout.setVisibility(View.GONE);
+    	}
     	else
+    	{
     		getMenuInflater().inflate(R.menu.main_menu_static, menu);
+	    	_meetupLoginLayout.setVisibility(View.VISIBLE);
+    	}
         return true;
     }
 
@@ -170,9 +164,15 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         menu.clear();
 
     	if (_userToken.trim().length() > 0)
+    	{
     		getMenuInflater().inflate(R.menu.main_menu, menu);
+	    	_meetupLoginLayout.setVisibility(View.GONE);
+    	}
     	else
+    	{
     		getMenuInflater().inflate(R.menu.main_menu_static, menu);
+	    	_meetupLoginLayout.setVisibility(View.VISIBLE);
+    	}
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -216,6 +216,19 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, this.getResources().getString(R.string.met_at_feedback));
     			
 	    		startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.send_feedback_using)));
+				return true;
+        	case R.id.logout_meetup:
+    	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+    			SharedPreferences.Editor editor = settings.edit();
+    			
+    			editor.remove(PreferencesHelper.USER_TOKEN);
+    			editor.remove(PreferencesHelper.USER_SECRET);
+    			
+    			editor.commit();
+    			
+    			_userToken = "";
+    			
+    			resetMenuOptions();
 				return true;
         }
         
@@ -313,7 +326,24 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         }
     }
 
-    // Private Methods
+	@Override
+	public void onTabChanged(String arg0) {
+	}
+	
+	public void refreshMeetupGroups()
+	{
+		UpdateMeetupGroupsTask updateMeetupGroupsTask = new UpdateMeetupGroupsTask(this, _userToken);
+		updateMeetupGroupsTask.execute();
+	}
+
+    /// Private Methods
+	
+    private void logIntoMeetup()
+    {
+        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
+        startAuthenticateMeetupTask.execute();
+    }
+    
     private TabSpec newTab(String tag, int label, int tabContentId) 
     {        
     	View indicator = LayoutInflater.from(this).inflate(R.layout.contact_sorting_tab, null);
@@ -324,16 +354,13 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
     	return tabSpec; 
     }
-
-	@Override
-	public void onTabChanged(String arg0) {
-	}
-	
-	public void refreshMeetupGroups()
-	{
-		UpdateMeetupGroupsTask updateMeetupGroupsTask = new UpdateMeetupGroupsTask(this, _userToken);
-		updateMeetupGroupsTask.execute();
-	}
+    
+    private Button.OnClickListener _loginButtonListener = new Button.OnClickListener() 
+    {
+		public void onClick(View v) {
+			logIntoMeetup();
+		}
+    };
 	
 	private class StartAuthenticateMeetupTask extends AsyncTask<String, String, String>
 	{
@@ -485,8 +512,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 			if ((_selfId == -2) && (_attemptReathorization))
 			{
 				_attemptReathorization = false;
-				StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(_parentActivity);
-				startAuthenticateMeetupTask.execute();
+				logIntoMeetup();
 			}
 		}
 	}
