@@ -2,33 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <com.metat.helpers.NoDefaultSpinner 
-		android:id="@+id/meetup_group_select" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" />
-    <AutoCompleteTextView 
-		android:id="@+id/name" 
-		android:layout_width="fill_parent" 
+    android:orientation="vertical"
+	style="@style/MainBackgroud">
+	<ScrollView 
+	    android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/name"
-        android:inputType="text" />
-    <EditText 
-		android:id="@+id/email" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:hint="@string/email_address"
-        android:inputType="text" />
-    <EditText 
-		android:id="@+id/phone" 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:hint="@string/phone_number"
-        android:inputType="text" />
-    <EditText
-        android:id="@+id/notes"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-		android:hint="@string/notes"
-	   	android:inputType="textMultiLine" />
+	    android:orientation="vertical">
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+			style="@style/ContactDetailsContainer">
+			<LinearLayout
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+				style="@style/ContactDetailsInputContainer"
+				android:background="@drawable/contact_detail_full">
+			    <com.metat.helpers.NoDefaultSpinner 
+					android:id="@+id/meetup_group_select" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					style="@style/GroupInput"
+					android:layout_marginBottom="15dp" />
+			    <AutoCompleteTextView 
+					android:id="@+id/name" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:hint="@string/name"
+			        android:inputType="text"
+					style="@style/ContactDetailInput"
+					android:layout_marginBottom="5dp" />
+			    <EditText 
+					android:id="@+id/email" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:hint="@string/email_address"
+			        android:inputType="text"
+					style="@style/ContactDetailInput"
+					android:layout_marginBottom="5dp" />
+			    <EditText 
+					android:id="@+id/phone" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:hint="@string/phone_number"
+			        android:inputType="text"
+					style="@style/ContactDetailInput"
+					android:layout_marginBottom="5dp" />
+			    <EditText
+			        android:id="@+id/notes"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+					android:hint="@string/notes"
+				   	android:inputType="textMultiLine"
+					style="@style/ContactDetailInput" />
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>

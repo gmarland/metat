@@ -60,6 +60,10 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
     	_consumer = new CommonsHttpOAuthConsumer(ClientWebservices.METAT_API_KEY, ClientWebservices.METAT_API_KEY_SECRET);
     	_provider = new CommonsHttpOAuthProvider(ClientWebservices.MEETUP_REQUEST_TOKEN_URL, ClientWebservices.MEETUP_ACCESS_TOKEN_URL, ClientWebservices.MEETUP_AUTHORIZE_URL);
@@ -328,6 +332,17 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
 	@Override
 	public void onTabChanged(String arg0) {
+		updateTabStyles();
+	}
+	
+	private void updateTabStyles()
+	{
+		for (int i=0; i<_contactSortingTabs.getTabWidget().getChildCount(); i++)
+		{
+			_contactSortingTabs.getTabWidget().getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_inactive));
+		}
+
+		_contactSortingTabs.getTabWidget().getChildAt(_contactSortingTabs.getCurrentTab()).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_selected));
 	}
 	
 	public void refreshMeetupGroups()

@@ -1,10 +1,192 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme" parent="android:Theme.Light" />
+
+	<style name="ContactSorting">
+        <item name="android:textColor">#FFFFFF</item> 
+		<item name="android:textSize">14sp</item>
+		<item name="android:typeface">sans</item>
+		<item name="android:gravity">center</item>
+	</style>
 	
 	<style name="DialogStyle" parent="@android:style/Theme.Dialog">
 	    <item name="android:topDark">#000000</item>
 	    <item name="android:background">#FFFFFF</item>
 	</style>
 
+	<style name="MainBackgroud">
+	    <item name="android:background">#F2F2F2</item>
+	</style>
+
+	<style name="LoginContainer">
+	    <item name="android:background">#29373A</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+	</style>
+
+	<style name="LoginText">
+        <item name="android:textColor">#828282</item> 
+		<item name="android:textSize">18sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="GroupContainer">
+	    <item name="android:paddingTop">10dp</item>
+	    <item name="android:paddingBottom">10dp</item>
+	    <item name="android:paddingLeft">8dp</item>
+	    <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">#F0F0F0</item> 
+		<item name="android:textSize">14sp</item>
+		<item name="android:typeface">sans</item>
+	</style>
+
+	<style name="ContactRow">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+	</style>
+
+	<style name="ContactHeader">
+	    <item name="android:background">#DEDEDA</item>
+        <item name="android:textColor">#0B0B0B</item> 
+		<item name="android:textSize">14sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+	</style>
+
+	<style name="ContactImage">
+        <item name="android:padding">1dp</item>
+	    <item name="android:background">#0B0B0B</item>
+	</style>
+	
+	<style name="ContactName">
+        <item name="android:textColor">#0B0B0B</item> 
+		<item name="android:textSize">18sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="ContactGroup">
+        <item name="android:textColor">#363636</item> 
+		<item name="android:textSize">14sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+	</style>
+	
+	<style name="ContactHeaderContainer">
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+	    <item name="android:background">#FFFFFF</item>
+	</style>
+	
+	<style name="ContactDetailHeader">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:textColor">#363636</item> 
+		<item name="android:textSize">15sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="ContactDetailNotesHeader">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:textColor">#363636</item> 
+		<item name="android:textSize">15sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="ContactDetail">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:textColor">#555555</item> 
+		<item name="android:textSize">15sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+	</style>
+	
+	<style name="ContactDetailInput">
+        <item name="android:textColor">#555555</item> 
+		<item name="android:textSize">15sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:padding">10dp</item>
+	</style>
+	
+	<style name="GroupInput">
+        <item name="android:textColor">#555555</item> 
+		<item name="android:textSize">16sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:padding">5dp</item>
+	</style>
+	
+	<style name="GroupSelectInput">
+        <item name="android:textColor">#555555</item> 
+		<item name="android:textSize">16sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:padding">5dp</item>
+	</style>
+	
+	<style name="ContactSelectInput">
+        <item name="android:textColor">#555555</item> 
+		<item name="android:textSize">15sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:padding">5dp</item>
+	</style>
+	
+	<style name="ContactDetailsContainer">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+	</style>
+	
+	<style name="ContactDetailsInputContainer">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+	</style>
+
+	<style name="GroupName">
+        <item name="android:textColor">#0B0B0B</item> 
+		<item name="android:textSize">18sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="GroupMemberCount">
+        <item name="android:textColor">#363636</item> 
+		<item name="android:textSize">14sp</item>
+		<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+	</style>
 </resources>

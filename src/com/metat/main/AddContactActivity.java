@@ -58,6 +58,10 @@ public class AddContactActivity extends Activity implements TextWatcher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_contact);
+        
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
 
@@ -68,9 +72,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
         	_sourceGroupId = extras.getString("groupId");
         
         _contacts = new MeetupContact[0];
-        
-    	setTitle(" " + getResources().getString(R.string.add));
-    	
+
     	GroupsDataAccess groupsDataAccess = new GroupsDataAccess(this);
     	_groups = groupsDataAccess.getAllGroups();
 
@@ -268,6 +270,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
 						break;
 					case GroupContacts:
 						returnIntent = new Intent(getBaseContext(), GroupActivity.class);
+						returnIntent.putExtra("groupId", ((Group)_meetupGroupSelect.getSelectedItem()).getMeetupId());
 						break;
 					}
 					

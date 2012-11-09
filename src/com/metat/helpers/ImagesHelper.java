@@ -8,6 +8,11 @@ import android.graphics.BitmapFactory;
 public class ImagesHelper {
 	public static final int THUMBNAIL_SIZE = 80;
 	
+    public static Bitmap ImageFileToBitmap(byte[] originalFile)
+    {
+	    return BitmapFactory.decodeByteArray(originalFile, 0, originalFile.length);
+    }
+	
     public static Bitmap ResampleImageFileToBitmap(byte[] originalFile, int maxSize)
     {
     	BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options(); 

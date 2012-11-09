@@ -33,12 +33,15 @@ public class GroupActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
 
         Bundle extras = getIntent().getExtras();
         
         GroupsDataAccess groupdDataAccess = new GroupsDataAccess(this);
         SelectedGroup = groupdDataAccess.getGroup(extras.getString("groupId"));
-        
+
+        getActionBar().setDisplayShowHomeEnabled(false);
     	setTitle(" " + SelectedGroup.getName());
         
     	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))

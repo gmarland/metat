@@ -6,7 +6,8 @@
 	android:orientation="vertical">
 	<TableRow
 	    android:layout_width="wrap_content"
-       	android:layout_height="wrap_content">
+       	android:layout_height="wrap_content"
+  		style="@style/ContactRow">
 	    <ImageView
 			android:id="@+id/contact_image"
 	        android:layout_width="80dp"
@@ -20,11 +21,13 @@
 			<TextView    
 			    android:id="@+id/contact_name"  
 			    android:layout_width="fill_parent"   
-			    android:layout_height="wrap_content"  />
+			    android:layout_height="wrap_content" 
+	    		style="@style/ContactName" />
 			<TextView    
 			    android:id="@+id/contact_meetup_group"  
 			    android:layout_width="fill_parent"   
-			    android:layout_height="wrap_content"  />
+			    android:layout_height="wrap_content" 
+	    		style="@style/ContactGroup" />
 		</LinearLayout>
 	</TableRow>
 </TableLayout>

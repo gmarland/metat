@@ -9,7 +9,9 @@
     <string name="contacts">Contacts</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="email">E-mail</string>
     <string name="email_address">E-mail Address</string>
+    <string name="email_using">E-mail using:</string>
     <string name="im_sure_i_want_to_remove_this_person">I\'m sure I want to remove this person</string>
     <string name="dont_remove_them">Don\'t remove them</string>
     <string name="log_into_meetup">Log into Meetup</string>
@@ -21,6 +23,7 @@
     <string name="notes">Notes</string>
     <string name="people">People</string>
     <string name="person">Person</string>
+    <string name="phone">Phone</string>
     <string name="phone_number">Phone number</string>
     <string name="save">Save</string>
     <string name="send_feedback_using">Send feedback using:</string>

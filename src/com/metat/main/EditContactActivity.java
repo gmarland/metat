@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditContactActivity extends Activity implements TextWatcher {
@@ -43,7 +42,6 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	private static MeetupContact[] _contacts = new MeetupContact[0];	
 	private String _userToken = "";
 	
-	private TextView _meetupGroupName;
 	private AutoCompleteTextView _name;
 	private EditText _email;
 	private EditText _phone;
@@ -54,6 +52,10 @@ public class EditContactActivity extends Activity implements TextWatcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_contact);
         
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
+        
         Bundle extras = getIntent().getExtras();
 
         if (extras.containsKey("navigationSource"))
@@ -63,9 +65,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
         
         _contacts = new MeetupContact[0];
-        
-    	setTitle(" " + getResources().getString(R.string.edit));
-    	
+
     	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
     	{
 	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
@@ -78,9 +78,6 @@ public class EditContactActivity extends Activity implements TextWatcher {
 		    	getGroupContactsTask.execute();
 	        }
     	}
-
-    	_meetupGroupName = (TextView) findViewById(R.id.meetup_group);
-    	_meetupGroupName.setText(_contact.getGroupName());
     	
     	_name = (AutoCompleteTextView) findViewById(R.id.name);
     	_name.setText(_contact.getName());

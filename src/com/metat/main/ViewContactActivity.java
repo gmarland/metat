@@ -8,10 +8,12 @@ import com.metat.models.NavigationSource;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +37,10 @@ public class ViewContactActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_contact);
         
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
+        
         Bundle extras = getIntent().getExtras();
 
         if (extras.containsKey("navigationSource"))
@@ -43,14 +49,11 @@ public class ViewContactActivity extends Activity {
         ContactDataAccess contactDataAccess = new ContactDataAccess(this);
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
 
-        getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setDisplayShowTitleEnabled(false);
-    	
     	_image = (ImageView) findViewById(R.id.image);
     	
     	if (_contact.getPhotoThumbnail().length > 0)
     	{
-    		_image.setImageBitmap(ImagesHelper.ResampleImageFileToBitmap(_contact.getPhotoThumbnail(), ImagesHelper.THUMBNAIL_SIZE));
+    		_image.setImageBitmap(ImagesHelper.ImageFileToBitmap(_contact.getPhotoThumbnail()));
     	}
     	else
     	{
@@ -63,29 +66,84 @@ public class ViewContactActivity extends Activity {
     	_name = (TextView) findViewById(R.id.name);
     	_name.setText(_contact.getName());
     	
+    	int contactDetailCount = 0;
+
+    	if (_contact.getEmail().trim().length() > 0)
+    		contactDetailCount++;
+
+    	if (_contact.getPhone().trim().length() > 0)
+    		contactDetailCount++;
+
+    	if (_contact.getNotes().trim().length() > 0)
+    		contactDetailCount++;
+    	
+    	int contentDetailDisplayed = 0;
+
+    	_emailContainer = (LinearLayout) findViewById(R.id.email_container);
+    	_emailContainer.setOnClickListener(_emailButtonListener);
+    	
     	_email = (TextView) findViewById(R.id.email);
     	_email.setText(_contact.getEmail());
-    	_emailContainer = (LinearLayout) findViewById(R.id.email_container);
+    	
     	if (_contact.getEmail().trim().length() == 0)
+    	{
     		_emailContainer.setVisibility(View.GONE);
+    	}
     	else
+    	{
     		_emailContainer.setVisibility(View.VISIBLE);
+    		
+    		if (contactDetailCount == 1)
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_full);
+    		else
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_top);
+    		
+    		contentDetailDisplayed++;
+    	}
+
+    	_phoneContainer = (LinearLayout) findViewById(R.id.phone_container);
+    	_phoneContainer.setOnClickListener(_phoneButtonListener);
     	
     	_phone = (TextView) findViewById(R.id.phone);
     	_phone.setText(_contact.getPhone());
-    	_phoneContainer = (LinearLayout) findViewById(R.id.phone_container);
-    	if (_contact.getPhone().trim().length() == 0)
-    		_phoneContainer.setVisibility(View.GONE);
-    	else
-    		_phoneContainer.setVisibility(View.VISIBLE);
     	
+    	if (_contact.getPhone().trim().length() == 0)
+    	{
+    		_phoneContainer.setVisibility(View.GONE);
+    	}
+    	else
+    	{
+    		_phoneContainer.setVisibility(View.VISIBLE);
+    		
+    		if (contactDetailCount == 1)
+    			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_full);
+    		else if (contentDetailDisplayed == 0)
+    			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_top);
+    		else if (contentDetailDisplayed == contactDetailCount)
+    			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_bottom);
+    		else
+    			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_middle);
+    		
+    		contentDetailDisplayed++;
+    	}
+
+    	_notesContainer = (LinearLayout) findViewById(R.id.notes_container);
     	_notes = (TextView) findViewById(R.id.notes);
     	_notes.setText(_contact.getNotes());
-    	_notesContainer = (LinearLayout) findViewById(R.id.notes_container);
+    	
     	if (_contact.getNotes().trim().length() == 0)
+    	{
     		_notesContainer.setVisibility(View.GONE);
+    	}
     	else
+    	{
     		_notesContainer.setVisibility(View.VISIBLE);
+
+    		if (contactDetailCount == 1)
+    			_notesContainer.setBackgroundResource(R.drawable.contact_detail_full);
+    		else
+    			_notesContainer.setBackgroundResource(R.drawable.contact_detail_bottom);
+    	}
     }
 
     @Override
@@ -151,4 +209,28 @@ public class ViewContactActivity extends Activity {
         
         return false;
     }
+
+    private Button.OnClickListener _emailButtonListener = new Button.OnClickListener() 
+    {
+		public void onClick(View v) {
+    		String emailList[] = { _contact.getEmail() };  
+
+    		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+    		
+    		emailIntent.setType("plain/text"); 
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, emailList);
+			
+    		startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.email_using)));
+		}
+    };
+
+    private Button.OnClickListener _phoneButtonListener = new Button.OnClickListener() 
+    {
+		public void onClick(View v) {
+			String uri = "tel:" + _contact.getPhone();
+			Intent intent = new Intent(Intent.ACTION_CALL);
+			intent.setData(Uri.parse(uri));
+			startActivity(intent);
+		}
+    };
 }
