@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/contact_action_header"
-	   	android:layout_height="wrap_content"
-        android:layout_width="fill_parent" />
-    <TextView
-        android:id="@+id/edit_contact_btn"
-	   	android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-	   	android:text="@string/edit" />
-    <TextView
-        android:id="@+id/delete_contact_btn"
-	   	android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-	   	android:text="@string/delete" />
-</LinearLayout>
+<RelativeLayout 
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    <TextView
+	        android:id="@+id/contact_action_header"
+		   	android:layout_height="wrap_content"
+	        android:layout_width="fill_parent"
+	        style="@style/DialogHeader"
+			android:background="@drawable/menu_header" />
+	    <TextView
+	        android:id="@+id/edit_contact_btn"
+		   	android:layout_height="wrap_content"
+	        android:layout_width="fill_parent"
+		   	android:text="@string/edit"
+	        style="@style/DialogItem"
+			android:background="@drawable/menu_item" />
+	    <TextView
+	        android:id="@+id/delete_contact_btn"
+		   	android:layout_height="wrap_content"
+	        android:layout_width="fill_parent"
+		   	android:text="@string/delete"
+	        style="@style/DialogItem"
+			android:background="@drawable/menu_item" />
+	</LinearLayout>
+</RelativeLayout>

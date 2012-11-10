@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -35,6 +34,12 @@ public class GroupContactDeleteConfirm extends DialogFragment {
 	
 	public GroupContactDeleteConfirm() {
 	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setStyle(STYLE_NO_TITLE, 0);
+	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -54,8 +59,6 @@ public class GroupContactDeleteConfirm extends DialogFragment {
 		
 		_cancelledBtn = (TextView) view.findViewById(R.id.cancelled_btn);
 		_cancelledBtn.setOnClickListener(deleteCancelledButtonListener);
-		
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		
         return view;
 	}

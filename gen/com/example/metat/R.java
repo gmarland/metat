@@ -25,10 +25,12 @@ public final class R {
         public static final int contacts_tab_selected=0x7f020006;
         public static final int ic_action_search=0x7f020007;
         public static final int ic_launcher=0x7f020008;
-        public static final int profile_default=0x7f020009;
-        public static final int profile_header=0x7f02000a;
-        public static final int profile_spacer=0x7f02000b;
-        public static final int textbox=0x7f02000c;
+        public static final int menu_header=0x7f020009;
+        public static final int menu_item=0x7f02000a;
+        public static final int profile_default=0x7f02000b;
+        public static final int profile_header=0x7f02000c;
+        public static final int profile_spacer=0x7f02000d;
+        public static final int textbox=0x7f02000e;
     }
     public static final class id {
         public static final int MeetupLoginContainer=0x7f080013;
@@ -140,6 +142,8 @@ public final class R {
         public static final int ContactRow=0x7f060007;
         public static final int ContactSelectInput=0x7f060013;
         public static final int ContactSorting=0x7f060001;
+        public static final int DialogHeader=0x7f060018;
+        public static final int DialogItem=0x7f060019;
         public static final int DialogStyle=0x7f060002;
         public static final int GroupContainer=0x7f060006;
         public static final int GroupInput=0x7f060011;

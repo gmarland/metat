@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -37,6 +36,12 @@ public class ContactAction extends DialogFragment {
 	}
 	
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setStyle(STYLE_NO_TITLE, 0);
+	}
+	
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		_context = getActivity();
@@ -54,8 +59,6 @@ public class ContactAction extends DialogFragment {
 		
 		_deleteBtn = (TextView) view.findViewById(R.id.delete_contact_btn);
 		_deleteBtn.setOnClickListener(deleteContactButtonListener);
-		
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		
         return view;
 	}
