@@ -164,15 +164,6 @@ public class ClientWebservices {
 			}
 	    }
 	    else if(statusLine.getStatusCode() == HttpStatus.SC_UNAUTHORIZED){
-			SharedPreferences settings = context.getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-
-			SharedPreferences.Editor editor = settings.edit();
-			
-			editor.remove(PreferencesHelper.USER_TOKEN);
-			editor.remove(PreferencesHelper.USER_SECRET);
-			
-			editor.commit();
-			
 			return -2;
 	    }
 	    else {
