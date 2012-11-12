@@ -225,36 +225,29 @@ public class AddContactActivity extends Activity implements TextWatcher {
         	case R.id.save:
         		if (_name.getText().toString().length() > 0)
         		{
-	        		int selectedIndex = -1;
+	        		String meetupId = "";
+	        		String name = _name.getText().toString();
+	        		String contactPhotoThumbnailLocation = "";
 	        		
 	        		for (int i=0; i<_contacts.length; i++)
 	        		{
 	        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
 	        			{
-	        				selectedIndex = i;
+		        			meetupId = _contacts[i].getMeetupId();
+		        			name = _contacts[i].getName();
+		        			contactPhotoThumbnailLocation = _contacts[i].getPhotoThumbnail();
 	        				break;
 	        			}
 	        		}
 	        		
-	        		String meetupId = "";
-	        		String name = "";
-	        		
-	        		if (selectedIndex != -1) {
-	        			meetupId = _contacts[selectedIndex].getMeetupId();
-	        			name = _contacts[selectedIndex].getName();
-	        		}
-	        		else
-	        		{
-	        			name = _name.getText().toString();
-	        		}
-	        			
-	        		String contactPhotoThumbnailLocation = _contacts[selectedIndex].getPhotoThumbnail();
-	        		
 	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
 	        		contactDataAccess.Insert(meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), ((Group)_meetupGroupSelect.getSelectedItem()).getMeetupId(), ((Group)_meetupGroupSelect.getSelectedItem()).getName());
 	        		
-	        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
-	        		downloadImageTask.execute();
+	        		if (contactPhotoThumbnailLocation.trim().length() > 0)
+	        		{
+		        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
+		        		downloadImageTask.execute();
+	        		}
 	        		
 					Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
 

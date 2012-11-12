@@ -1,16 +1,15 @@
 package com.metat.helpers;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Stack;
 
-import com.example.metat.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.models.Contact;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -19,31 +18,24 @@ public class ImageLoader {
 	private Context _context;
     private HashMap<String, Bitmap> _cache = new HashMap<String, Bitmap>();
     
-    private File _cacheDir;
-    
     public ImageLoader(Context context){
     	_context = context;
     	_contactDataAccess = new ContactDataAccess(_context);
     	
         //Make the background thread low priority. This way it will not affect the UI performance
         photoLoaderThread.setPriority(Thread.NORM_PRIORITY-1);
-        
-        _cacheDir = context.getCacheDir();
-        
-        if(!_cacheDir.exists())
-            _cacheDir.mkdirs();
     }
-
-    final int stub_id = R.drawable.profile_default;
     
     public void DisplayImage(long contactId, String meetupId, ImageView imageView)
     {
         if(_cache.containsKey(meetupId))
+        {
+        	//Log.e("cached", meetupId);
             imageView.setImageBitmap(_cache.get(meetupId));
+        }
         else
         {
             queuePhoto(contactId, meetupId, (Activity)_context, imageView);
-            imageView.setImageResource(stub_id);
         }    
     }
         
@@ -164,20 +156,18 @@ public class ImageLoader {
         public BitmapDisplayer(Bitmap b, ImageView i){bitmap=b;imageView=i;}
         public void run()
         {
-            if(bitmap!=null)
-                imageView.setImageBitmap(bitmap);
-            else
-                imageView.setImageResource(stub_id);
+            if((bitmap!=null) && (!bitmap.isRecycled()))
+            {
+            	if ((imageView.getDrawable() != null) && (((BitmapDrawable)imageView.getDrawable()).getBitmap() != null) && (!((BitmapDrawable)imageView.getDrawable()).getBitmap().isRecycled()))
+	            {
+            		imageView.setImageBitmap(bitmap);
+	            }
+            }
         }
     }
 
     public void clearCache() {
         _cache.clear();
-        
-        File[] files=_cacheDir.listFiles();
-        
-        for(File f:files)
-            f.delete();
     }
 }
 

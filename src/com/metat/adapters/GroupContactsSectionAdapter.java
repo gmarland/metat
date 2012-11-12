@@ -14,18 +14,18 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-public class ContactsSectionAdapter extends BaseAdapter {
-	public ImageLoader ImageLoader;
+public class GroupContactsSectionAdapter extends BaseAdapter {
+	public ImageLoader GroupImageLoader;
 	
 	private Context _context;
 	private Contact[] _contacts;
 
-    public ContactsSectionAdapter(Context context, Contact[] contacts)
+    public GroupContactsSectionAdapter(Context context, Contact[] contacts)
     {
     	_context = context;
     	_contacts = contacts;
 
-        ImageLoader = new ImageLoader(context);
+    	GroupImageLoader = new ImageLoader(context);
     }
 
 	public int getCount() {
@@ -47,22 +47,22 @@ public class ContactsSectionAdapter extends BaseAdapter {
     	if (convertView == null) 
     	{ 
     		LayoutInflater vi = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-    		contactLayout = (TableLayout) vi.inflate(R.layout.contact_list_item, parent, false); 
+    		contactLayout = (TableLayout) vi.inflate(R.layout.group_contact_list_item, parent, false); 
     	} 
     	else
     	{
     		contactLayout = (TableLayout)convertView;
     	}
 
-		ImageView imageView = (ImageView)contactLayout.findViewById(R.id.contact_image);
+		ImageView imageView = (ImageView)contactLayout.findViewById(R.id.group_contact_image);
     	imageView.setTag(_contacts[position].getMeetupId());
-    	imageView.setImageBitmap(BitmapFactory.decodeResource(_context.getResources(), R.drawable.profile_default));
-    	ImageLoader.DisplayImage(_contacts[position].getId(), _contacts[position].getMeetupId(), imageView);
-    	
-    	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.contact_name);
+    	imageView.setImageBitmap(BitmapFactory.decodeResource(_context.getResources(), R.drawable.group_profile_default));
+    	GroupImageLoader.DisplayImage(_contacts[position].getId(), _contacts[position].getMeetupId(), imageView);
+
+    	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.group_contact_name);
     	contactNameTextView.setText(_contacts[position].getName());    
 
-    	TextView contactMetAtTextView = (TextView)contactLayout.findViewById(R.id.contact_meetup_group);
+    	TextView contactMetAtTextView = (TextView)contactLayout.findViewById(R.id.group_contact_meetup_group);
     	contactMetAtTextView.setText(_context.getString(R.string.met_at) + " " + _contacts[position].getGroupName());
     	
     	return contactLayout;

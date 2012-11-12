@@ -5,8 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.metat.adapters.ContactsAdapter;
-import com.metat.adapters.ContactsSectionAdapter;
+import com.example.metat.R;
+import com.metat.adapters.GroupContactsAdapter;
+import com.metat.adapters.GroupContactsSectionAdapter;
 import com.metat.main.GroupActivity;
 import com.metat.main.ViewContactActivity;
 import com.metat.models.Contact;
@@ -52,7 +53,7 @@ public class AllExistingGroupContacts extends ListFragment {
 	
 	public void bindContactsAdapter()
 	{
-		ContactsAdapter contactsAdapter = new ContactsAdapter(getActivity());
+		GroupContactsAdapter contactsAdapter = new GroupContactsAdapter(getActivity());
 		
 		Map<String,List<Contact>> contactSections = new LinkedHashMap<String,List<Contact>>();
 
@@ -66,7 +67,7 @@ public class AllExistingGroupContacts extends ListFragment {
 		
 		for (String headerIndex : contactSections.keySet())
 		{
-			ContactsSectionAdapter contactsSectionAdapter = new ContactsSectionAdapter(getActivity(), contactSections.get(headerIndex).toArray(new Contact[contactSections.get(headerIndex).size()]));
+			GroupContactsSectionAdapter contactsSectionAdapter = new GroupContactsSectionAdapter(getActivity(), contactSections.get(headerIndex).toArray(new Contact[contactSections.get(headerIndex).size()]));
 			contactsAdapter.addSection(headerIndex, contactsSectionAdapter);
 		}
 		

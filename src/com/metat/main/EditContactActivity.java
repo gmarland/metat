@@ -156,31 +156,20 @@ public class EditContactActivity extends Activity implements TextWatcher {
         	case R.id.update:
         		if (_name.getText().toString().length() > 0)
         		{
-	        		int selectedIndex = -1;
+	        		String meetupId = _contact.getMeetupId();
+	        		String name = _name.getText().toString();
+	        		String contactPhotoThumbnailLocation = "";
 	        		
 	        		for (int i=0; i<_contacts.length; i++)
 	        		{
 	        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
 	        			{
-	        				selectedIndex = i;
+		        			meetupId = _contacts[i].getMeetupId();
+		        			name = _contacts[i].getName();
+		        			
+		            		contactPhotoThumbnailLocation = _contacts[i].getPhotoThumbnail();
 	        				break;
 	        			}
-	        		}
-	        		
-	        		String meetupId = "";
-	        		String name = "";
-	        		String contactPhotoThumbnailLocation = "";
-	        		
-	        		if (selectedIndex != -1) {
-	        			meetupId = _contacts[selectedIndex].getMeetupId();
-	        			name = _contacts[selectedIndex].getName();
-	        			
-	            		contactPhotoThumbnailLocation = _contacts[selectedIndex].getPhotoThumbnail();
-	        		}
-	        		else
-	        		{
-	        			meetupId = _contact.getMeetupId();
-	        			name = _name.getText().toString();
 	        		}
 	        		
 	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);

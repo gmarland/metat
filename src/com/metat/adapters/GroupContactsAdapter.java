@@ -12,12 +12,12 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
-public class ContactsAdapter extends BaseAdapter {
+public class GroupContactsAdapter extends BaseAdapter {
 	public final Map<String,Adapter> sections = new LinkedHashMap<String,Adapter>();
 	public final ArrayAdapter<String> headers;
 	public final static int TYPE_SECTION_HEADER = 0;
 	
-	public ContactsAdapter(Context context) {
+	public GroupContactsAdapter(Context context) {
 		headers = new ArrayAdapter<String>(context, R.layout.contact_list_header);
 	}
 	
@@ -85,9 +85,9 @@ public class ContactsAdapter extends BaseAdapter {
 	public void stopAdapterLoaders()
 	{
 		for(String section : this.sections.keySet()) {
-			ContactsSectionAdapter adapter = (ContactsSectionAdapter)sections.get(section);
-			adapter.ImageLoader.stopThread();
-			adapter.ImageLoader = null;
+			GroupContactsSectionAdapter adapter = (GroupContactsSectionAdapter)sections.get(section);
+			adapter.GroupImageLoader.stopThread();
+			adapter.GroupImageLoader = null;
 			adapter = null;
 			sections.put(section, null);
 		}

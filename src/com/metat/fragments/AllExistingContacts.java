@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.metat.R;
 import com.metat.adapters.ContactsAdapter;
 import com.metat.adapters.ContactsSectionAdapter;
 import com.metat.main.MainActivity;
@@ -13,11 +14,14 @@ import com.metat.models.Contact;
 
 import android.app.ListFragment;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.TableLayout;
 
 public class AllExistingContacts extends ListFragment {
 	@Override
@@ -68,5 +72,52 @@ public class AllExistingContacts extends ListFragment {
 		}
 		
 		setListAdapter(contactsAdapter);
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
+		bindContactsAdapter();
+	}
+	
+	public void onPause()
+	{
+		super.onPause();
+		clearAllImages();
+	}
+	
+	public void clearAllImages()
+	{
+		if (getListView() != null)
+		{
+			for (int i=0; i<getListView().getChildCount(); i++)
+			{
+				if (getListView().getChildAt(i).getClass().equals(TableLayout.class))
+				{
+					TableLayout imageLayout = (TableLayout)getListView().getChildAt(i);
+					ImageView imageView = (ImageView)imageLayout.findViewById(R.id.contact_image);
+					
+			        if (imageView != null)
+			        { 
+			            if ((imageView.getDrawable() != null) && (!((BitmapDrawable)imageView.getDrawable()).getBitmap().isRecycled()))
+			            {
+			            	((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle(); 
+			            	imageView.setBackgroundResource(0); 
+			            }
+			        } 
+
+	            	imageView = null;
+			        imageLayout = null;
+				}
+			}
+	
+			if (getListAdapter() != null)
+			{
+				((ContactsAdapter)getListAdapter()).stopAdapterLoaders();
+				setListAdapter(null);
+			}
+			
+			System.gc();
+		}
 	}
 }

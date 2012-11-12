@@ -22,7 +22,7 @@ public class ViewContactActivity extends Activity {
 	private Contact _contact;
 	private NavigationSource _navigationSource = NavigationSource.AllContacts;
 	
-	private ImageView _image;
+	private ImageView _contactImage;
 	private TextView _meetupGroupName;
 	private TextView _name;
 	private TextView _email;
@@ -49,15 +49,16 @@ public class ViewContactActivity extends Activity {
         ContactDataAccess contactDataAccess = new ContactDataAccess(this);
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
 
-    	_image = (ImageView) findViewById(R.id.image);
+        _contactImage = (ImageView) findViewById(R.id.contact_image);
     	
     	if (_contact.getPhotoThumbnail().length > 0)
     	{
-    		_image.setImageBitmap(ImagesHelper.ImageFileToBitmap(_contact.getPhotoThumbnail()));
+    		_contactImage.setVisibility(View.VISIBLE);
+    		_contactImage.setImageBitmap(ImagesHelper.ImageFileToBitmap(_contact.getPhotoThumbnail()));
     	}
     	else
     	{
-    		_image.setImageResource(R.drawable.profile_default);
+    		_contactImage.setVisibility(View.GONE);
     	}
     	
     	_meetupGroupName = (TextView) findViewById(R.id.meetup_group);
