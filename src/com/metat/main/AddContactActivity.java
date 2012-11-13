@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -45,7 +46,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
 	private ArrayAdapter<Group> _meetupGroupsAdapter;
 	private ArrayAdapter<MeetupContact> _meetupGroupContactsAdapter;
 	
-	private static MeetupContact[] _contacts = new MeetupContact[0];	
+	private static ArrayList<MeetupContact> _contacts = new ArrayList<MeetupContact>();	
 	private String _userToken = "";
 	
 	private NoDefaultSpinner _meetupGroupSelect;
@@ -71,10 +72,20 @@ public class AddContactActivity extends Activity implements TextWatcher {
         if (extras.containsKey("groupId"))
         	_sourceGroupId = extras.getString("groupId");
         
-        _contacts = new MeetupContact[0];
+        _contacts = new ArrayList<MeetupContact>();
 
     	GroupsDataAccess groupsDataAccess = new GroupsDataAccess(this);
     	_groups = groupsDataAccess.getAllGroups();
+
+    	_name = (AutoCompleteTextView) findViewById(R.id.name);
+    	_name.addTextChangedListener(this);
+    	_name.setThreshold(2);
+		_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(this, R.layout.contacts_spinner_style, _contacts);
+		_name.setAdapter(_meetupGroupContactsAdapter);
+    	
+    	_email = (EditText) findViewById(R.id.email);
+    	_phone = (EditText) findViewById(R.id.phone);
+    	_notes = (EditText) findViewById(R.id.notes);
 
         if (_groups.length > 0)
         {
@@ -94,12 +105,12 @@ public class AddContactActivity extends Activity implements TextWatcher {
 		        
 		        if (_sourceGroupId.trim().length() > 0)
 		        {
-			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _sourceGroupId);
+			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(_userToken, _sourceGroupId);
 			    	getGroupContactsTask.execute();
 		        }
 		        else
 		        {
-			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _groups[0].getMeetupId());
+			    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(_userToken, _groups[0].getMeetupId());
 			    	getGroupContactsTask.execute();	
 		        }
 	    	}
@@ -123,11 +134,13 @@ public class AddContactActivity extends Activity implements TextWatcher {
 	    	_meetupGroupSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 				public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-					_contacts = new MeetupContact[0];
-					_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(getBaseContext(), R.layout.contacts_spinner_style, _contacts);
-					_name.setAdapter(_meetupGroupContactsAdapter);
+					_contacts = new ArrayList<MeetupContact>();
 					
-					GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(getBaseContext(), _userToken, _groups[pos].getMeetupId());
+					_meetupGroupContactsAdapter.clear();
+					_meetupGroupContactsAdapter.addAll(_contacts);
+					_meetupGroupContactsAdapter.notifyDataSetChanged();
+					
+					GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(_userToken, _groups[pos].getMeetupId());
 	    			getGroupContactsTask.execute();
 				}
 
@@ -135,16 +148,6 @@ public class AddContactActivity extends Activity implements TextWatcher {
 				}
 			});
         }
-
-    	_name = (AutoCompleteTextView) findViewById(R.id.name);
-    	_name.addTextChangedListener(this);
-    	_name.setThreshold(2);
-		_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(this, R.layout.contacts_spinner_style, _contacts);
-		_name.setAdapter(_meetupGroupContactsAdapter);
-    	
-    	_email = (EditText) findViewById(R.id.email);
-    	_phone = (EditText) findViewById(R.id.phone);
-    	_notes = (EditText) findViewById(R.id.notes);
     }
 
     @Override
@@ -229,13 +232,13 @@ public class AddContactActivity extends Activity implements TextWatcher {
 	        		String name = _name.getText().toString();
 	        		String contactPhotoThumbnailLocation = "";
 	        		
-	        		for (int i=0; i<_contacts.length; i++)
+	        		for (int i=0; i<_contacts.size(); i++)
 	        		{
-	        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
+	        			if ((_contacts.get(i).getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
 	        			{
-		        			meetupId = _contacts[i].getMeetupId();
-		        			name = _contacts[i].getName();
-		        			contactPhotoThumbnailLocation = _contacts[i].getPhotoThumbnail();
+		        			meetupId = _contacts.get(i).getMeetupId();
+		        			name = _contacts.get(i).getName();
+		        			contactPhotoThumbnailLocation = _contacts.get(i).getPhotoThumbnail();
 	        				break;
 	        			}
 	        		}
@@ -284,20 +287,18 @@ public class AddContactActivity extends Activity implements TextWatcher {
     
 	private class GetGroupContactsTask extends AsyncTask<String, String, String>
 	{
-		private Context _context;
 		private String _meetupKey;
 		private String _groupMeetupId;
 		
-		private MeetupContact[] _retrievedContacts = new MeetupContact[0];
+		private ArrayList<MeetupContact> _retrievedContacts = new ArrayList<MeetupContact>();
 		
-		public GetGroupContactsTask(Context context, String meetupKey, String groupMeetupId)
+		public GetGroupContactsTask(String meetupKey, String groupMeetupId)
 		{
-			_context = context;
 			_meetupKey = meetupKey;
 			_groupMeetupId = groupMeetupId;
 			
-			_contacts = new MeetupContact[0];
-			_retrievedContacts = new MeetupContact[0];
+			_contacts = new ArrayList<MeetupContact>();
+			_retrievedContacts = new ArrayList<MeetupContact>();
 		}
 		
 		@Override
@@ -310,9 +311,10 @@ public class AddContactActivity extends Activity implements TextWatcher {
 		@Override
         protected void onPostExecute(String result) {
 			_contacts = _retrievedContacts;
-
-			_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(_context, R.layout.contacts_spinner_style, _contacts);
-			_name.setAdapter(_meetupGroupContactsAdapter);
+			
+			_meetupGroupContactsAdapter.clear();
+			_meetupGroupContactsAdapter.addAll(_contacts);
+			_meetupGroupContactsAdapter.notifyDataSetChanged();
 		}
 	}
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -39,7 +40,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	
 	private Contact _contact;
 	
-	private static MeetupContact[] _contacts = new MeetupContact[0];	
+	private static ArrayList<MeetupContact> _contacts = new ArrayList<MeetupContact>();	
 	private String _userToken = "";
 	
 	private AutoCompleteTextView _name;
@@ -64,20 +65,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
         ContactDataAccess contactDataAccess = new ContactDataAccess(this);
         _contact = contactDataAccess.getContact(extras.getLong("contactId"));
         
-        _contacts = new MeetupContact[0];
-
-    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
-    	{
-	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-	
-	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
-	        {
-	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-		        
-		    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(this, _userToken, _contact.getGroupId());
-		    	getGroupContactsTask.execute();
-	        }
-    	}
+        _contacts = new ArrayList<MeetupContact>();
     	
     	_name = (AutoCompleteTextView) findViewById(R.id.name);
     	_name.setText(_contact.getName());
@@ -92,6 +80,19 @@ public class EditContactActivity extends Activity implements TextWatcher {
     	_phone.setText(_contact.getPhone());
     	_notes = (EditText) findViewById(R.id.notes);
     	_notes.setText(_contact.getNotes());
+
+    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
+    	{
+	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
+	
+	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
+	        {
+	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
+		        
+		    	GetGroupContactsTask getGroupContactsTask = new GetGroupContactsTask(getBaseContext(), _userToken, _contact.getGroupId());
+		    	getGroupContactsTask.execute();
+	        }
+    	}
     }
 
     @Override
@@ -160,14 +161,14 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        		String name = _name.getText().toString();
 	        		String contactPhotoThumbnailLocation = "";
 	        		
-	        		for (int i=0; i<_contacts.length; i++)
+	        		for (int i=0; i<_contacts.size(); i++)
 	        		{
-	        			if ((_contacts[i].getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
+	        			if ((_contacts.get(i).getName().trim().toLowerCase()).equals(_name.getText().toString().trim().toLowerCase()))
 	        			{
-		        			meetupId = _contacts[i].getMeetupId();
-		        			name = _contacts[i].getName();
+		        			meetupId = _contacts.get(i).getMeetupId();
+		        			name = _contacts.get(i).getName();
 		        			
-		            		contactPhotoThumbnailLocation = _contacts[i].getPhotoThumbnail();
+		            		contactPhotoThumbnailLocation = _contacts.get(i).getPhotoThumbnail();
 	        				break;
 	        			}
 	        		}
@@ -201,19 +202,21 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	private class GetGroupContactsTask extends AsyncTask<String, String, String>
 	{
 		private Context _context;
+		
 		private String _meetupKey;
 		private String _groupMeetupId;
 		
-		private MeetupContact[] _retrievedContacts = new MeetupContact[0];
+		private ArrayList<MeetupContact> _retrievedContacts = new ArrayList<MeetupContact>();
 		
 		public GetGroupContactsTask(Context context, String meetupKey, String groupMeetupId)
 		{
 			_context = context;
+			
 			_meetupKey = meetupKey;
 			_groupMeetupId = groupMeetupId;
 
-			_contacts = new MeetupContact[0];
-			_retrievedContacts = new MeetupContact[0];
+			_contacts = new ArrayList<MeetupContact>();
+			_retrievedContacts = new ArrayList<MeetupContact>();
 		}
 		
 		@Override

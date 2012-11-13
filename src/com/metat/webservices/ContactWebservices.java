@@ -27,7 +27,7 @@ public class ContactWebservices {
 	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "." + MEMBER_PHOTO_URL;
 
 
-	public static MeetupContact[] getAllContacts(String meetupKey, String groupId)
+	public static ArrayList<MeetupContact> getAllContacts(String meetupKey, String groupId)
 	{
 		HttpResponse response = null;
 		StatusLine statusLine = null;
@@ -41,7 +41,7 @@ public class ContactWebservices {
 		catch (Exception ex)
 		{
 			Log.e("getAllContacts()", Log.getStackTraceString(ex));
-			return new MeetupContact[0];
+			return new ArrayList<MeetupContact>();
 		}
 
 	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
@@ -53,7 +53,7 @@ public class ContactWebservices {
 	        }
 	        catch (Exception ex) {
 				Log.e("getAllContacts()", Log.getStackTraceString(ex));
-				return new MeetupContact[0];
+				return new ArrayList<MeetupContact>();
 	        }
 	        
 	        String responseString = out.toString();
@@ -77,11 +77,11 @@ public class ContactWebservices {
 			        }
 			    }
 			    
-			    return contacts.toArray(new MeetupContact[contacts.size()]);
+			    return contacts;
 			}
 	        catch (JSONException ex) {
 				Log.e("getAllContacts()", Log.getStackTraceString(ex));
-				return new MeetupContact[0];
+				return new ArrayList<MeetupContact>();
 			}
 	    }
 	    else {
@@ -92,7 +92,7 @@ public class ContactWebservices {
 				Log.e("getAllContacts()", ex.getMessage());
 	        }
 
-			return new MeetupContact[0];
+			return new ArrayList<MeetupContact>();
 	    }
 	}
 }
