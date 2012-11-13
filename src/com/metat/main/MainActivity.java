@@ -6,7 +6,7 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 
 import com.metat.helpers.PreferencesHelper;
-import com.example.metat.R;
+import com.metat.contacts.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.ContactAction;

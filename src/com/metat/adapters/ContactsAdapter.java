@@ -3,7 +3,7 @@ package com.metat.adapters;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.example.metat.R;
+import com.metat.contacts.R;
 
 import android.content.Context;
 import android.view.View;

@@ -1,6 +1,6 @@
 package com.metat.dialogs;
 
-import com.example.metat.R;
+import com.metat.contacts.R;
 import com.metat.main.GroupActivity;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.models.Contact;

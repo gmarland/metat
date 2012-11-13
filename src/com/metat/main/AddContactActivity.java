@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import com.example.metat.R;
+import com.metat.contacts.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.models.Group;

@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.metat.R;
+import com.metat.contacts.R;
 import com.metat.adapters.GroupContactsAdapter;
 import com.metat.adapters.GroupContactsSectionAdapter;
 import com.metat.main.GroupActivity;

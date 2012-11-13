@@ -1,6 +1,6 @@
 package com.metat.adapters;
 
-import com.example.metat.R;
+import com.metat.contacts.R;
 import com.metat.models.Group;
 
 import android.content.Context;
