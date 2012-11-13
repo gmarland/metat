@@ -40,7 +40,7 @@ public class AllExistingMeetpGroups extends ListFragment {
 		}});
 	}
 	
-	private void bindMeetupGroupsAdapter()
+	public void bindMeetupGroupsAdapter()
 	{
 		GroupsDataAccess groupDataAccess = new GroupsDataAccess(getActivity());
 		

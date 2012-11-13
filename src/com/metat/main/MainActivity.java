@@ -11,6 +11,7 @@ import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.ContactAction;
 import com.metat.dialogs.ContactDeleteConfirm;
+import com.metat.dialogs.WelcomeMessage;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.models.Contact;
 import com.metat.models.Group;
@@ -81,6 +82,14 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	        	refreshMeetupGroups();
 	        }
     	}
+        else
+        {
+            if (settings.getBoolean(PreferencesHelper.SHOW_WELCOME, true))
+            {
+            	showWelcomeDialog();
+            }
+        }
+        
 
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts();
@@ -237,6 +246,25 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         }
         
         return false;
+    }
+    
+    public void showWelcomeDialog()
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("welcomeMessageDialog");
+        if (prev != null) {
+        	fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+
+        WelcomeMessage welcomeMessage = WelcomeMessage.newInstance();
+        
+        if (welcomeMessage.getDialog() != null) {
+        	welcomeMessage.getDialog().setCancelable(false);
+        	welcomeMessage.getDialog().setCanceledOnTouchOutside(false);
+        }
+        
+        welcomeMessage.show(fragmentTransaction, "welcomeMessageDialog");
     }
     
     public void showContactActionDialog(long contactId)
@@ -450,6 +478,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	{
 		private Activity _parentActivity;
 		private String _meetupKey;
+		private int _actionsPerformed;
 		
 		private long _selfId;
 		
@@ -457,6 +486,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		{
 			_parentActivity = activity;
 			_meetupKey = meetupKey;
+			_actionsPerformed = 0;
 		}
 		
 		@Override
@@ -488,6 +518,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 								{
 									groupsDataAccess.Update(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
 									contactDataAccess.UpdateGroupNames(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
+									_actionsPerformed++;
 								}
 							}
 						}
@@ -495,6 +526,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 						if (!onlineGroupFound)
 						{
 							groupsDataAccess.Insert(onlineMeetupGroup);
+							_actionsPerformed++;
 						}
 					}
 	
@@ -513,6 +545,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 						if (!existingGroupFound)
 						{
 							groupsDataAccess.Delete(existingMeetupGroup.getMeetupId());
+							_actionsPerformed++;
 						}
 					}
 				}
@@ -528,6 +561,15 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 			{
 				_attemptReathorization = false;
 				logIntoMeetup();
+			}
+			if (_actionsPerformed > 0)
+			{
+				Fragment allMeetupsFragment = getFragmentManager().findFragmentByTag("AllExistingMeetups");
+
+				if (allMeetupsFragment != null)
+				{
+					((AllExistingMeetpGroups)allMeetupsFragment).bindMeetupGroupsAdapter();
+				}
 			}
 		}
 	}

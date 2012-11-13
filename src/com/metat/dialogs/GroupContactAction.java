@@ -73,7 +73,6 @@ public class GroupContactAction extends DialogFragment {
      private Button.OnClickListener deleteContactButtonListener = new Button.OnClickListener() 
      {
   		public void onClick(View v) {
- 			//getDialog().dismiss();
  			((GroupActivity)_context).deleteContactSelected(_contact.getId());
   		}
      };
