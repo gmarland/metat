@@ -296,6 +296,7 @@ public class AddContactActivity extends Activity implements TextWatcher {
 			_meetupKey = meetupKey;
 			_groupMeetupId = groupMeetupId;
 			
+			_contacts = new MeetupContact[0];
 			_retrievedContacts = new MeetupContact[0];
 		}
 		

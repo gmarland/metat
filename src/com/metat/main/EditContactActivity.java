@@ -211,7 +211,8 @@ public class EditContactActivity extends Activity implements TextWatcher {
 			_context = context;
 			_meetupKey = meetupKey;
 			_groupMeetupId = groupMeetupId;
-			
+
+			_contacts = new MeetupContact[0];
 			_retrievedContacts = new MeetupContact[0];
 		}
 		
