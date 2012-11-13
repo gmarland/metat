@@ -1,15 +1,14 @@
 package com.metat.helpers;
 
 import java.util.HashMap;
-import java.util.Stack;
 
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.models.Contact;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -21,153 +20,42 @@ public class ImageLoader {
     public ImageLoader(Context context){
     	_context = context;
     	_contactDataAccess = new ContactDataAccess(_context);
-    	
-        //Make the background thread low priority. This way it will not affect the UI performance
-        photoLoaderThread.setPriority(Thread.NORM_PRIORITY-1);
     }
     
-    public void DisplayImage(long contactId, String meetupId, ImageView imageView)
+    public void DisplayImage(final long contactId, final String meetupId, final ImageView imageView)
     {
         if(_cache.containsKey(meetupId))
         {
-        	//Log.e("cached", meetupId);
-            imageView.setImageBitmap(_cache.get(meetupId));
-        }
-        else
-        {
-            queuePhoto(contactId, meetupId, (Activity)_context, imageView);
-        }    
-    }
-        
-    private void queuePhoto(long contactId, String meetupId, Activity activity, ImageView imageView)
-    {
-        //This ImageView may be used for other images before. So there may be some old tasks in the queue. We need to discard them. 
-        photosQueue.Clean(imageView);
-        
-        PhotoToLoad p = new PhotoToLoad(contactId, meetupId, imageView);
-        
-        synchronized(photosQueue.photosToLoad){
-            photosQueue.photosToLoad.push(p);
-            photosQueue.photosToLoad.notifyAll();
-        }
-        
-        //start thread if it's not started yet
-        if(photoLoaderThread.getState()==Thread.State.NEW)
-            photoLoaderThread.start();
-    }
-    
-    private Contact getContact(long contactId) 
-    {
-		return _contactDataAccess.getContact(contactId);
-    }
-
-    //decodes image and scales it to reduce memory consumption
-    private Bitmap decodeImage(Contact contact){
-    	return ImagesHelper.ResampleImageFileToBitmap(contact.getPhotoThumbnail(), ImagesHelper.THUMBNAIL_SIZE);
-    }
-
-    //Task for the queue
-    private class PhotoToLoad
-    {
-        public long ContactId;
-        public String MeetupId;
-        public ImageView ImageView;
-        
-        public PhotoToLoad(long id, String meetupId, ImageView i){
-        	ContactId = id; 
-        	MeetupId = meetupId; 
-        	ImageView = i;
-        }
-    }
-    
-    PhotosQueue photosQueue=new PhotosQueue();
-    
-    public void stopThread()
-    {
-        photoLoaderThread.interrupt();
-    }
-    
-    //stores list of photos to download
-    class PhotosQueue
-    {
-        private Stack<PhotoToLoad> photosToLoad=new Stack<PhotoToLoad>();
-        
-        public void Clean(ImageView image)
-        {
-            for(int j=0 ;j<photosToLoad.size();){
-                if(photosToLoad.get(j).ImageView == image)
-                    photosToLoad.remove(j);
-                else
-                    ++j;
-            }
-        }
-    }
-    
-    class PhotosLoader extends Thread {
-        public void run() {
-            try {
-                while(true)
-                {
-                    if(photosQueue.photosToLoad.size()==0)
-                    {
-                        synchronized(photosQueue.photosToLoad){
-                            photosQueue.photosToLoad.wait();
-                        }
-                    }
-                    
-                    if(photosQueue.photosToLoad.size()!=0)
-                    {
-                        PhotoToLoad photoToLoad;
-                        
-                        synchronized(photosQueue.photosToLoad){
-                            photoToLoad=photosQueue.photosToLoad.pop();
-                        }
-                        
-                        Contact contact = getContact(photoToLoad.ContactId);
-                        
-                        if ((contact != null) && (contact.getPhotoThumbnail().length > 0))
-                        {
-	                        Bitmap bmp = decodeImage(contact);
-	                        _cache.put(photoToLoad.MeetupId, bmp);
-	                        Object tag = photoToLoad.ImageView.getTag();
-	
-	                        if(tag!=null && ((String)tag).equals(photoToLoad.MeetupId)){
-	                            BitmapDisplayer bd=new BitmapDisplayer(bmp, photoToLoad.ImageView);
-	                            Activity a = (Activity)_context;
-	                            a.runOnUiThread(bd);
-	                        }
-                        }
-                    }
-                    
-                    if(Thread.interrupted())
-                        break;
-                }
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-    
-    PhotosLoader photoLoaderThread = new PhotosLoader();
-    
-    class BitmapDisplayer implements Runnable
-    {
-        Bitmap bitmap;
-        ImageView imageView;
-        public BitmapDisplayer(Bitmap b, ImageView i){bitmap=b;imageView=i;}
-        public void run()
-        {
-            if((bitmap!=null) && (!bitmap.isRecycled()))
+            if((imageView.getTag()!=null) && (imageView.getTag().equals(meetupId)))
             {
-            	if ((imageView.getDrawable() != null) && (((BitmapDrawable)imageView.getDrawable()).getBitmap() != null) && (!((BitmapDrawable)imageView.getDrawable()).getBitmap().isRecycled()))
-	            {
-            		imageView.setImageBitmap(bitmap);
-	            }
+            	imageView.setImageBitmap(_cache.get(meetupId));
             }
         }
-    }
+        
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                _cache.put(meetupId, (Bitmap) message.obj);
+                imageView.setImageBitmap((Bitmap) message.obj);
+            }
+        };
 
-    public void clearCache() {
-        _cache.clear();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                Contact contact = _contactDataAccess.getContact(contactId);;
+
+                if (contact.getPhotoThumbnail().length > 0)
+                {
+	                Bitmap bitmap = ImagesHelper.ResampleImageFileToBitmap(contact.getPhotoThumbnail(), ImagesHelper.THUMBNAIL_SIZE);
+	                
+	                Message message = handler.obtainMessage(1, bitmap);
+	                handler.sendMessage(message);
+                }
+            }
+        };
+        
+        thread.start();
     }
 }
 

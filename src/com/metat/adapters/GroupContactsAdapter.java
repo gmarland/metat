@@ -86,7 +86,6 @@ public class GroupContactsAdapter extends BaseAdapter {
 	{
 		for(String section : this.sections.keySet()) {
 			GroupContactsSectionAdapter adapter = (GroupContactsSectionAdapter)sections.get(section);
-			adapter.GroupImageLoader.stopThread();
 			adapter.GroupImageLoader = null;
 			adapter = null;
 			sections.put(section, null);

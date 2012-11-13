@@ -55,8 +55,8 @@ public class ContactsSectionAdapter extends BaseAdapter {
     	}
 
 		ImageView imageView = (ImageView)contactLayout.findViewById(R.id.contact_image);
-    	imageView.setTag(_contacts[position].getMeetupId());
     	imageView.setImageBitmap(BitmapFactory.decodeResource(_context.getResources(), R.drawable.profile_default));
+    	imageView.setTag(_contacts[position].getMeetupId());
     	ImageLoader.DisplayImage(_contacts[position].getId(), _contacts[position].getMeetupId(), imageView);
     	
     	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.contact_name);

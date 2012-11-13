@@ -86,7 +86,6 @@ public class ContactsAdapter extends BaseAdapter {
 	{
 		for(String section : this.sections.keySet()) {
 			ContactsSectionAdapter adapter = (ContactsSectionAdapter)sections.get(section);
-			adapter.ImageLoader.stopThread();
 			adapter.ImageLoader = null;
 			adapter = null;
 			sections.put(section, null);
