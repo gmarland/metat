@@ -69,11 +69,11 @@ public class ContactWebservices {
 			        if (contact.has(MEMBER_PHOTO_CONTAINER))
 			        {
 				        JSONObject photoContainer = contact.getJSONObject(MEMBER_PHOTO_CONTAINER);
-				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoContainer.getString(MEMBER_PHOTO_URL), contact.getString(MEMBER_NAME)));
+				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoContainer.getString(MEMBER_PHOTO_URL), contact.getString(MEMBER_NAME), groupId));
 			        }
 			        else
 			        {
-				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), "", contact.getString(MEMBER_NAME)));
+				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), "", contact.getString(MEMBER_NAME), groupId));
 			        }
 			    }
 			    

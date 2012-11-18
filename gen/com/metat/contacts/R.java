@@ -94,9 +94,10 @@ public final class R {
         public static final int group=0x7f030009;
         public static final int group_contact_list_item=0x7f03000a;
         public static final int groups_spinner_style=0x7f03000b;
-        public static final int main=0x7f03000c;
-        public static final int meetup_group_list_item=0x7f03000d;
-        public static final int view_contact=0x7f03000e;
+        public static final int loading=0x7f03000c;
+        public static final int main=0x7f03000d;
+        public static final int meetup_group_list_item=0x7f03000e;
+        public static final int view_contact=0x7f03000f;
     }
     public static final class menu {
         public static final int add_contact_menu=0x7f070000;

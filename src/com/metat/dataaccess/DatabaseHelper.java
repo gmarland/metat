@@ -7,14 +7,22 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper 
 {
 	public static final String DATABASE_NAME = "MetAt";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 
 	private Context _context;
 	private static DatabaseHelper _dbHelper = null;
 	
 	private String GROUP_TABLE_CREATE = "CREATE TABLE MeetupGroup (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										"meetupId TEXT NULL, " +
-										"name TEXT NOT NULL)";
+										"name TEXT NOT NULL, " +
+										"link TEXT NULL)";
+	
+	private String MEETUP_CONTACT_TABLE_CREATE = "CREATE TABLE MeetupContact (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+										"meetupId TEXT NOT NULL, " +
+										"name TEXT NOT NULL, " +
+										"photoUrl NULL, " +
+										"link TEXT NULL, " +
+										"groupMeetupId TEXT NULL)";
 
 	private String CONTACT_TABLE_CREATE = "CREATE TABLE Contact (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										"meetupId TEXT NULL, " + 
@@ -23,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 										"email TEXT NULL, " +
 										"phone TEXT NULL, " +
 										"notes TEXT NULL, " +
+										"link TEXT NULL, " +
 										"groupMeetupId TEXT NULL, " +
 										"groupName TEXT NOT NULL)";
 	
@@ -37,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db) 
     {
 		db.execSQL(GROUP_TABLE_CREATE);
+		db.execSQL(MEETUP_CONTACT_TABLE_CREATE);
 		db.execSQL(CONTACT_TABLE_CREATE);
     }
 
@@ -45,6 +55,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
     {
     	for (int i=oldVersion+1; i<= newVersion; i++)
     	{
+    		if (oldVersion < 2)
+    		{
+    			db.execSQL(MEETUP_CONTACT_TABLE_CREATE);
+    			db.execSQL("ALTER TABLE MeetupGroup ADD COLUMN link TEXT NULL;");
+    			db.execSQL("ALTER TABLE Contact ADD COLUMN link TEXT NULL;");
+    			db.execSQL("ALTER TABLE Contact ADD COLUMN groupLink TEXT NULL;");
+    		}
     	}
     }
     

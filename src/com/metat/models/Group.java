@@ -4,6 +4,7 @@ public class Group implements Comparable<Group> {
 	private long _id;
 	private String _meetupId;
 	private String _name;
+	private String _link;
 	
 	private int _memberCount = 0;
 	
@@ -14,11 +15,12 @@ public class Group implements Comparable<Group> {
 		_name = name;
 	}
 	
-	public Group(long id, String meetupId, String name)
+	public Group(long id, String meetupId, String name, String link)
 	{
 		_id = id;
 		_meetupId = meetupId;
 		_name = name;
+		_link = link;
 	}
 	
 	public long getId()
@@ -44,6 +46,11 @@ public class Group implements Comparable<Group> {
 	public int getMemberCount()
 	{
 		return _memberCount;
+	}
+	
+	public String getLink()
+	{
+		return _link;
 	}
 	
     @Override

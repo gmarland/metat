@@ -8,27 +8,28 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.contacts.R;
 import com.metat.dataaccess.ContactDataAccess;
-import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.ContactAction;
 import com.metat.dialogs.ContactDeleteConfirm;
 import com.metat.dialogs.WelcomeMessage;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.models.Contact;
-import com.metat.models.Group;
 import com.metat.models.NavigationSource;
+import com.metat.tasks.FinishAuthenticateMeetup;
+import com.metat.tasks.StartAuthenticateMeetup;
+import com.metat.tasks.UpdateMeetupGroups;
 import com.metat.webservices.ClientWebservices;
-import com.metat.webservices.GroupWebservices;
 import com.metat.fragments.AllExistingContacts;
 import com.metat.fragments.AllExistingMeetpGroups;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,10 +50,11 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	private LinearLayout _meetupLoginLayout;
 	
 	private String _userToken = "";
-	private static boolean _attemptReathorization = true;
+	public static boolean AttemptReathorization = true;
 	
 	private OAuthConsumer _consumer;
 	private OAuthProvider _provider;
+	private IntentFilter _intentFilter;
 	
 	public static Contact[] AllContacts = new Contact[0];
 	
@@ -79,7 +81,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
 	    	{
 	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-	        	refreshMeetupGroups();
 	        }
     	}
         else
@@ -145,15 +146,27 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	protected void onResume()
 	{
 		super.onResume();
-		
+
+        _intentFilter = new IntentFilter();
+        _intentFilter.addAction("REFRESH_MEETUP_GROUPS");
+        
+        registerReceiver(_intentReceiver, _intentFilter);
+        
 		Uri uri = getIntent().getData();
 		
 		if ((uri != null) && (ClientWebservices.CALLBACK_URI.getScheme().equals(uri.getScheme())))
 		{
-			FinishAuthenticateMeetupTask finishAuthenticateMeetupTask = new FinishAuthenticateMeetupTask(this, uri);
+			FinishAuthenticateMeetup finishAuthenticateMeetupTask = new FinishAuthenticateMeetup(this, _consumer, _provider, uri);
 			finishAuthenticateMeetupTask.execute();
 		}
 	}
+
+    @Override 
+    protected void onPause() 
+    { 
+        unregisterReceiver(_intentReceiver); 
+        super.onPause(); 
+    } 
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -193,6 +206,11 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     public void resetMenuOptions()
     {
     	this.invalidateOptionsMenu();
+    }
+    
+    public void setUserToken(String userToken)
+    {
+    	_userToken = userToken;
     }
 
     @Override
@@ -363,29 +381,29 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		updateTabStyles();
 	}
 	
-	private void updateTabStyles()
-	{
-		for (int i=0; i<_contactSortingTabs.getTabWidget().getChildCount(); i++)
-		{
-			_contactSortingTabs.getTabWidget().getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_inactive));
-		}
-
-		_contactSortingTabs.getTabWidget().getChildAt(_contactSortingTabs.getCurrentTab()).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_selected));
-	}
-	
 	public void refreshMeetupGroups()
 	{
-		UpdateMeetupGroupsTask updateMeetupGroupsTask = new UpdateMeetupGroupsTask(this, _userToken);
+		UpdateMeetupGroups updateMeetupGroupsTask = new UpdateMeetupGroups(this, _userToken, _consumer, _provider);
 		updateMeetupGroupsTask.execute();
 	}
-
-    /// Private Methods
 	
-    private void logIntoMeetup()
+	public void reloadMeetupGroups()
+	{
+		Fragment allMeetupsFragment = getFragmentManager().findFragmentByTag("AllExistingMeetups");
+
+		if (allMeetupsFragment != null)
+		{
+			((AllExistingMeetpGroups)allMeetupsFragment).bindMeetupGroupsAdapter();
+		}
+	}
+	
+    public void logIntoMeetup()
     {
-        StartAuthenticateMeetupTask startAuthenticateMeetupTask = new StartAuthenticateMeetupTask(this);
+        StartAuthenticateMeetup startAuthenticateMeetupTask = new StartAuthenticateMeetup(this, _consumer, _provider);
         startAuthenticateMeetupTask.execute();
     }
+
+    /// Private Methods
     
     private TabSpec newTab(String tag, int label, int tabContentId) 
     {        
@@ -397,6 +415,16 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
     	return tabSpec; 
     }
+	
+	private void updateTabStyles()
+	{
+		for (int i=0; i<_contactSortingTabs.getTabWidget().getChildCount(); i++)
+		{
+			_contactSortingTabs.getTabWidget().getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_inactive));
+		}
+
+		_contactSortingTabs.getTabWidget().getChildAt(_contactSortingTabs.getCurrentTab()).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_selected));
+	}
     
     private Button.OnClickListener _loginButtonListener = new Button.OnClickListener() 
     {
@@ -404,173 +432,11 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 			logIntoMeetup();
 		}
     };
-	
-	private class StartAuthenticateMeetupTask extends AsyncTask<String, String, String>
-	{
-		private Activity _parentActivity;
-		
-		public StartAuthenticateMeetupTask(Activity activity)
-		{
-			_parentActivity = activity;
-		}
-		
-		@Override
-		protected String doInBackground(String... strings) {
-			Intent i = _parentActivity.getIntent();
-			
-			if (i.getData() == null) {
-				Uri authenticationUri = ClientWebservices.startMeetupAuthorization(_parentActivity.getBaseContext(), _consumer, _provider);
-				
-				if (authenticationUri != null)
-					return authenticationUri.toString();
-				else
-				{
-					return "";
-				}
-			}
-			else
-				return "";
-		}
-		
-		@Override
-        protected void onPostExecute(String result) {
-			if (result.trim().length() > 0)
-			{
-				_parentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result)));
-			}
-		}
-	}
-	
-	private class FinishAuthenticateMeetupTask extends AsyncTask<String, String, String>
-	{
-		private Activity _parentActivity;
-		private Uri _meetupUri;
-		
-		public FinishAuthenticateMeetupTask(Activity activity, Uri uri)
-		{
-			_parentActivity = activity;
-			_meetupUri = uri;
-		}
-		
-		@Override
-		protected String doInBackground(String... strings) {
-			ClientWebservices.completeMeetupAuthorization(_parentActivity, _consumer, _provider, _meetupUri);
-	        
-			return "";
-		}
-		
-		@Override
-        protected void onPostExecute(String result) {
-			SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-        	getIntent().setData(null);
-        	
-	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
-	        {
-	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-	        	((MainActivity)_parentActivity).resetMenuOptions();
-	        	((MainActivity)_parentActivity).refreshMeetupGroups();
-	        }
-		}
-	}
-	
-	private class UpdateMeetupGroupsTask extends AsyncTask<String, String, String>
-	{
-		private Activity _parentActivity;
-		private String _meetupKey;
-		private int _actionsPerformed;
-		
-		private long _selfId;
-		
-		public UpdateMeetupGroupsTask(Activity activity, String meetupKey)
-		{
-			_parentActivity = activity;
-			_meetupKey = meetupKey;
-			_actionsPerformed = 0;
-		}
-		
-		@Override
-		protected String doInBackground(String... strings) {
-			_selfId = ClientWebservices.getCurrentUser(_parentActivity,_meetupKey);
 
-			if (_selfId >= 0)
-			{
-				GroupsDataAccess groupsDataAccess = new GroupsDataAccess(_parentActivity);
-				ContactDataAccess contactDataAccess = new ContactDataAccess(_parentActivity);
-				
-				Group[] onlineMeetupGroups = GroupWebservices.getAllGroups(_meetupKey, _selfId + "");
-				
-				if (onlineMeetupGroups.length > 0)
-				{
-					Group[] existingMeetupGroups = groupsDataAccess.getAllGroups();
-					
-					for (Group onlineMeetupGroup : onlineMeetupGroups)
-					{
-						boolean onlineGroupFound = false;
-	
-						for (Group existingMeetupGroup : existingMeetupGroups)
-						{
-							if (onlineMeetupGroup.getMeetupId().equals(existingMeetupGroup.getMeetupId()))
-							{
-								onlineGroupFound = true;
-								
-								if (!onlineMeetupGroup.getName().trim().equals(existingMeetupGroup.getName().trim()))
-								{
-									groupsDataAccess.Update(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
-									contactDataAccess.UpdateGroupNames(onlineMeetupGroup.getMeetupId(), onlineMeetupGroup.getName().trim());
-									_actionsPerformed++;
-								}
-							}
-						}
-						
-						if (!onlineGroupFound)
-						{
-							groupsDataAccess.Insert(onlineMeetupGroup);
-							_actionsPerformed++;
-						}
-					}
-	
-					existingMeetupGroups = groupsDataAccess.getAllGroups();
-					
-					for (Group existingMeetupGroup : existingMeetupGroups)
-					{
-						boolean existingGroupFound = false;
-	
-						for (Group onlineMeetupGroup : onlineMeetupGroups)
-						{
-							if (existingMeetupGroup.getMeetupId().equals(onlineMeetupGroup.getMeetupId()))
-								existingGroupFound = true;
-						}
-	
-						if (!existingGroupFound)
-						{
-							groupsDataAccess.Delete(existingMeetupGroup.getMeetupId());
-							_actionsPerformed++;
-						}
-					}
-				}
-			}
-			
-			
-			return "Complete";
-		}
-		
+	private BroadcastReceiver _intentReceiver = new BroadcastReceiver() {
 		@Override
-        protected void onPostExecute(String result) {
-			if ((_selfId == -2) && (_attemptReathorization))
-			{
-				_attemptReathorization = false;
-				logIntoMeetup();
-			}
-			if (_actionsPerformed > 0)
-			{
-				Fragment allMeetupsFragment = getFragmentManager().findFragmentByTag("AllExistingMeetups");
-
-				if (allMeetupsFragment != null)
-				{
-					((AllExistingMeetpGroups)allMeetupsFragment).bindMeetupGroupsAdapter();
-				}
-			}
+		public void onReceive(Context context, Intent intent) {
+			reloadMeetupGroups();
 		}
-	}
+	};
 }

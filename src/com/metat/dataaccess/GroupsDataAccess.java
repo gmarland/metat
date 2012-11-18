@@ -13,6 +13,7 @@ public class GroupsDataAccess {
 	public static final String KEY_ID = "_id";
 	public static final String KEY_MEEETUPID = "meetupId";
 	public static final String KEY_NAME = "name";
+	public static final String KEY_LINK = "link";
 
 	public static final String DATABASE_TABLE = "MeetupGroup";
 
@@ -25,7 +26,7 @@ public class GroupsDataAccess {
 	
 	public Group getGroup(String id)
 	{
-		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME }, KEY_MEEETUPID + " = '" + id + "'", null, null, null, KEY_NAME + " ASC");
+		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME, KEY_LINK }, KEY_MEEETUPID + " = '" + id + "'", null, null, null, KEY_NAME + " ASC");
 
 		if (groupsCursor != null)
 		{
@@ -35,7 +36,7 @@ public class GroupsDataAccess {
 			{
 				do
 				{
-					group = new Group(groupsCursor.getLong(groupsCursor.getColumnIndex(KEY_ID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_MEEETUPID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_NAME)));
+					group = new Group(groupsCursor.getLong(groupsCursor.getColumnIndex(KEY_ID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_MEEETUPID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_NAME)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_LINK)));
 				}
 				while (groupsCursor.moveToNext());
 			}
@@ -50,7 +51,7 @@ public class GroupsDataAccess {
 	
 	public Group[] getAllGroups()
 	{
-		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME }, null, null, null, null, KEY_NAME + " ASC");
+		Cursor groupsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_NAME, KEY_LINK }, null, null, null, null, KEY_NAME + " ASC");
 
 		if (groupsCursor != null)
 		{
@@ -60,7 +61,7 @@ public class GroupsDataAccess {
 			{
 				do
 				{
-					Group group = new Group(groupsCursor.getLong(groupsCursor.getColumnIndex(KEY_ID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_MEEETUPID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_NAME)));
+					Group group = new Group(groupsCursor.getLong(groupsCursor.getColumnIndex(KEY_ID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_MEEETUPID)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_NAME)), groupsCursor.getString(groupsCursor.getColumnIndex(KEY_LINK)));
 					groups.add(group);
 				}
 				while (groupsCursor.moveToNext());
@@ -80,16 +81,18 @@ public class GroupsDataAccess {
 		ContentValues values = new ContentValues();
 		values.put(KEY_MEEETUPID, group.getMeetupId());
 		values.put(KEY_NAME, group.getName());
+		values.put(KEY_LINK, group.getLink());
 		
 		_dbHelper.getWritableDatabase().insert(DATABASE_TABLE, null, values);
 	}
 	
-	public void Update(String meetupId, String name)
+	public void Update(String meetupId, String name, String link)
 	{
-		ContentValues ownerValues = new ContentValues();
-		ownerValues.put(KEY_NAME, name);
+		ContentValues values = new ContentValues();
+		values.put(KEY_NAME, name);
+		values.put(KEY_LINK, link);
 		
-		_dbHelper.getWritableDatabase().update(DATABASE_TABLE, ownerValues, KEY_MEEETUPID + " = '" + meetupId + "'", null);
+		_dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_MEEETUPID + " = '" + meetupId + "'", null);
 	}
 	
 	public boolean Delete(String meetupId)
