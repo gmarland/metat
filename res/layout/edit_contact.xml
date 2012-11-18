@@ -33,19 +33,19 @@
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"
 					android:hint="@string/email_address"
-			        android:inputType="text"
 					style="@style/ContactDetailInput"
-					android:layout_marginBottom="5dp" 
-					android:background="@drawable/textbox" />
+					android:background="@drawable/textbox"
+    				android:inputType="textEmailAddress" 
+					android:layout_marginBottom="5dp" />
 			    <EditText 
 					android:id="@+id/phone" 
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"
 					android:hint="@string/phone_number"
-			        android:inputType="text"
 					style="@style/ContactDetailInput"
-					android:layout_marginBottom="5dp"
-					android:background="@drawable/textbox" />
+    				android:inputType="phone"
+					android:background="@drawable/textbox"
+					android:layout_marginBottom="5dp" />
 			    <EditText
 			        android:id="@+id/notes"
 			        android:layout_width="fill_parent"

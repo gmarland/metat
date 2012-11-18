@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
@@ -197,7 +196,6 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 					    		Intent broadcastContactRefreshComplete = new Intent();
 					    		broadcastContactRefreshComplete.setAction("REFRESH_MEETUP_CONTACTS");
 	
-					    		Log.e("broadcasting", retrievedMeetupGroup.getMeetupId());
 					        	Bundle extras = new Bundle();
 					        	extras.putString("meetupGroupId", retrievedMeetupGroup.getMeetupId());
 					        	broadcastContactRefreshComplete.putExtras(extras);
