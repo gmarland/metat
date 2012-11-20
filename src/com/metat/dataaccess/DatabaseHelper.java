@@ -18,11 +18,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
 										"link TEXT NULL)";
 	
 	private String MEETUP_CONTACT_TABLE_CREATE = "CREATE TABLE MeetupContact (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+										"groupMeetupId TEXT NULL, " +
 										"meetupId TEXT NOT NULL, " +
 										"name TEXT NOT NULL, " +
 										"photoUrl NULL, " +
-										"link TEXT NULL, " +
-										"groupMeetupId TEXT NULL)";
+										"link TEXT NULL," +
+										"facebookLink TEXT NULL," +
+										"twitterLink TEXT NULL," +
+										"flickrLink TEXT NULL," +
+										"linkedInLink TEXT NULL," +
+										"tumblrLink TEXT NULL)";
 
 	private String CONTACT_TABLE_CREATE = "CREATE TABLE Contact (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 										"meetupId TEXT NULL, " + 
@@ -31,7 +36,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
 										"email TEXT NULL, " +
 										"phone TEXT NULL, " +
 										"notes TEXT NULL, " +
-										"link TEXT NULL, " +
+										"link TEXT NULL," +
+										"facebookLink TEXT NULL," +
+										"twitterLink TEXT NULL," +
+										"flickrLink TEXT NULL," +
+										"linkedInLink TEXT NULL," +
+										"tumblrLink TEXT NULL, " +
 										"groupMeetupId TEXT NULL, " +
 										"groupName TEXT NOT NULL)";
 	

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,14 +24,21 @@ public class ViewContactActivity extends Activity {
 	private NavigationSource _navigationSource = NavigationSource.AllContacts;
 	
 	private ImageView _contactImage;
-	private TextView _meetupGroupName;
 	private TextView _name;
-	private TextView _email;
+	private TextView _meetupGroupName;
+
+	private ImageView _twitterImageView;
+	private ImageView _facebookImageView;
+	private ImageView _flickrImageView;
+	private ImageView _tumblrImageView;
+	private ImageView _linkedInImageView;
+	
 	private LinearLayout _emailContainer;
-	private TextView _phone;
+	private TextView _email;
 	private LinearLayout _phoneContainer;
-	private TextView _notes;
+	private TextView _phone;
 	private LinearLayout _notesContainer;
+	private TextView _notes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,106 @@ public class ViewContactActivity extends Activity {
 
     	_name = (TextView) findViewById(R.id.name);
     	_name.setText(_contact.getName());
+
+    	_twitterImageView = (ImageView) findViewById(R.id.twitter_link);
+    	if ((_contact.getTwitterId() != null) && (_contact.getTwitterId().trim().length() > 0))
+    	{
+    		_twitterImageView.setVisibility(View.VISIBLE);
+    		_twitterImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" + _contact.getTwitterId().replaceAll("@", "")));
+					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					getBaseContext().startActivity(browserIntent);
+				}
+    			
+    		});
+    	}
+    	else
+    	{
+    		_twitterImageView.setVisibility(View.GONE);
+    	}
+    	
+    	_facebookImageView = (ImageView) findViewById(R.id.facebook_link);
+    	if ((_contact.getFacebookId() != null) && (_contact.getFacebookId().trim().length() > 0))
+    	{
+    		_facebookImageView.setVisibility(View.VISIBLE);
+    		_facebookImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/profile.php?id=" + _contact.getFacebookId()));
+					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					getBaseContext().startActivity(browserIntent);
+				}
+    			
+    		});
+    	}
+    	else
+    	{
+    		_facebookImageView.setVisibility(View.GONE);
+    	}
+    	
+    	_flickrImageView = (ImageView) findViewById(R.id.flickr_link);
+    	if ((_contact.getFlickrId() != null) && (_contact.getFlickrId().trim().length() > 0))
+    	{
+    		_flickrImageView.setVisibility(View.VISIBLE);
+    		_flickrImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(_contact.getFlickrId()));
+					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					getBaseContext().startActivity(browserIntent);
+				}
+    			
+    		});
+    	}
+    	else
+    	{
+    		_flickrImageView.setVisibility(View.GONE);
+    	}
+    	
+    	_tumblrImageView = (ImageView) findViewById(R.id.tumblr_link);
+    	if ((_contact.getTumblrId() != null) && (_contact.getTumblrId().trim().length() > 0))
+    	{
+    		_tumblrImageView.setVisibility(View.VISIBLE);
+    		_tumblrImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(_contact.getTumblrId()));
+					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					getBaseContext().startActivity(browserIntent);
+				}
+    			
+    		});
+    	}
+    	else
+    	{
+    		_tumblrImageView.setVisibility(View.GONE);
+    	}
+    	
+    	_linkedInImageView = (ImageView) findViewById(R.id.linkedin_link);
+    	if ((_contact.getLinkedInId() != null) && (_contact.getLinkedInId().trim().length() > 0))
+    	{
+    		_linkedInImageView.setVisibility(View.VISIBLE);
+    		_linkedInImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(_contact.getLinkedInId()));
+					browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					getBaseContext().startActivity(browserIntent);
+				}
+    			
+    		});
+    	}
+    	else
+    	{
+    		_linkedInImageView.setVisibility(View.GONE);
+    	}
     	
     	int contactDetailCount = 0;
 

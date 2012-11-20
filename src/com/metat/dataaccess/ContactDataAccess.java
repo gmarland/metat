@@ -17,6 +17,11 @@ public class ContactDataAccess {
 	public static final String KEY_PHONE = "phone";
 	public static final String KEY_NOTES = "notes";
 	public static final String KEY_LINK = "link";
+	public static final String KEY_FACEBOOK_LINK = "facebookLink";
+	public static final String KEY_TWITTER_LINK = "twitterLink";
+	public static final String KEY_FLICKR_LINK = "flickrLink";
+	public static final String KEY_LINKEDIN_LINK = "linkedInLink";
+	public static final String KEY_TUMBLR_LINK = "tumblrLink";
 	public static final String KEY_GROUPMEETUPID = "groupMeetupId";
 	public static final String KEY_GROUPNAME = "groupName";
 
@@ -81,7 +86,7 @@ public class ContactDataAccess {
 	
 	public Contact getContact(long id)
 	{
-		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES, KEY_LINK, KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_ID + " = " + id, null, null, null, KEY_NAME + " ASC");
+		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES, KEY_LINK, KEY_FACEBOOK_LINK, KEY_TWITTER_LINK, KEY_FLICKR_LINK, KEY_LINKEDIN_LINK, KEY_TUMBLR_LINK, KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_ID + " = " + id, null, null, null, KEY_NAME + " ASC");
 
 		if (contactsCursor != null)
 		{
@@ -91,7 +96,7 @@ public class ContactDataAccess {
 			{
 				do
 				{
-					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
+					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_TWITTER_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINKEDIN_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FACEBOOK_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_TUMBLR_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FLICKR_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
 				}
 				while (contactsCursor.moveToNext());
 			}
@@ -106,7 +111,7 @@ public class ContactDataAccess {
 
 	public Contact getContact(String meetupId)
 	{
-		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES, KEY_LINK, KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_MEEETUPID + " = '" + meetupId + "'", null, null, null, KEY_NAME + " ASC");
+		Cursor contactsCursor= _dbHelper.getReadableDatabase().query(DATABASE_TABLE, new String[] { KEY_ID, KEY_MEEETUPID, KEY_THUMBNAIL, KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_NOTES, KEY_LINK, KEY_FACEBOOK_LINK, KEY_TWITTER_LINK, KEY_FLICKR_LINK, KEY_LINKEDIN_LINK, KEY_TUMBLR_LINK, KEY_GROUPMEETUPID, KEY_GROUPNAME }, KEY_MEEETUPID + " = '" + meetupId + "'", null, null, null, KEY_NAME + " ASC");
 
 		if (contactsCursor != null)
 		{
@@ -116,7 +121,7 @@ public class ContactDataAccess {
 			{
 				do
 				{
-					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
+					contact = new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(KEY_ID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_MEEETUPID)), contactsCursor.getBlob(contactsCursor.getColumnIndex(KEY_THUMBNAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NAME)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_EMAIL)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_PHONE)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_NOTES)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_TWITTER_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_LINKEDIN_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FACEBOOK_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_TUMBLR_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_FLICKR_LINK)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPMEETUPID)), contactsCursor.getString(contactsCursor.getColumnIndex(KEY_GROUPNAME)));
 				}
 				while (contactsCursor.moveToNext());
 			}
@@ -129,7 +134,7 @@ public class ContactDataAccess {
 			return null;
 	}
 	
-	public void Insert(String meetupId, byte[] thumbnail, String name, String email, String phone, String notes, String groupId, String groupName)
+	public void Insert(String meetupId, byte[] thumbnail, String name, String email, String phone, String notes, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String groupId, String groupName)
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_MEEETUPID, meetupId);
@@ -138,6 +143,12 @@ public class ContactDataAccess {
 		values.put(KEY_EMAIL, email);
 		values.put(KEY_PHONE, phone);
 		values.put(KEY_NOTES, notes);
+		values.put(KEY_LINK, link);
+		values.put(KEY_FACEBOOK_LINK,  facebookId);
+		values.put(KEY_TWITTER_LINK, twitterId);
+		values.put(KEY_FLICKR_LINK, flickrId);
+		values.put(KEY_LINKEDIN_LINK, linkedInId);
+		values.put(KEY_TUMBLR_LINK, tumblrId);
 		values.put(KEY_GROUPMEETUPID, groupId);
 		values.put(KEY_GROUPNAME, groupName);
 		
@@ -154,7 +165,7 @@ public class ContactDataAccess {
 		}
 	}
 	
-	public boolean updateContact(long id, String meetupId, byte[] thumbnail, String name, String email, String phone, String notes)
+	public boolean updateContact(long id, String meetupId, byte[] thumbnail, String name, String email, String phone, String notes, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId)
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_MEEETUPID, meetupId);
@@ -166,6 +177,12 @@ public class ContactDataAccess {
 		values.put(KEY_EMAIL, email);
 		values.put(KEY_PHONE, phone);
 		values.put(KEY_NOTES, notes);
+		values.put(KEY_LINK, link);
+		values.put(KEY_FACEBOOK_LINK,  facebookId);
+		values.put(KEY_TWITTER_LINK, twitterId);
+		values.put(KEY_FLICKR_LINK, flickrId);
+		values.put(KEY_LINKEDIN_LINK, linkedInId);
+		values.put(KEY_TUMBLR_LINK, tumblrId);
 		
 		return _dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_ID + " = " + id, null) > 0;
 	}

@@ -153,14 +153,49 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 									{
 										contactFound = true;
 										
+										String linkId = "";
+										String twitterId = "";
+										String linkedinId = "";
+										String facebookId = "";
+										String tumblrId = "";
+										String flickrId = "";
+										
+										if (meetupContact.getLink() != null)
+											linkId = meetupContact.getLink().trim();
+										
+										if (meetupContact.getTwitterId() != null)
+											twitterId = meetupContact.getTwitterId().trim();
+										
+										if (meetupContact.getLinkedInId() != null)
+											linkedinId = meetupContact.getLinkedInId().trim();
+										
+										if (meetupContact.getFacebookId() != null)
+											facebookId = meetupContact.getFacebookId().trim();
+										
+										if (meetupContact.getTumblrId() != null)
+											tumblrId = meetupContact.getTumblrId().trim();
+										
+										if (meetupContact.getFlickrId() != null)
+											flickrId = meetupContact.getFlickrId().trim();
+										
 										if (((meetupContact.getName() != null) && (existingMeetupContacts.get(i).getName() != null) && (!meetupContact.getName().trim().equals(existingMeetupContacts.get(i).getName().trim()))) || 
 												((existingMeetupContacts.get(i).getPhotoThumbnail() != null) && (existingMeetupContacts.get(i).getPhotoThumbnail() != null) && (!existingMeetupContacts.get(i).getPhotoThumbnail().trim().equals(existingMeetupContacts.get(i).getPhotoThumbnail().trim()))) || 
-												((meetupContact.getLink() != null) && (meetupContactDataAccess != null) && (!meetupContact.getLink().trim().equals(existingMeetupContacts.get(i).getLink().trim()))))
+												((existingMeetupContacts.get(i).getLink() != null) && (meetupContactDataAccess != null) && (!linkId.equals(existingMeetupContacts.get(i).getLink().trim()))) || 
+												((existingMeetupContacts.get(i).getTwitterId() != null) && (meetupContactDataAccess != null) && (!twitterId.equals(existingMeetupContacts.get(i).getTwitterId().trim()))) || 
+												((existingMeetupContacts.get(i).getFacebookId() != null) && (meetupContactDataAccess != null) && (!facebookId.equals(existingMeetupContacts.get(i).getFacebookId().trim()))) || 
+												((existingMeetupContacts.get(i).getFlickrId() != null) && (meetupContactDataAccess != null) && (!flickrId.equals(existingMeetupContacts.get(i).getFlickrId().trim()))) || 
+												((existingMeetupContacts.get(i).getTumblrId() != null) && (meetupContactDataAccess != null) && (!tumblrId.equals(existingMeetupContacts.get(i).getTumblrId()))) || 
+												((existingMeetupContacts.get(i).getLinkedInId() != null) && (meetupContactDataAccess != null) && (!linkedinId.equals(existingMeetupContacts.get(i).getLinkedInId().trim()))))
 										{
-											meetupContactDataAccess.Update(existingMeetupContacts.get(i).getMeetupId(), meetupContact.getPhotoThumbnail().trim(), meetupContact.getName().trim(), meetupContact.getLink().trim());
+											meetupContactDataAccess.Update(existingMeetupContacts.get(i).getMeetupId(), meetupContact.getPhotoThumbnail().trim(), meetupContact.getName().trim(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
 											existingMeetupContacts.get(i).setPhotoThumbnail(meetupContact.getPhotoThumbnail().trim());
 											existingMeetupContacts.get(i).setName(meetupContact.getName().trim());
-											existingMeetupContacts.get(i).setLink(meetupContact.getLink().trim());
+											existingMeetupContacts.get(i).setLink(linkId);
+											existingMeetupContacts.get(i).setTwitterId(twitterId);
+											existingMeetupContacts.get(i).setLinkedInId(linkedinId);
+											existingMeetupContacts.get(i).setFacebookId(facebookId);
+											existingMeetupContacts.get(i).setTumblrId(tumblrId);
+											existingMeetupContacts.get(i).setFlickrId(flickrId);
 											contactActionCount++;
 										}
 									}

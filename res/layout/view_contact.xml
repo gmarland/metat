@@ -35,7 +35,38 @@
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content" 
 	    			style="@style/ContactGroup" />
+				<LinearLayout
+				    android:layout_width="fill_parent"   
+				    android:layout_height="wrap_content"
+				    android:orientation="horizontal">
+				    <ImageView 
+				        android:id="@+id/twitter_link" 
+					    android:layout_height="wrap_content"
+					    style="@style/ContactLink"
+					    android:src="@drawable/twitter_icon"/>
+				    <ImageView 
+				        android:id="@+id/facebook_link" 
+					    android:layout_height="wrap_content"
+					    style="@style/ContactLink"
+					    android:src="@drawable/facebook_icon"/>
+				    <ImageView 
+				        android:id="@+id/flickr_link" 
+					    android:layout_height="wrap_content"
+					    style="@style/ContactLink"
+					    android:src="@drawable/flickr_icon"/>
+				    <ImageView 
+				        android:id="@+id/tumblr_link" 
+					    android:layout_height="wrap_content"
+					    style="@style/ContactLink"
+					    android:src="@drawable/tumblr_icon"/>
+				    <ImageView 
+				        android:id="@+id/linkedin_link" 
+					    android:layout_height="wrap_content"
+					    style="@style/ContactLink"
+					    android:src="@drawable/linkedin_icon"/>
+				</LinearLayout>
 			</LinearLayout>
+			
 		</TableRow>
 	</TableLayout>
 	<LinearLayout 

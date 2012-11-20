@@ -23,8 +23,15 @@ public class ContactWebservices {
 	private static final String MEMBER_NAME = "name";
 	private static final String MEMBER_PHOTO_CONTAINER = "photo";
 	private static final String MEMBER_PHOTO_URL = "photo_link";
+	private static final String MEMBER_OTHER_SERVICES = "other_services";
+	private static final String MEMBER_TWITTER = "twitter";
+	private static final String MEMBER_LINKEDIN = "linkedin";
+	private static final String MEMBER_FACEBOOK = "facebook";
+	private static final String MEMBER_TUMBLR = "tumblr";
+    private static final String MEMBER_FLICKR = "flickr";
+	private static final String MEMBER_OTHER_SERVICES_IDENTIFIER = "identifier";
 
-	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "." + MEMBER_PHOTO_URL;
+	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "," + MEMBER_PHOTO_URL + "," + MEMBER_OTHER_SERVICES;
 
 
 	public static ArrayList<MeetupContact> getAllContacts(String meetupKey, String groupId)
@@ -66,15 +73,56 @@ public class ContactWebservices {
 
 			    for(int i = 0; i < allContacts.length(); i++){
 			        JSONObject contact = allContacts.getJSONObject(i);
+			        
+			        String photoUrl = "";
+			        String twitterId = "";
+			        String linkedInId = "";
+			        String facebookId = "";
+			        String tumblrId = "";
+			        String flickrId = "";
+			        
 			        if (contact.has(MEMBER_PHOTO_CONTAINER))
 			        {
 				        JSONObject photoContainer = contact.getJSONObject(MEMBER_PHOTO_CONTAINER);
-				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoContainer.getString(MEMBER_PHOTO_URL), contact.getString(MEMBER_NAME), groupId));
+			        	photoUrl = photoContainer.getString(MEMBER_PHOTO_URL);
 			        }
-			        else
+
+			        if (contact.has(MEMBER_OTHER_SERVICES))
 			        {
-				        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), "", contact.getString(MEMBER_NAME), groupId));
+				        JSONObject otherServices = contact.getJSONObject(MEMBER_OTHER_SERVICES);
+
+				        if (otherServices.has(MEMBER_TWITTER))
+				        {
+					        JSONObject twitterObj = otherServices.getJSONObject(MEMBER_TWITTER);
+					        twitterId = twitterObj.getString(MEMBER_OTHER_SERVICES_IDENTIFIER);
+				        }
+
+				        if (otherServices.has(MEMBER_LINKEDIN))
+				        {
+					        JSONObject linkedinObj = otherServices.getJSONObject(MEMBER_LINKEDIN);
+					        linkedInId = linkedinObj.getString(MEMBER_OTHER_SERVICES_IDENTIFIER);
+				        }
+
+				        if (otherServices.has(MEMBER_FACEBOOK))
+				        {
+					        JSONObject facebookObj = otherServices.getJSONObject(MEMBER_FACEBOOK);
+					        facebookId = facebookObj.getString(MEMBER_OTHER_SERVICES_IDENTIFIER);
+				        }
+
+				        if (otherServices.has(MEMBER_TUMBLR))
+				        {
+					        JSONObject tumblrObj = otherServices.getJSONObject(MEMBER_TUMBLR);
+					        tumblrId = tumblrObj.getString(MEMBER_OTHER_SERVICES_IDENTIFIER);
+				        }
+
+				        if (otherServices.has(MEMBER_FLICKR))
+				        {
+					        JSONObject flickrObj = otherServices.getJSONObject(MEMBER_FLICKR);
+					        flickrId = flickrObj.getString(MEMBER_OTHER_SERVICES_IDENTIFIER);
+				        }
 			        }
+			        
+			        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoUrl, contact.getString(MEMBER_NAME), twitterId, linkedInId, facebookId, tumblrId, flickrId, groupId));
 			    }
 			    
 			    return contacts;

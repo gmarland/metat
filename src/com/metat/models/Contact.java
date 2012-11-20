@@ -10,6 +10,12 @@ public class Contact {
 	private String _notes;
 	private String _link;
 
+	private String _twitterId;
+	private String _linkedInId;
+	private String _facebookId;
+	private String _tumblrId;
+	private String _flickrId;
+
 	private String _groupId;
 	private String _groupName;
 	
@@ -25,7 +31,7 @@ public class Contact {
 		_groupName = groupName;
 	}
 	
-	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String email, String phone, String notes, String link, String groupId, String groupName)
+	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String email, String phone, String notes, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String groupId, String groupName)
 	{
 		_id = id;
 		_meetupId = meetupId;
@@ -35,6 +41,12 @@ public class Contact {
 		_phone = phone;
 		_notes = notes;
 		_link = link;
+
+		_twitterId = twitterId;
+		_linkedInId = linkedInId;
+		_facebookId = facebookId;
+		_tumblrId = tumblrId;
+		_flickrId = flickrId;
 		
 		_groupId = groupId;
 		_groupName = groupName;
@@ -78,6 +90,31 @@ public class Contact {
 	public String getLink()
 	{
 		return _link;
+	}
+	
+	public String getTwitterId()
+	{
+		return _twitterId;
+	}
+	
+	public String getLinkedInId()
+	{
+		return _linkedInId;
+	}
+	
+	public String getFacebookId()
+	{
+		return _facebookId;
+	}
+	
+	public String getTumblrId()
+	{
+		return _tumblrId;
+	}
+	
+	public String getFlickrId()
+	{
+		return _flickrId;
 	}
 	
 	public String getGroupId()

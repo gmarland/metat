@@ -169,6 +169,12 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        		String meetupId = _contact.getMeetupId();
 	        		String name = _name.getText().toString();
 	        		String contactPhotoThumbnailLocation = "";
+	        		String link = "";
+	        		String twitterId = "";
+	        		String linkedInId = "";
+	        		String facebookId = "";
+	        		String tumblrId = "";
+	        		String flickrId = "";
 	        		
 	        		for (int i=0; i<_contacts.size(); i++)
 	        		{
@@ -176,6 +182,12 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        			{
 		        			meetupId = _contacts.get(i).getMeetupId();
 		        			name = _contacts.get(i).getName();
+		        			link = _contacts.get(i).getLink();
+			        		twitterId = _contacts.get(i).getTwitterId();
+			        		linkedInId = _contacts.get(i).getLinkedInId();
+			        		facebookId = _contacts.get(i).getFacebookId();
+			        		tumblrId = _contacts.get(i).getTumblrId();
+			        		flickrId = _contacts.get(i).getFlickrId();
 		        			
 		            		contactPhotoThumbnailLocation = _contacts.get(i).getPhotoThumbnail();
 	        				break;
@@ -183,7 +195,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        		}
 	        		
 	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
-        			contactDataAccess.updateContact(_contact.getId(), meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString());
+        			contactDataAccess.updateContact(_contact.getId(), meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), link, twitterId, linkedInId, facebookId, tumblrId, flickrId);
 	        		
         			if (contactPhotoThumbnailLocation.trim().length() > 0) {
 		        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);
