@@ -140,6 +140,7 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 						if (retrievedContacts.size() > 0)
 						{
 							MeetupContactDataAccess meetupContactDataAccess = new MeetupContactDataAccess(_parentActivity);
+							ContactDataAccess contactDataAccess = new ContactDataAccess(_parentActivity);
 							 
 							ArrayList<MeetupContact> existingMeetupContacts = meetupContactDataAccess.getAllMeetupContacts(retrievedMeetupGroup.getMeetupId());
 							
@@ -188,6 +189,7 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 												((existingMeetupContacts.get(i).getLinkedInId() != null) && (meetupContactDataAccess != null) && (!linkedinId.equals(existingMeetupContacts.get(i).getLinkedInId().trim()))))
 										{
 											meetupContactDataAccess.Update(existingMeetupContacts.get(i).getMeetupId(), meetupContact.getPhotoThumbnail().trim(), meetupContact.getName().trim(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
+											contactDataAccess.updateContact(existingMeetupContacts.get(i).getMeetupId(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
 											existingMeetupContacts.get(i).setPhotoThumbnail(meetupContact.getPhotoThumbnail().trim());
 											existingMeetupContacts.get(i).setName(meetupContact.getName().trim());
 											existingMeetupContacts.get(i).setLink(linkId);

@@ -187,6 +187,19 @@ public class ContactDataAccess {
 		return _dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_ID + " = " + id, null) > 0;
 	}
 	
+	public boolean updateContact(String meetupId, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_LINK, link);
+		values.put(KEY_FACEBOOK_LINK,  facebookId);
+		values.put(KEY_TWITTER_LINK, twitterId);
+		values.put(KEY_FLICKR_LINK, flickrId);
+		values.put(KEY_LINKEDIN_LINK, linkedInId);
+		values.put(KEY_TUMBLR_LINK, tumblrId);
+		
+		return _dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_MEEETUPID + " = '" + meetupId + "'", null) > 0;
+	}
+	
 	public void UpdateGroupNames(String meetupId, String name)
 	{
 		ContentValues ownerValues = new ContentValues();
