@@ -249,14 +249,14 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 							}
 						}
 					}
+
+					MainActivity.LoggingIn = false;
 					
 					_contactsDownloadingHandler.sendMessage(new Message());
 				} });
 				
 				thread.start();
 			}
-			
-			MainActivity.LoggingIn = false;
 		}
 	}
 

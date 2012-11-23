@@ -94,7 +94,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
             }
         }
         
-
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts();
         
@@ -161,6 +160,23 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		{
 			FinishAuthenticateMeetup finishAuthenticateMeetupTask = new FinishAuthenticateMeetup(this, _consumer, _provider, uri);
 			finishAuthenticateMeetupTask.execute();
+		}
+		else
+		{
+			if (!LoggingIn)
+			{
+		        Fragment prev = getFragmentManager().findFragmentByTag("loadingContactsDialog");
+		        if (prev != null) {
+		        	dismissLoadingContacts();
+		        }
+			}
+			else
+			{
+		        Fragment prev = getFragmentManager().findFragmentByTag("loadingContactsDialog");
+		        if (prev == null) {
+		        	showLoadingContacts();
+		        }
+			}
 		}
 	}
 
@@ -316,10 +332,14 @@ public class MainActivity extends Activity implements OnTabChangeListener {
             ((LoadingGroups)dialog).getDialog().dismiss();
         	fragmentTransaction.remove(dialog);
         }
-        
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+
+        try
+        {
+	        fragmentTransaction.addToBackStack(null);
+	        fragmentTransaction.commit();
+	    }
+	    catch (Exception ex) {}
+	    }
     
     public void showLoadingContacts()
     {
@@ -349,12 +369,18 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         Fragment dialog = getFragmentManager().findFragmentByTag("loadingContactsDialog");
         
         if (dialog != null) {
-            ((LoadingContacts)dialog).getDialog().dismiss();
-        	fragmentTransaction.remove(dialog);
+            if (((LoadingContacts)dialog).getDialog() != null)
+            	((LoadingContacts)dialog).getDialog().dismiss();
+        	
+            fragmentTransaction.remove(dialog);
         }
         
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        try
+        {
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+        catch (Exception ex) {}
     }
     
     public void showContactActionDialog(long contactId)
