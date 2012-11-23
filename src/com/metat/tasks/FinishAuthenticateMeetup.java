@@ -47,6 +47,10 @@ public class FinishAuthenticateMeetup extends AsyncTask<String, String, String>
         {
         	((MainActivity)_parentActivity).setUserToken(settings.getString(PreferencesHelper.USER_TOKEN, ""));
         	((MainActivity)_parentActivity).resetMenuOptions();
+        	
+        	if (MainActivity.LoggingIn)
+        		((MainActivity)_parentActivity).showLoadingGroups();
+        		
         	((MainActivity)_parentActivity).refreshMeetupGroups();
         }
 	}

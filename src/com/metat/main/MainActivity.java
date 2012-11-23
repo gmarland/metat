@@ -10,6 +10,8 @@ import com.metat.contacts.R;
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dialogs.ContactAction;
 import com.metat.dialogs.ContactDeleteConfirm;
+import com.metat.dialogs.LoadingContacts;
+import com.metat.dialogs.LoadingGroups;
 import com.metat.dialogs.WelcomeMessage;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.models.Contact;
@@ -51,6 +53,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	
 	private String _userToken = "";
 	public static boolean AttemptReathorization = true;
+	public static boolean LoggingIn = false;
 	
 	private OAuthConsumer _consumer;
 	private OAuthProvider _provider;
@@ -285,6 +288,75 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         welcomeMessage.show(fragmentTransaction, "welcomeMessageDialog");
     }
     
+    public void showLoadingGroups()
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("loadingGroupsDialog");
+        if (prev != null) {
+        	fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+
+        LoadingGroups loadingGroups = LoadingGroups.newInstance();
+        
+        if (loadingGroups.getDialog() != null) {
+        	loadingGroups.getDialog().setCancelable(false);
+        	loadingGroups.getDialog().setCanceledOnTouchOutside(false);
+        }
+        
+        loadingGroups.show(fragmentTransaction, "loadingGroupsDialog");
+    }
+    
+    public void dismissLoadingGroups()
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment dialog = getFragmentManager().findFragmentByTag("loadingGroupsDialog");
+        
+        if (dialog != null) {
+            ((LoadingGroups)dialog).getDialog().dismiss();
+        	fragmentTransaction.remove(dialog);
+        }
+        
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+    
+    public void showLoadingContacts()
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+    	
+        Fragment prev = getFragmentManager().findFragmentByTag("loadingContactsDialog");
+        if (prev != null) {
+        	fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        
+        LoadingContacts loadingContacts = LoadingContacts.newInstance();
+        
+        if (loadingContacts.getDialog() != null) {
+        	loadingContacts.getDialog().setCancelable(false);
+        	loadingContacts.getDialog().setCanceledOnTouchOutside(false);
+        }
+        
+        loadingContacts.show(fragmentTransaction, "loadingContactsDialog");
+    }
+    
+    public void dismissLoadingContacts()
+    {
+    	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment dialog = getFragmentManager().findFragmentByTag("loadingContactsDialog");
+        
+        if (dialog != null) {
+            ((LoadingContacts)dialog).getDialog().dismiss();
+        	fragmentTransaction.remove(dialog);
+        }
+        
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+    
     public void showContactActionDialog(long contactId)
     {
     	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -306,8 +378,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     public void editContactSelected(long contactId)
     {
     	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-    	
         Fragment prevContactActionDialog = getFragmentManager().findFragmentByTag("contactActionDialog");
+        
         if (prevContactActionDialog != null) {
             ((ContactAction)prevContactActionDialog).getDialog().dismiss();
         	fragmentTransaction.remove(prevContactActionDialog);
@@ -429,6 +501,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     private Button.OnClickListener _loginButtonListener = new Button.OnClickListener() 
     {
 		public void onClick(View v) {
+			LoggingIn = true;
 			logIntoMeetup();
 		}
     };

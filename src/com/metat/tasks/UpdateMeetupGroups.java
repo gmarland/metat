@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
@@ -126,9 +128,15 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 		    		_parentActivity.sendBroadcast(broadcastRefreshComplete);
 		        }
 			}
+			
+        	if (MainActivity.LoggingIn)
+        		((MainActivity)_parentActivity).dismissLoadingGroups();
 
 			if (_retrievedMeetupGroups.length > 0)
 			{
+	        	if (MainActivity.LoggingIn)
+	        		((MainActivity)_parentActivity).showLoadingContacts();
+	        	
 				Thread thread = new Thread(new Runnable() { public void run() {
 					for (Group retrievedMeetupGroup : _retrievedMeetupGroups)
 					{
@@ -241,10 +249,23 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 							}
 						}
 					}
+					
+					_contactsDownloadingHandler.sendMessage(new Message());
 				} });
 				
 				thread.start();
 			}
+			
+			MainActivity.LoggingIn = false;
 		}
 	}
+
+    final Handler _contactsDownloadingHandler = new Handler()
+    {
+		 @Override
+		 public void handleMessage(Message msg) {
+			 if (_parentActivity.getClass().equals(MainActivity.class))
+				 ((MainActivity)_parentActivity).dismissLoadingContacts();
+		 }
+    };
 }
