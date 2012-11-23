@@ -36,8 +36,8 @@ public class LoadingContacts extends DialogFragment {
     	ProgressBar progressBar = new ProgressBar(getActivity());
     	loadingProgressBarContainer.addView(progressBar);
 
-    	getDialog().setCancelable(false);
-    	getDialog().setCanceledOnTouchOutside(false);
+    	getDialog().setCancelable(true);
+    	getDialog().setCanceledOnTouchOutside(true);
         
         return view;
 	}

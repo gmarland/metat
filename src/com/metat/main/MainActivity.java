@@ -356,8 +356,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         LoadingContacts loadingContacts = LoadingContacts.newInstance();
         
         if (loadingContacts.getDialog() != null) {
-        	loadingContacts.getDialog().setCancelable(false);
-        	loadingContacts.getDialog().setCanceledOnTouchOutside(false);
+        	loadingContacts.getDialog().setCancelable(true);
+        	loadingContacts.getDialog().setCanceledOnTouchOutside(true);
         }
         
         loadingContacts.show(fragmentTransaction, "loadingContactsDialog");
