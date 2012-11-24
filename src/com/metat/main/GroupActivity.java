@@ -5,8 +5,6 @@ import com.metat.dataaccess.ContactDataAccess;
 import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.GroupContactAction;
 import com.metat.dialogs.GroupContactDeleteConfirm;
-import com.metat.helpers.ConnectionHelper;
-import com.metat.helpers.PreferencesHelper;
 import com.metat.models.Contact;
 import com.metat.models.Group;
 import com.metat.models.NavigationSource;
@@ -16,15 +14,11 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class GroupActivity extends Activity {
-	private String _userToken = "";
-	
 	public static Group SelectedGroup = null;
 	public static Contact[] AllContacts = new Contact[0];
 	
@@ -43,16 +37,6 @@ public class GroupActivity extends Activity {
 
         getActionBar().setDisplayShowHomeEnabled(false);
     	setTitle(" " + SelectedGroup.getName());
-        
-    	if (ConnectionHelper.isNetworkAvailable(getBaseContext()))
-    	{
-	        SharedPreferences settings = getSharedPreferences(PreferencesHelper.MEEUP_PREFS, Context.MODE_PRIVATE);
-			
-	        if (settings.getString(PreferencesHelper.USER_TOKEN, null) != null)
-	        {
-	        	_userToken = settings.getString(PreferencesHelper.USER_TOKEN, "");
-	        }
-    	}
     	
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts(SelectedGroup.getMeetupId());
@@ -79,29 +63,8 @@ public class GroupActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-    	if (_userToken.trim().length() > 0)
-    		getMenuInflater().inflate(R.menu.group_menu, menu);
-    	else
-    		getMenuInflater().inflate(R.menu.group_menu_static, menu);
+    	getMenuInflater().inflate(R.menu.group_menu, menu);
         return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        menu.clear();
-
-    	if (_userToken.trim().length() > 0)
-    		getMenuInflater().inflate(R.menu.group_menu, menu);
-    	else
-    		getMenuInflater().inflate(R.menu.group_menu_static, menu);
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-    
-    public void resetMenuOptions()
-    {
-    	this.invalidateOptionsMenu();
     }
 
     @Override

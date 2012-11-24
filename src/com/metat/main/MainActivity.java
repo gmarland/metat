@@ -1,5 +1,10 @@
 package com.metat.main;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -8,6 +13,7 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import com.metat.helpers.PreferencesHelper;
 import com.metat.contacts.R;
 import com.metat.dataaccess.ContactDataAccess;
+import com.metat.dataaccess.GroupsDataAccess;
 import com.metat.dialogs.ContactAction;
 import com.metat.dialogs.ContactDeleteConfirm;
 import com.metat.dialogs.LoadingContacts;
@@ -15,6 +21,7 @@ import com.metat.dialogs.LoadingGroups;
 import com.metat.dialogs.WelcomeMessage;
 import com.metat.helpers.ConnectionHelper;
 import com.metat.models.Contact;
+import com.metat.models.Group;
 import com.metat.models.NavigationSource;
 import com.metat.tasks.FinishAuthenticateMeetup;
 import com.metat.tasks.StartAuthenticateMeetup;
@@ -33,7 +40,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +67,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	private IntentFilter _intentFilter;
 	
 	public static Contact[] AllContacts = new Contact[0];
+	public static Group[] AllGroups = new Group[0];
+			
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -97,6 +105,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
         
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts();
+    	AllGroups = loadAllGroups();
         
         _contactSortingTabs = (TabHost)findViewById(R.id.contact_sorting_tabs);
         _contactSortingTabs.setOnTabChangedListener(this); 
@@ -488,6 +497,8 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	
 	public void reloadMeetupGroups()
 	{
+    	AllGroups = loadAllGroups();
+    	
 		Fragment allMeetupsFragment = getFragmentManager().findFragmentByTag("AllExistingMeetups");
 
 		if (allMeetupsFragment != null)
@@ -524,6 +535,39 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
 		_contactSortingTabs.getTabWidget().getChildAt(_contactSortingTabs.getCurrentTab()).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_selected));
 	}
+	
+	private Group[] loadAllGroups()
+	{
+		GroupsDataAccess groupDataAccess = new GroupsDataAccess(this);
+		
+		Map<String, Group> allUserGroups = new LinkedHashMap<String,Group>();
+		
+		for (Group group : groupDataAccess.getAllGroups())
+		{
+			allUserGroups.put(group.getMeetupId(), new Group(group.getMeetupId(), group.getName()));
+		}
+	
+		for (Contact contact : AllContacts)
+		{
+			if (!allUserGroups.containsKey(contact.getGroupId()))
+				allUserGroups.put(contact.getGroupId(), new Group(contact.getGroupId(), contact.getGroupName()));
+			
+			allUserGroups.get(contact.getGroupId()).addMemberCount();
+		}
+		
+		ArrayList<Group> distinctGroups = new ArrayList<Group>();
+		
+		for(String key : allUserGroups.keySet())
+		{
+			distinctGroups.add(allUserGroups.get(key));
+		}
+		
+		Collections.sort(distinctGroups);
+		
+		return distinctGroups.toArray(new Group[distinctGroups.size()]);
+	}
+	
+	// Private Properties
     
     private Button.OnClickListener _loginButtonListener = new Button.OnClickListener() 
     {
