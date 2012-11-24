@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -367,7 +368,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     {
     	FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         Fragment dialog = getFragmentManager().findFragmentByTag("loadingContactsDialog");
-        
+		
         if (dialog != null) {
             if (((LoadingContacts)dialog).getDialog() != null)
             	((LoadingContacts)dialog).getDialog().dismiss();
@@ -527,8 +528,11 @@ public class MainActivity extends Activity implements OnTabChangeListener {
     private Button.OnClickListener _loginButtonListener = new Button.OnClickListener() 
     {
 		public void onClick(View v) {
-			LoggingIn = true;
-			logIntoMeetup();
+			if(!LoggingIn)
+			{
+				LoggingIn = true;
+				logIntoMeetup();
+			}
 		}
     };
 

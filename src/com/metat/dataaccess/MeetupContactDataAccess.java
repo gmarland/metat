@@ -114,6 +114,11 @@ public class MeetupContactDataAccess {
 		_dbHelper.getWritableDatabase().update(DATABASE_TABLE, values, KEY_MEEETUPID + " = '" + meetupId + "'", null);
 	}
 	
+	public boolean Delete(long id)
+	{
+		return (_dbHelper.getWritableDatabase().delete(DATABASE_TABLE, KEY_ID + " = " + id, null) > 0);
+	}
+	
 	public boolean Delete(String meetupId)
 	{
 		return (_dbHelper.getWritableDatabase().delete(DATABASE_TABLE, KEY_MEEETUPID + " = '" + meetupId + "'", null) > 0);
