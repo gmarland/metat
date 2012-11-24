@@ -1,8 +1,10 @@
 package com.metat.dialogs;
 
 import com.metat.contacts.R;
+import com.metat.main.MainActivity;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,5 +42,10 @@ public class LoadingContacts extends DialogFragment {
     	getDialog().setCanceledOnTouchOutside(true);
         
         return view;
+	}
+	
+	public void onDismiss (DialogInterface dialog)
+	{
+		MainActivity.LoggingIn = false;
 	}
 }
