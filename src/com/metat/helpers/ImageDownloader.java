@@ -35,7 +35,9 @@ public class ImageDownloader {
             if((imageView.getTag()!=null) && (imageView.getTag().equals(meetupId)))
             {
                 if (imageView.getTag().equals(meetupId))
+                {
                 	imageView.setImageBitmap(_cache.get(meetupId));
+                }
             }
         }
         
@@ -45,7 +47,9 @@ public class ImageDownloader {
                 _cache.put(meetupId, (Bitmap) message.obj);
                 
                 if (imageView.getTag().equals(meetupId))
+                {
                 	imageView.setImageBitmap((Bitmap) message.obj);
+                }
             }
         };
 
