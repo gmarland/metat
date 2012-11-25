@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<TabHost
+		android:id="@+id/group_contacts_sorting_tabs"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:orientation="vertical">
+		android:layout_height="fill_parent">
 		<LinearLayout
-		    android:id="@+id/contacts_container"
+			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="fill_parent">
+			<TabWidget
+				android:id="@android:id/tabs"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" />
+			<FrameLayout
+				android:id="@android:id/tabcontent"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:paddingLeft="6dp"
+				android:paddingRight="6dp"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp">
+				<FrameLayout
+				    android:id="@+id/contacts_container"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+				<FrameLayout
+				    android:id="@+id/browse_contacts_container"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content" />
+			</FrameLayout>
+		 </LinearLayout>
+	</TabHost>
 </LinearLayout> 

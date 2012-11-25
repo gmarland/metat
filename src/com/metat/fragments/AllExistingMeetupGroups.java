@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class AllExistingMeetpGroups extends ListFragment {
+public class AllExistingMeetupGroups extends ListFragment {
 	private MeetupGroupsAdapter _meetupGroupsAdapter;
 
 	@Override

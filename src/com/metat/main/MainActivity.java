@@ -28,7 +28,7 @@ import com.metat.tasks.StartAuthenticateMeetup;
 import com.metat.tasks.UpdateMeetupGroups;
 import com.metat.webservices.ClientWebservices;
 import com.metat.fragments.AllExistingContacts;
-import com.metat.fragments.AllExistingMeetpGroups;
+import com.metat.fragments.AllExistingMeetupGroups;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,7 +69,6 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 	public static Contact[] AllContacts = new Contact[0];
 	public static Group[] AllGroups = new Group[0];
 			
-	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -145,7 +144,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 		}
 		else
 		{
-			allMeetupsFragment = new AllExistingMeetpGroups();
+			allMeetupsFragment = new AllExistingMeetupGroups();
 			Bundle allContactsSelectedArgs = new Bundle();
 			allContactsFragment.setArguments(allContactsSelectedArgs);
 			transaction.add(R.id.meetup_groups_container, allMeetupsFragment, "AllExistingMeetups");
@@ -503,7 +502,7 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 
 		if (allMeetupsFragment != null)
 		{
-			((AllExistingMeetpGroups)allMeetupsFragment).bindMeetupGroupsAdapter();
+			((AllExistingMeetupGroups)allMeetupsFragment).bindMeetupGroupsAdapter();
 		}
 	}
 	

@@ -9,24 +9,36 @@ import com.metat.models.Contact;
 import com.metat.models.Group;
 import com.metat.models.NavigationSource;
 import com.metat.fragments.AllExistingGroupContacts;
+import com.metat.fragments.BrowseGroupContacts;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
 
-public class GroupActivity extends Activity {
+public class GroupActivity extends Activity implements OnTabChangeListener {
+    public static final String TAB_ADDED = "added";
+    public static final String TAB_BROWSE = "browse";
+    
 	public static Group SelectedGroup = null;
 	public static Contact[] AllContacts = new Contact[0];
+
+	private TabHost _contactSortingTabs;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.group);
         
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar));
 
@@ -40,6 +52,13 @@ public class GroupActivity extends Activity {
     	
     	ContactDataAccess contactDataAccess = new ContactDataAccess(this);
     	AllContacts = contactDataAccess.getAllContacts(SelectedGroup.getMeetupId());
+    	
+        _contactSortingTabs = (TabHost)findViewById(R.id.group_contacts_sorting_tabs);
+        _contactSortingTabs.setOnTabChangedListener(this); 
+        _contactSortingTabs.setup();
+
+        _contactSortingTabs.addTab(newTab(TAB_ADDED, R.string.contacts, R.id.contacts_container));
+        _contactSortingTabs.addTab(newTab(TAB_BROWSE, R.string.browse, R.id.browse_contacts_container));
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -55,6 +74,21 @@ public class GroupActivity extends Activity {
 			Bundle allContactsSelectedArgs = new Bundle();
 			allContactsFragment.setArguments(allContactsSelectedArgs);
 			transaction.add(R.id.contacts_container, allContactsFragment, "AllExistingGroupContacts");
+		}
+
+		Fragment browseGroupFragment;
+
+		if (savedInstanceState != null)
+		{
+			browseGroupFragment = getFragmentManager().findFragmentByTag("BrowseGroupContacts");
+		}
+		else
+		{
+			browseGroupFragment = new BrowseGroupContacts();
+			Bundle browseGroupSelectedArgs = new Bundle();
+			browseGroupSelectedArgs.putString("groupId", SelectedGroup.getMeetupId());
+			browseGroupFragment.setArguments(browseGroupSelectedArgs);
+			transaction.add(R.id.browse_contacts_container, browseGroupFragment, "BrowseGroupContacts");
 		}
 
 		transaction.commit();
@@ -192,4 +226,32 @@ public class GroupActivity extends Activity {
         	((AllExistingGroupContacts)allExistingContacts).bindContactsAdapter();
         }
     }
+
+	@Override
+	public void onTabChanged(String arg0) {
+		updateTabStyles();
+	}
+
+    /// Private Methods
+    
+    private TabSpec newTab(String tag, int label, int tabContentId) 
+    {        
+    	View indicator = LayoutInflater.from(this).inflate(R.layout.contact_sorting_tab, null);
+    	((TextView) indicator.findViewById(R.id.sorting_lbl)).setText(label);
+    	TabSpec tabSpec = _contactSortingTabs.newTabSpec(tag);
+    	tabSpec.setIndicator(indicator);
+    	tabSpec.setContent(tabContentId);
+
+    	return tabSpec; 
+    }
+	
+	private void updateTabStyles()
+	{
+		for (int i=0; i<_contactSortingTabs.getTabWidget().getChildCount(); i++)
+		{
+			_contactSortingTabs.getTabWidget().getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_inactive));
+		}
+
+		_contactSortingTabs.getTabWidget().getChildAt(_contactSortingTabs.getCurrentTab()).setBackgroundDrawable(getResources().getDrawable(R.drawable.contacts_tab_selected));
+	}
 }
