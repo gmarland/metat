@@ -5,6 +5,7 @@ public class MeetupContact {
 	private String _meetupId;
 	private String _photoThumbnail;
 	private String _name;
+	private String _bio;
 	private String _link;
 	private String _meetupGroupId;
 
@@ -14,12 +15,13 @@ public class MeetupContact {
 	private String _tumblrId;
 	private String _flickrId;
 
-	public MeetupContact(long id, String meetupId, String photoThumbnail, String name, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String meetupGroupId)
+	public MeetupContact(long id, String meetupId, String photoThumbnail, String name, String bio, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String meetupGroupId)
 	{
 		_id = id;
 		_meetupId = meetupId;
 		_photoThumbnail = photoThumbnail;
 		_name = name;
+		_bio = bio;
 		_link = link;
 
 		_twitterId = twitterId;
@@ -31,11 +33,12 @@ public class MeetupContact {
 		_meetupGroupId = meetupGroupId;
 	}
 	
-	public MeetupContact(String meetupId, String photoThumbnail, String name, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String meetupGroupId)
+	public MeetupContact(String meetupId, String photoThumbnail, String name, String bio, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String meetupGroupId)
 	{
 		_meetupId = meetupId;
 		_photoThumbnail = photoThumbnail;
 		_name = name;
+		_bio = bio;
 
 		_twitterId = twitterId;
 		_linkedInId = linkedInId;
@@ -76,6 +79,11 @@ public class MeetupContact {
 	public String getName()
 	{
 		return _name;
+	}
+	
+	public String getBio()
+	{
+		return _bio;
 	}
 	
 	public void setName(String name)

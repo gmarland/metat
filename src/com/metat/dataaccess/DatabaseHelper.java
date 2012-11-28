@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper 
 {
 	public static final String DATABASE_NAME = "MetAt";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 
 	private Context _context;
 	private static DatabaseHelper _dbHelper = null;
@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 										"groupMeetupId TEXT NULL, " +
 										"meetupId TEXT NOT NULL, " +
 										"name TEXT NOT NULL, " +
+										"bio TEXT NOT NULL, " +
 										"photoUrl NULL, " +
 										"link TEXT NULL," +
 										"facebookLink TEXT NULL," +
@@ -33,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 										"meetupId TEXT NULL, " + 
 										"thumbnail BLOB NOT NULL, " + 
 										"name TEXT NOT NULL, " + 
+										"website TEXT NOT NULL, " + 
 										"email TEXT NULL, " +
 										"phone TEXT NULL, " +
 										"notes TEXT NULL, " +
@@ -71,6 +73,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
     			db.execSQL("ALTER TABLE MeetupGroup ADD COLUMN link TEXT NULL;");
     			db.execSQL("ALTER TABLE Contact ADD COLUMN link TEXT NULL;");
     			db.execSQL("ALTER TABLE Contact ADD COLUMN groupLink TEXT NULL;");
+    		}
+    		
+    		if (oldVersion < 3)
+    		{
+    			db.execSQL("ALTER TABLE MeetupContact ADD COLUMN bio TEXT NULL;");
     		}
     	}
     }

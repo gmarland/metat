@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	private IntentFilter _intentFilter;
 	
 	private AutoCompleteTextView _name;
+	private EditText _website;
 	private EditText _email;
 	private EditText _phone;
 	private EditText _notes;
@@ -76,10 +78,13 @@ public class EditContactActivity extends Activity implements TextWatcher {
 
 		_meetupGroupContactsAdapter = new ArrayAdapter<MeetupContact>(this, R.layout.contacts_spinner_style, _contacts);
 		_name.setAdapter(_meetupGroupContactsAdapter);
-    	
+
+		_website = (EditText) findViewById(R.id.website);
+		_website.setText(_contact.getWebsite());
     	_email = (EditText) findViewById(R.id.email);
     	_email.setText(_contact.getEmail());
     	_phone = (EditText) findViewById(R.id.phone);
+    	_phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     	_phone.setText(_contact.getPhone());
     	_notes = (EditText) findViewById(R.id.notes);
     	_notes.setText(_contact.getNotes());
@@ -168,6 +173,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
         		{
 	        		String meetupId = _contact.getMeetupId();
 	        		String name = _name.getText().toString();
+	        		String website = _website.getText().toString(); 
 	        		String contactPhotoThumbnailLocation = "";
 	        		String link = "";
 	        		String twitterId = "";
@@ -195,7 +201,7 @@ public class EditContactActivity extends Activity implements TextWatcher {
 	        		}
 	        		
 	        		ContactDataAccess contactDataAccess = new ContactDataAccess(this);
-        			contactDataAccess.updateContact(_contact.getId(), meetupId, new byte[0], name, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), link, twitterId, linkedInId, facebookId, tumblrId, flickrId);
+        			contactDataAccess.updateContact(_contact.getId(), meetupId, new byte[0], name, website, _email.getText().toString(), _phone.getText().toString(), _notes.getText().toString(), link, twitterId, linkedInId, facebookId, tumblrId, flickrId);
 	        		
         			if (contactPhotoThumbnailLocation.trim().length() > 0) {
 		        		DownloadImageTask downloadImageTask = new DownloadImageTask(this, meetupId, contactPhotoThumbnailLocation);

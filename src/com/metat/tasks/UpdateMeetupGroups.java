@@ -202,13 +202,14 @@ public class UpdateMeetupGroups extends AsyncTask<String, String, String>
 											if (((meetupContact.getName() != null) && (existingMeetupContacts.get(i).getName() != null) && (!meetupContact.getName().trim().equals(existingMeetupContacts.get(i).getName().trim()))) || 
 													((existingMeetupContacts.get(i).getPhotoThumbnail() != null) && (existingMeetupContacts.get(i).getPhotoThumbnail() != null) && (!existingMeetupContacts.get(i).getPhotoThumbnail().trim().equals(existingMeetupContacts.get(i).getPhotoThumbnail().trim()))) || 
 													((existingMeetupContacts.get(i).getLink() != null) && (meetupContactDataAccess != null) && (!linkId.equals(existingMeetupContacts.get(i).getLink().trim()))) || 
+													((existingMeetupContacts.get(i).getBio() != null) && (meetupContactDataAccess != null) && (!meetupContact.getBio().equals(existingMeetupContacts.get(i).getBio().trim()))) || 
 													((existingMeetupContacts.get(i).getTwitterId() != null) && (meetupContactDataAccess != null) && (!twitterId.equals(existingMeetupContacts.get(i).getTwitterId().trim()))) || 
 													((existingMeetupContacts.get(i).getFacebookId() != null) && (meetupContactDataAccess != null) && (!facebookId.equals(existingMeetupContacts.get(i).getFacebookId().trim()))) || 
 													((existingMeetupContacts.get(i).getFlickrId() != null) && (meetupContactDataAccess != null) && (!flickrId.equals(existingMeetupContacts.get(i).getFlickrId().trim()))) || 
 													((existingMeetupContacts.get(i).getTumblrId() != null) && (meetupContactDataAccess != null) && (!tumblrId.equals(existingMeetupContacts.get(i).getTumblrId()))) || 
 													((existingMeetupContacts.get(i).getLinkedInId() != null) && (meetupContactDataAccess != null) && (!linkedinId.equals(existingMeetupContacts.get(i).getLinkedInId().trim()))))
 											{
-												meetupContactDataAccess.Update(existingMeetupContacts.get(i).getMeetupId(), meetupContact.getPhotoThumbnail().trim(), meetupContact.getName().trim(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
+												meetupContactDataAccess.Update(existingMeetupContacts.get(i).getMeetupId(), meetupContact.getPhotoThumbnail().trim(), meetupContact.getName().trim(), meetupContact.getBio().trim(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
 												contactDataAccess.updateContact(existingMeetupContacts.get(i).getMeetupId(), linkId, twitterId, linkedinId, facebookId, tumblrId, flickrId);
 												existingMeetupContacts.get(i).setPhotoThumbnail(meetupContact.getPhotoThumbnail().trim());
 												existingMeetupContacts.get(i).setName(meetupContact.getName().trim());

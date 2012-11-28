@@ -21,6 +21,7 @@ public class ContactWebservices {
 	private static final String MEMBER_CONTAINER = "results";
 	private static final String MEMBER_ID = "id";
 	private static final String MEMBER_NAME = "name";
+	private static final String MEMBER_BIO = "bio";
 	private static final String MEMBER_PHOTO_CONTAINER = "photo";
 	private static final String MEMBER_PHOTO_URL = "photo_link";
 	private static final String MEMBER_OTHER_SERVICES = "other_services";
@@ -31,7 +32,7 @@ public class ContactWebservices {
     private static final String MEMBER_FLICKR = "flickr";
 	private static final String MEMBER_OTHER_SERVICES_IDENTIFIER = "identifier";
 
-	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_PHOTO_CONTAINER + "," + MEMBER_PHOTO_URL + "," + MEMBER_OTHER_SERVICES;
+	private static final String GET_ALL_CONTACTS = "https://api.meetup.com/2/members?access_token={key}&group_id={group_id}&only=" + MEMBER_ID + "," + MEMBER_NAME + "," + MEMBER_BIO + "," + MEMBER_PHOTO_CONTAINER + "," + MEMBER_PHOTO_URL + "," + MEMBER_OTHER_SERVICES;
 
 
 	public static ArrayList<MeetupContact> getAllContacts(String meetupKey, String groupId)
@@ -74,12 +75,18 @@ public class ContactWebservices {
 			    for(int i = 0; i < allContacts.length(); i++){
 			        JSONObject contact = allContacts.getJSONObject(i);
 			        
+			        String bio = "";
 			        String photoUrl = "";
 			        String twitterId = "";
 			        String linkedInId = "";
 			        String facebookId = "";
 			        String tumblrId = "";
 			        String flickrId = "";
+			        
+			        if (contact.has(MEMBER_BIO))
+			        {
+			        	bio = contact.getString(MEMBER_BIO);
+			        }
 			        
 			        if (contact.has(MEMBER_PHOTO_CONTAINER))
 			        {
@@ -122,7 +129,7 @@ public class ContactWebservices {
 				        }
 			        }
 			        
-			        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoUrl, contact.getString(MEMBER_NAME), twitterId, linkedInId, facebookId, tumblrId, flickrId, groupId));
+			        contacts.add(new MeetupContact(contact.getString(MEMBER_ID), photoUrl, contact.getString(MEMBER_NAME), bio, twitterId, linkedInId, facebookId, tumblrId, flickrId, groupId));
 			    }
 			    
 			    return contacts;

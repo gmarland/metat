@@ -32,11 +32,13 @@ public class ViewContactActivity extends Activity {
 	private ImageView _flickrImageView;
 	private ImageView _tumblrImageView;
 	private ImageView _linkedInImageView;
-	
-	private LinearLayout _emailContainer;
-	private TextView _email;
+
+	private LinearLayout _websiteContainer;
+	private TextView _website;
 	private LinearLayout _phoneContainer;
 	private TextView _phone;
+	private LinearLayout _emailContainer;
+	private TextView _email;
 	private LinearLayout _notesContainer;
 	private TextView _notes;
 
@@ -177,10 +179,13 @@ public class ViewContactActivity extends Activity {
     	
     	int contactDetailCount = 0;
 
-    	if (_contact.getEmail().trim().length() > 0)
+    	if (_contact.getWebsite().trim().length() > 0)
     		contactDetailCount++;
 
     	if (_contact.getPhone().trim().length() > 0)
+    		contactDetailCount++;
+
+    	if (_contact.getEmail().trim().length() > 0)
     		contactDetailCount++;
 
     	if (_contact.getNotes().trim().length() > 0)
@@ -188,24 +193,24 @@ public class ViewContactActivity extends Activity {
     	
     	int contentDetailDisplayed = 0;
 
-    	_emailContainer = (LinearLayout) findViewById(R.id.email_container);
-    	_emailContainer.setOnClickListener(_emailButtonListener);
+    	_websiteContainer = (LinearLayout) findViewById(R.id.website_container);
+    	_websiteContainer.setOnClickListener(_websiteButtonListener);
     	
-    	_email = (TextView) findViewById(R.id.email);
-    	_email.setText(_contact.getEmail());
+    	_website = (TextView) findViewById(R.id.website);
+    	_website.setText(_contact.getWebsite());
     	
-    	if (_contact.getEmail().trim().length() == 0)
+    	if (_contact.getWebsite().trim().length() == 0)
     	{
-    		_emailContainer.setVisibility(View.GONE);
+    		_websiteContainer.setVisibility(View.GONE);
     	}
     	else
     	{
-    		_emailContainer.setVisibility(View.VISIBLE);
+    		_websiteContainer.setVisibility(View.VISIBLE);
     		
     		if (contactDetailCount == 1)
-    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_full);
+    			_websiteContainer.setBackgroundResource(R.drawable.contact_detail_full);
     		else
-    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_top);
+    			_websiteContainer.setBackgroundResource(R.drawable.contact_detail_top);
     		
     		contentDetailDisplayed++;
     	}
@@ -223,7 +228,7 @@ public class ViewContactActivity extends Activity {
     	else
     	{
     		_phoneContainer.setVisibility(View.VISIBLE);
-    		
+
     		if (contactDetailCount == 1)
     			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_full);
     		else if (contentDetailDisplayed == 0)
@@ -233,6 +238,32 @@ public class ViewContactActivity extends Activity {
     		else
     			_phoneContainer.setBackgroundResource(R.drawable.contact_detail_middle);
     		
+    		contentDetailDisplayed++;
+    	}
+
+    	_emailContainer = (LinearLayout) findViewById(R.id.email_container);
+    	_emailContainer.setOnClickListener(_emailButtonListener);
+    	
+    	_email = (TextView) findViewById(R.id.email);
+    	_email.setText(_contact.getEmail());
+    	
+    	if (_contact.getEmail().trim().length() == 0)
+    	{
+    		_emailContainer.setVisibility(View.GONE);
+    	}
+    	else
+    	{
+    		_emailContainer.setVisibility(View.VISIBLE);
+
+    		if (contactDetailCount == 1)
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_full);
+    		else if (contentDetailDisplayed == 0)
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_top);
+    		else if (contentDetailDisplayed == contactDetailCount)
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_bottom);
+    		else
+    			_emailContainer.setBackgroundResource(R.drawable.contact_detail_middle);
+
     		contentDetailDisplayed++;
     	}
 
@@ -318,6 +349,13 @@ public class ViewContactActivity extends Activity {
         
         return false;
     }
+
+    private Button.OnClickListener _websiteButtonListener = new Button.OnClickListener() 
+    {
+		public void onClick(View v) {
+			
+		}
+    };
 
     private Button.OnClickListener _emailButtonListener = new Button.OnClickListener() 
     {

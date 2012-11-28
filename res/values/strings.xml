@@ -17,6 +17,7 @@
     <string name="email_address">E-mail Address</string>
     <string name="email_using">E-mail using:</string>
     <string name="im_sure_i_want_to_remove_this_person">I\'m sure I want to remove this person</string>
+    <string name="introduction">Inroduction</string>
     <string name="dont_remove_them">Don\'t remove them</string>
     <string name="loading">Loading</string>
     <string name="log_into_meetup">Log into Meetup</string>
@@ -36,6 +37,7 @@
     <string name="settings">Settings</string>
     <string name="update">Update</string>
     <string name="updating_group_contacts">Updating group contacts</string>
+    <string name="website">Website</string>
     <string name="welcome_to_met_at">Welcome to Met At</string>
     <string name="welcome_message">Met At is an app that helps you remember the people you\'ve met at Meetups.\n\r\n\rAll you need to do to get started is log into Meetup. Doing so will download and sync all your groups to the app.\n\r\n\rBe aware, the first sync could take a short amount of time.</string>
     <string name="you_need_to_provide_a_name">You need to provide a name</string>

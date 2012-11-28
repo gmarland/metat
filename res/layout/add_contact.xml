@@ -34,12 +34,12 @@
 					style="@style/ContactDetailInput"
 					android:layout_marginBottom="5dp" />
 			    <EditText 
-					android:id="@+id/email" 
+					android:id="@+id/website" 
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"
-					android:hint="@string/email_address"
+					android:hint="@string/website"
 					style="@style/ContactDetailInput"
-    				android:inputType="textEmailAddress"
+			        android:inputType="textUri"
 					android:layout_marginBottom="5dp" />
 			    <EditText 
 					android:id="@+id/phone" 
@@ -48,6 +48,14 @@
 					android:hint="@string/phone_number"
 					style="@style/ContactDetailInput"
 			        android:inputType="phone"
+					android:layout_marginBottom="5dp" />
+			    <EditText 
+					android:id="@+id/email" 
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					android:hint="@string/email_address"
+					style="@style/ContactDetailInput"
+    				android:inputType="textEmailAddress"
 					android:layout_marginBottom="5dp" />
 			    <EditText
 			        android:id="@+id/notes"

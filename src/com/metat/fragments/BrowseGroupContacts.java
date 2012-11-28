@@ -8,8 +8,7 @@ import java.util.Map;
 import com.metat.adapters.BrowseGroupAdapter;
 import com.metat.adapters.BrowseGroupSectionAdapter;
 import com.metat.dataaccess.MeetupContactDataAccess;
-import com.metat.main.ViewContactActivity;
-import com.metat.models.Contact;
+import com.metat.main.ViewMeetupContactActivity;
 import com.metat.models.MeetupContact;
 import com.metat.models.NavigationSource;
 
@@ -43,10 +42,9 @@ public class BrowseGroupContacts extends ListFragment {
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        		Intent intent = new Intent(getActivity(), ViewContactActivity.class);
+        		Intent intent = new Intent(getActivity(), ViewMeetupContactActivity.class);
         		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        		intent.putExtra("contactId", ((Contact)parent.getAdapter().getItem(position)).getId());
-        		intent.putExtra("groupId", ((Contact)parent.getAdapter().getItem(position)).getGroupId());
+        		intent.putExtra("contactId", ((MeetupContact)parent.getAdapter().getItem(position)).getId());
         		intent.putExtra("navigationSource", NavigationSource.GroupContacts);
 
         		getActivity().startActivity(intent);	

@@ -40,7 +40,7 @@ public class GroupContactsSectionAdapter extends BaseAdapter {
 		return itemId;
 	}
 
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
     	TableLayout contactLayout;
 
@@ -55,15 +55,13 @@ public class GroupContactsSectionAdapter extends BaseAdapter {
     	}
 
 		ImageView imageView = (ImageView)contactLayout.findViewById(R.id.group_contact_image);
+		
     	imageView.setTag(_contacts[position].getMeetupId());
     	imageView.setImageBitmap(BitmapFactory.decodeResource(_context.getResources(), R.drawable.group_profile_default));
     	GroupImageLoader.DisplayImage(_contacts[position].getId(), _contacts[position].getMeetupId(), imageView);
 
     	TextView contactNameTextView = (TextView)contactLayout.findViewById(R.id.group_contact_name);
     	contactNameTextView.setText(_contacts[position].getName());    
-
-    	TextView contactMetAtTextView = (TextView)contactLayout.findViewById(R.id.group_contact_meetup_group);
-    	contactMetAtTextView.setText(_context.getString(R.string.met_at) + " " + _contacts[position].getGroupName());
     	
     	return contactLayout;
     }

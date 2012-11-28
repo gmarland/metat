@@ -5,6 +5,7 @@ public class Contact {
 	private String _meetupId;
 	private byte[] _photoThumbnail;
 	private String _name;
+	private String _website;
 	private String _email;
 	private String _phone;
 	private String _notes;
@@ -31,12 +32,13 @@ public class Contact {
 		_groupName = groupName;
 	}
 	
-	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String email, String phone, String notes, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String groupId, String groupName)
+	public Contact(long id, String meetupId, byte[] photoThumbnail, String name, String website, String email, String phone, String notes, String link, String twitterId, String linkedInId, String facebookId, String tumblrId, String flickrId, String groupId, String groupName)
 	{
 		_id = id;
 		_meetupId = meetupId;
 		_photoThumbnail = photoThumbnail;
 		_name = name;
+		_website = website;
 		_email = email;
 		_phone = phone;
 		_notes = notes;
@@ -70,6 +72,11 @@ public class Contact {
 	public String getName()
 	{
 		return _name;
+	}
+	
+	public String getWebsite()
+	{
+		return _website;
 	}
 	
 	public String getEmail()
