@@ -31,6 +31,7 @@
     <string name="person">Person</string>
     <string name="phone">Phone</string>
     <string name="phone_number">Phone number</string>
+    <string name="refresh_meetup_groups">Refresh Meetup Groups</string>
     <string name="save">Save</string>
     <string name="send_feedback_using">Send feedback using:</string>
     <string name="send_feedback">Send Feedback</string>

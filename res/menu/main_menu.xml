@@ -4,6 +4,9 @@
         android:id="@+id/add_contact"
 		android:title="@string/add"
       	android:showAsAction="always|withText" />
+	<item android:id="@+id/refresh_meetup_groups"
+		android:title="@string/refresh_meetup_groups"
+		android:orderInCategory="0" />
 	<item android:id="@+id/send_feedback"
 		android:title="@string/send_feedback"
 		android:orderInCategory="0" />

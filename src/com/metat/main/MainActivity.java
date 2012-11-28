@@ -265,6 +265,11 @@ public class MainActivity extends Activity implements OnTabChangeListener {
 				
 				getBaseContext().startActivity(intent);	
         		return true;
+        	case R.id.refresh_meetup_groups:
+        		LoggingIn = true; 
+        		showLoadingGroups();
+        		refreshMeetupGroups();
+        		return true;
         	case R.id.send_feedback:
 	    		String emailList[] = { PreferencesHelper.FEEDBACK_EMAIL };  
 

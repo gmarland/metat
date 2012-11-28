@@ -63,7 +63,7 @@ public final class R {
         public static final int delete_contact_btn=0x7f08000d;
         public static final int dont_show_again_chk=0x7f080009;
         public static final int dont_show_again_container=0x7f080008;
-        public static final int edit=0x7f080036;
+        public static final int edit=0x7f080037;
         public static final int edit_contact_btn=0x7f08000c;
         public static final int email=0x7f080004;
         public static final int email_container=0x7f08002b;
@@ -81,7 +81,7 @@ public final class R {
         public static final int loading_contacts_progressBar=0x7f080021;
         public static final int loading_groups_progressBar=0x7f080022;
         public static final int loading_label=0x7f080020;
-        public static final int logout_meetup=0x7f080034;
+        public static final int logout_meetup=0x7f080035;
         public static final int meetup_group=0x7f080028;
         public static final int meetup_group_select=0x7f080000;
         public static final int meetup_groups_container=0x7f080024;
@@ -90,12 +90,13 @@ public final class R {
         public static final int notes_container=0x7f08002c;
         public static final int phone=0x7f080003;
         public static final int phone_container=0x7f08002a;
+        public static final int refresh_meetup_groups=0x7f080033;
         public static final int save=0x7f080030;
-        public static final int send_feedback=0x7f080033;
+        public static final int send_feedback=0x7f080034;
         public static final int sorting_lbl=0x7f080015;
         public static final int tumblr_link=0x7f08001e;
         public static final int twitter_link=0x7f08001b;
-        public static final int update=0x7f080035;
+        public static final int update=0x7f080036;
         public static final int website=0x7f080002;
         public static final int website_container=0x7f080029;
     }
@@ -160,16 +161,17 @@ public final class R {
         public static final int person=0x7f05001c;
         public static final int phone=0x7f05001d;
         public static final int phone_number=0x7f05001e;
-        public static final int save=0x7f05001f;
-        public static final int send_feedback=0x7f050021;
-        public static final int send_feedback_using=0x7f050020;
-        public static final int settings=0x7f050022;
-        public static final int update=0x7f050023;
-        public static final int updating_group_contacts=0x7f050024;
-        public static final int website=0x7f050025;
-        public static final int welcome_message=0x7f050027;
-        public static final int welcome_to_met_at=0x7f050026;
-        public static final int you_need_to_provide_a_name=0x7f050028;
+        public static final int refresh_meetup_groups=0x7f05001f;
+        public static final int save=0x7f050020;
+        public static final int send_feedback=0x7f050022;
+        public static final int send_feedback_using=0x7f050021;
+        public static final int settings=0x7f050023;
+        public static final int update=0x7f050024;
+        public static final int updating_group_contacts=0x7f050025;
+        public static final int website=0x7f050026;
+        public static final int welcome_message=0x7f050028;
+        public static final int welcome_to_met_at=0x7f050027;
+        public static final int you_need_to_provide_a_name=0x7f050029;
     }
     public static final class style {
         public static final int ActionButtonContainer=0x7f060024;
