@@ -44,6 +44,7 @@ public final class R {
     }
     public static final class id {
         public static final int MeetupLoginContainer=0x7f080025;
+        public static final int add=0x7f080038;
         public static final int add_contact=0x7f080032;
         public static final int alert_body=0x7f080007;
         public static final int alert_close_btn=0x7f08000a;
@@ -128,6 +129,7 @@ public final class R {
         public static final int main_menu_static=0x7f070003;
         public static final int update_contact_menu=0x7f070004;
         public static final int view_contact_menu=0x7f070005;
+        public static final int view_existing_contact_menu=0x7f070006;
     }
     public static final class string {
         public static final int add=0x7f050000;

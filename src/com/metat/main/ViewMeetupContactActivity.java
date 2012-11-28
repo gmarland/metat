@@ -297,7 +297,7 @@ public class ViewMeetupContactActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.view_contact_menu, menu);
+        getMenuInflater().inflate(R.menu.view_existing_contact_menu, menu);
         return true;
     }
 
@@ -324,6 +324,15 @@ public class ViewMeetupContactActivity extends Activity {
 			backIntent.putExtra("groupId", _meetupContact.getMeetupGroupId());
 			backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			getBaseContext().startActivity(backIntent);	
+    		return true;
+		case R.id.add:
+			Intent intent = new Intent(getBaseContext(), AddContactActivity.class);
+    		intent.putExtra("contactId", _meetupContact.getId());
+    		intent.putExtra("groupId", _meetupContact.getMeetupGroupId());
+    		intent.putExtra("navigationSource", NavigationSource.ViewMeetupContact);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			getBaseContext().startActivity(intent);	
     		return true;
         }
         

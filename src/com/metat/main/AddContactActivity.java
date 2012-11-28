@@ -40,8 +40,9 @@ import android.widget.Toast;
 
 public class AddContactActivity extends Activity implements TextWatcher {
 	private NavigationSource _navigationSource = NavigationSource.AllContacts;
-	
+
 	private String _sourceGroupId = "";
+	private long _sourceContactId = -1;
 	
 	private Group[] _groups;
 	private ArrayAdapter<Group> _meetupGroupsAdapter;
@@ -74,12 +75,15 @@ public class AddContactActivity extends Activity implements TextWatcher {
 
         if (extras.containsKey("groupId"))
         	_sourceGroupId = extras.getString("groupId");
-        
+
+        if (extras.containsKey("contactId"))
+        	_sourceContactId = extras.getLong("contactId");
+
         _contacts = new ArrayList<MeetupContact>();
 
     	GroupsDataAccess groupsDataAccess = new GroupsDataAccess(this);
     	_groups = groupsDataAccess.getAllGroups();
-
+    	
     	_name = (AutoCompleteTextView) findViewById(R.id.name);
     	_name.addTextChangedListener(this);
     	_name.setThreshold(2);
@@ -133,6 +137,18 @@ public class AddContactActivity extends Activity implements TextWatcher {
 			_meetupGroupContactsAdapter.clear();
 			_meetupGroupContactsAdapter.addAll(_contacts);
 			_meetupGroupContactsAdapter.notifyDataSetChanged();
+
+			if (_sourceContactId != -1)
+			{
+				MeetupContact meetupContact = meetupContactDataAccess.getMeetupContact(_sourceContactId);
+				
+				if (meetupContact != null)
+				{
+					_name.setText(meetupContact.getName());
+			    	_notes.setText(meetupContact.getBio());
+			    	_website.requestFocus();
+				}
+			}
         }
     }
     
@@ -186,6 +202,11 @@ public class AddContactActivity extends Activity implements TextWatcher {
 				cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 			}
 			break;
+		case ViewMeetupContact:
+			cancelIntent = new Intent(getBaseContext(), ViewMeetupContactActivity.class);
+			cancelIntent.putExtra("contactId", _sourceContactId);
+			cancelIntent.putExtra("navigationSource", NavigationSource.GroupContacts);
+			break;
 		}
 		
 		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -222,6 +243,11 @@ public class AddContactActivity extends Activity implements TextWatcher {
 						cancelIntent = new Intent(getBaseContext(), MainActivity.class);
 						cancelIntent.putExtra("selectedTab", MainActivity.TAB_MEETUPS);
 					}
+					break;
+				case ViewMeetupContact:
+					cancelIntent = new Intent(getBaseContext(), ViewMeetupContactActivity.class);
+					cancelIntent.putExtra("contactId", _sourceContactId);
+					cancelIntent.putExtra("navigationSource", NavigationSource.GroupContacts);
 					break;
 				}
 				
