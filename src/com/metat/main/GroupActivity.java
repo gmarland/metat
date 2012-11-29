@@ -60,6 +60,11 @@ public class GroupActivity extends Activity implements OnTabChangeListener {
         _contactSortingTabs.addTab(newTab(TAB_ADDED, R.string.contacts, R.id.contacts_container));
         _contactSortingTabs.addTab(newTab(TAB_BROWSE, R.string.browse, R.id.browse_contacts_container));
 
+        if ((extras != null) && (extras.containsKey("selectedTab")))
+            _contactSortingTabs.setCurrentTabByTag(extras.getString("selectedTab"));
+        else
+        	_contactSortingTabs.setCurrentTabByTag(TAB_ADDED);
+
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
 		Fragment allContactsFragment;

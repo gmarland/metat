@@ -303,15 +303,12 @@ public class ViewMeetupContactActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-		Intent cancelIntent = new Intent(getBaseContext(), MainActivity.class);
-
-		switch (_navigationSource)
-		{
-		}
+		Intent backIntent = new Intent(getBaseContext(), GroupActivity.class);
+		backIntent.putExtra("groupId", _meetupContact.getMeetupGroupId());
+		backIntent.putExtra("selectedTab", GroupActivity.TAB_BROWSE);
+		backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
-		cancelIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
-		getBaseContext().startActivity(cancelIntent);	
+		getBaseContext().startActivity(backIntent);	
     }
     
     @Override
@@ -322,6 +319,7 @@ public class ViewMeetupContactActivity extends Activity {
 		case R.id.back:
 			Intent backIntent = new Intent(getBaseContext(), GroupActivity.class);
 			backIntent.putExtra("groupId", _meetupContact.getMeetupGroupId());
+			backIntent.putExtra("selectedTab", GroupActivity.TAB_BROWSE);
 			backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			getBaseContext().startActivity(backIntent);	
     		return true;
