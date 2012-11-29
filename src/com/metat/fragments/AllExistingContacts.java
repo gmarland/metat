@@ -49,6 +49,8 @@ public class AllExistingContacts extends ListFragment {
 				return false;
 			} 
 	    });
+
+		getListView().setFastScrollEnabled(true);
 	}
 	
 	public void bindContactsAdapter()

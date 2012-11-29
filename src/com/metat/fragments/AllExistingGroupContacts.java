@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.metat.adapters.GroupContactsAdapter;
 import com.metat.adapters.GroupContactsSectionAdapter;
+import com.metat.contacts.R;
 import com.metat.main.GroupActivity;
 import com.metat.main.ViewContactActivity;
 import com.metat.models.Contact;
@@ -14,9 +15,12 @@ import com.metat.models.NavigationSource;
 
 import android.app.ListFragment;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
@@ -48,6 +52,8 @@ public class AllExistingGroupContacts extends ListFragment {
 				return false;
 			} 
 	    });
+
+		getListView().setFastScrollEnabled(true);
 	}
 	
 	public void bindContactsAdapter()
@@ -71,5 +77,52 @@ public class AllExistingGroupContacts extends ListFragment {
 		}
 		
 		setListAdapter(contactsAdapter);
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
+		bindContactsAdapter();
+	}
+	
+	public void onPause()
+	{
+		super.onPause();
+		clearAllImages();
+	}
+	
+	public void clearAllImages()
+	{
+		if (getListView() != null)
+		{
+			for (int i=0; i<getListView().getChildCount(); i++)
+			{
+				if (getListView().getChildAt(i).getClass().equals(TableLayout.class))
+				{
+					TableLayout imageLayout = (TableLayout)getListView().getChildAt(i);
+					ImageView imageView = (ImageView)imageLayout.findViewById(R.id.group_contact_image);
+					
+			        if (imageView != null)
+			        { 
+			            if ((imageView.getDrawable() != null) && (!((BitmapDrawable)imageView.getDrawable()).getBitmap().isRecycled()))
+			            {
+			            	((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle(); 
+			            	imageView.setBackgroundResource(0); 
+			            }
+			        } 
+
+	            	imageView = null;
+			        imageLayout = null;
+				}
+			}
+	
+			if (getListAdapter() != null)
+			{
+				((GroupContactsAdapter)getListAdapter()).stopAdapterLoaders();
+				setListAdapter(null);
+			}
+			
+			System.gc();
+		}
 	}
 }

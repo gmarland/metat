@@ -1,5 +1,6 @@
 package com.metat.adapters;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,19 +12,33 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.SectionIndexer;
 
-public class GroupContactsAdapter extends BaseAdapter {
+public class GroupContactsAdapter extends BaseAdapter implements SectionIndexer {
 	public final Map<String,Adapter> sections = new LinkedHashMap<String,Adapter>();
 	public final ArrayAdapter<String> headers;
+	
 	public final static int TYPE_SECTION_HEADER = 0;
+
+    private HashMap<String, Integer> _alphaIndexer;  
 	
 	public GroupContactsAdapter(Context context) {
 		headers = new ArrayAdapter<String>(context, R.layout.contact_list_header);
+		_alphaIndexer = new HashMap<String, Integer>();  
 	}
 	
 	public void addSection(String section, Adapter adapter) {
 		this.headers.add(section);
 		this.sections.put(section, adapter);
+		
+		int sectionCount = 0;
+
+		for (int i=0; i<headers.getCount()-1; i++)
+		{
+			sectionCount += sections.get(headers.getItem(i)).getCount();
+		}
+		
+		_alphaIndexer.put(section, sectionCount);
 	}
 	
 	public Object getItem(int position) {
@@ -113,5 +128,37 @@ public class GroupContactsAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+
+	@Override
+	public int getPositionForSection(int position) {
+		return _alphaIndexer.get(headers.getItem(position));
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		int sectionCount = 0;
+
+		for (int i=0; i<headers.getCount()-1; i++)
+		{
+			sectionCount += sections.get(headers.getItem(i)).getCount();
+			
+			if (sectionCount > position)
+				return i;
+		}
+		
+		return 0;
+	}
+
+	@Override
+	public Object[] getSections() {
+		String[] sectionHeaders = new String[headers.getCount()];
+		
+		for (int i=0; i<headers.getCount(); i++)
+		{
+			sectionHeaders[i] = headers.getItem(i);
+		}
+		
+		return sectionHeaders;
 	}
 }
